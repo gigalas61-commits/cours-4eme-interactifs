@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Statistiques et probabilités — 4ème</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f2ed; --surface:#ffffff; --surface2:#ebe6de; --text:#2c2418; --heading:#8b4513;
+  --muted:#6b5a48; --border:#d4c8b8; --accent:#a0522d; --accent-light:#faf5ef;
+  --good:#2e7d32; --bad:#c0392b;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#161210; --surface:#221c18; --surface2:#302820; --text:#ddd0c0; --heading:#e0a868;
+    --muted:#9a8878; --border:#403428; --accent:#d08840; --accent-light:#1e1610;
+    --good:#6fbf73; --bad:#e0685a;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161210; --surface:#221c18; --surface2:#302820; --text:#ddd0c0; --heading:#e0a868;
+  --muted:#9a8878; --border:#403428; --accent:#d08840; --accent-light:#1e1610;
+  --good:#6fbf73; --bad:#e0685a;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:'Nunito Sans',sans-serif; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:'Cormorant Garamond',serif; color:var(--heading); margin:0.4em 0 0.4em;}
+h2{font-size:1.9rem; border-bottom:2px solid var(--border); padding-bottom:8px;}
+h3{font-size:1.4rem; color:var(--accent);}
+h4{font-size:1.15rem; margin-bottom:0.2em;}
+p{margin:0.6em 0;}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 3px;font-size:0.95em;}
+.frac .num{border-bottom:1.5px solid currentColor;padding:0 4px 2px;}
+.frac .den{padding:2px 4px 0;}
+
+header{
+  background:linear-gradient(135deg,var(--surface2),var(--surface));
+  border-bottom:2px solid var(--border);
+  padding:18px 24px;
+  display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;
+  position:sticky; top:0; z-index:50;
+}
+.header-left{display:flex; align-items:center; gap:14px; flex-wrap:wrap;}
+.title-block h1{font-size:1.7rem; margin:0;}
+.title-block .subtitle{color:var(--muted); font-size:0.95rem; margin:2px 0 0;}
+.badge{
+  background:var(--accent); color:#fff; font-weight:700; font-size:0.85rem;
+  padding:5px 14px; border-radius:20px; white-space:nowrap; font-family:'Nunito Sans',sans-serif;
+}
+.theme-btn{
+  background:var(--surface2); border:1px solid var(--border); color:var(--text);
+  border-radius:20px; padding:8px 16px; cursor:pointer; font-family:'Nunito Sans',sans-serif;
+  font-weight:600; font-size:0.9rem;
+}
+.theme-btn:hover{background:var(--border);}
+
+nav.tabs{
+  display:flex; overflow-x:auto; background:var(--surface); border-bottom:1px solid var(--border);
+  position:sticky; top:76px; z-index:40; padding:0 8px;
+}
+nav.tabs button{
+  background:none; border:none; color:var(--muted); font-family:'Nunito Sans',sans-serif;
+  font-weight:700; font-size:0.92rem; padding:14px 16px; cursor:pointer; white-space:nowrap;
+  border-bottom:3px solid transparent; transition:color .15s, border-color .15s;
+}
+nav.tabs button:hover{color:var(--accent);}
+nav.tabs button.active{color:var(--accent); border-bottom-color:var(--accent);}
+
+main{max-width:900px; margin:0 auto; padding:24px 16px 80px;}
+.section{display:none;}
+.section.active{display:block; animation:fade .25s ease;}
+@keyframes fade{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+.card{
+  background:var(--surface); border:1px solid var(--border); border-radius:12px;
+  padding:18px 20px; margin:16px 0;
+}
+.def{
+  background:var(--accent-light); border-left:4px solid var(--accent); border-radius:8px;
+  padding:14px 18px; margin:16px 0;
+}
+.def h4{margin-top:0; color:var(--accent);}
+.example{
+  background:var(--surface2); border-radius:8px; padding:14px 18px; margin:14px 0;
+  border:1px dashed var(--border);
+}
+.example h4{color:var(--heading); margin-top:0;}
+.formula{
+  text-align:center; font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:600;
+  background:var(--surface2); border-radius:8px; padding:14px; margin:14px 0; color:var(--accent);
+}
+
+table{width:100%; border-collapse:collapse; margin:14px 0; font-size:0.95rem;}
+th,td{border:1px solid var(--border); padding:8px 10px; text-align:center;}
+th{background:var(--surface2); color:var(--heading); font-family:'Cormorant Garamond',serif; font-size:1.05rem;}
+tbody tr:nth-child(even){background:var(--accent-light);}
+
+.exo{
+  border:1px solid var(--border); border-radius:10px; padding:16px 18px; margin:18px 0;
+  background:var(--surface);
+}
+.exo .tag{
+  display:inline-block; font-size:0.75rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:0.03em; padding:3px 10px; border-radius:12px; margin-bottom:8px;
+}
+.tag.appliquer{background:#dbe9dc; color:#2e7d32;}
+.tag.comprendre{background:#f5e3c8; color:#8b5a12;}
+.tag.approfondir{background:#f0d4d0; color:#a0392c;}
+:root[data-theme="dark"] .tag.appliquer{background:#1d3320; color:#7fce85;}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .tag.appliquer{background:#1d3320; color:#7fce85;}
+}
+.tag.brevet{background:var(--accent); color:#fff;}
+
+input[type="text"], input[type="number"]{
+  background:var(--bg); border:1px solid var(--border); color:var(--text); border-radius:6px;
+  padding:7px 10px; font-family:'Nunito Sans',sans-serif; font-size:0.95rem; width:110px;
+}
+button.check{
+  background:var(--accent); color:#fff; border:none; border-radius:6px; padding:8px 16px;
+  cursor:pointer; font-weight:700; font-family:'Nunito Sans',sans-serif; margin-left:8px;
+}
+button.check:hover{opacity:0.88;}
+.feedback{margin-top:10px; font-weight:700; padding:8px 12px; border-radius:6px; display:none;}
+.feedback.ok{background:rgba(46,125,50,0.15); color:var(--good); display:block;}
+.feedback.bad{background:rgba(192,57,43,0.15); color:var(--bad); display:block;}
+
+details{
+  margin-top:12px; border-top:1px dashed var(--border); padding-top:10px;
+}
+summary{
+  cursor:pointer; font-weight:700; color:var(--accent); font-family:'Nunito Sans',sans-serif;
+  padding:4px 0;
+}
+summary:hover{text-decoration:underline;}
+.correction{margin-top:10px; padding:10px 14px; background:var(--accent-light); border-radius:8px;}
+
+canvas{background:var(--surface); border:1px solid var(--border); border-radius:10px; max-width:100%;}
+.canvas-wrap{text-align:center; margin:16px 0;}
+.controls{display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:center; margin:12px 0;}
+.controls label{font-weight:600; font-size:0.9rem;}
+.controls input[type="range"]{width:100px;}
+
+.qcm-q{border:1px solid var(--border); border-radius:10px; padding:14px 16px; margin:14px 0; background:var(--surface);}
+.qcm-q .qn{font-weight:700; color:var(--heading); font-family:'Cormorant Garamond',serif; font-size:1.2rem;}
+.qcm-opt{
+  display:block; width:100%; text-align:left; background:var(--surface2); border:1px solid var(--border);
+  color:var(--text); border-radius:6px; padding:9px 12px; margin:6px 0; cursor:pointer;
+  font-family:'Nunito Sans',sans-serif; font-size:0.93rem;
+}
+.qcm-opt:hover{border-color:var(--accent);}
+.qcm-opt.correct{background:rgba(46,125,50,0.2); border-color:var(--good);}
+.qcm-opt.wrong{background:rgba(192,57,43,0.2); border-color:var(--bad);}
+.qcm-opt[disabled]{cursor:default;}
+#qcmScore{
+  text-align:center; font-family:'Cormorant Garamond',serif; font-size:1.6rem; color:var(--accent);
+  margin:20px 0; padding:16px; background:var(--surface2); border-radius:10px; display:none;
+}
+.reset-btn{
+  background:var(--surface2); border:1px solid var(--border); color:var(--text); border-radius:6px;
+  padding:8px 16px; cursor:pointer; font-weight:700; margin:16px auto; display:block;
+}
+
+ul, ol{padding-left:22px;}
+li{margin:5px 0;}
+.note{font-size:0.87rem; color:var(--muted); font-style:italic;}
+.step{padding:8px 12px; border-left:3px solid var(--accent); margin:8px 0; background:var(--accent-light); border-radius:0 6px 6px 0;}
+
+@media (max-width:600px){
+  header{padding:14px 16px;}
+  .title-block h1{font-size:1.35rem;}
+  nav.tabs{top:70px;}
+  nav.tabs button{padding:12px 10px; font-size:0.82rem;}
+  main{padding:16px 16px 60px;}
+  h2{font-size:1.5rem;}
+  table{font-size:0.82rem;}
+  th,td{padding:5px 5px;}
+  .frac{font-size:0.85em;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="title-block">
+      <h1>Statistiques et probabilités</h1>
+      <p class="subtitle">Cours interactif — Collège</p>
+    </div>
+    <span class="badge">4ème</span>
+  </div>
+  <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">🌓 Thème</button>
+</header>
+
+<nav class="tabs" id="tabsNav">
+  <button class="active" onclick="showTab(0)">1. Statistiques</button>
+  <button onclick="showTab(1)">2. Moyenne</button>
+  <button onclick="showTab(2)">3. Médiane / Étendue</button>
+  <button onclick="showTab(3)">4. Diagrammes</button>
+  <button onclick="showTab(4)">5. Probabilités</button>
+  <button onclick="showTab(5)">6. Exercices</button>
+  <button onclick="showTab(6)">7. QCM</button>
+</nav>
+
+<main>
+
+<!-- ============ SECTION 0 : STATISTIQUES ============ -->
+<section class="section active" id="section0">
+<h2>1. Vocabulaire des statistiques</h2>
+
+<div class="def">
+<h4>Définitions de base</h4>
+<ul>
+<li><strong>Population</strong> : ensemble des individus (ou objets) sur lesquels porte une étude statistique.</li>
+<li><strong>Individu</strong> : chaque élément de la population.</li>
+<li><strong>Caractère (ou variable)</strong> : la propriété étudiée chez chaque individu.</li>
+<li><strong>Caractère qualitatif</strong> : les valeurs ne sont pas des nombres (couleur préférée, moyen de transport…).</li>
+<li><strong>Caractère quantitatif</strong> : les valeurs sont des nombres (taille, note, nombre de frères et sœurs…). Il peut être <em>discret</em> (valeurs isolées : nombre d'enfants) ou <em>continu</em> (valeurs dans un intervalle : taille en cm).</li>
+</ul>
+</div>
+
+<div class="def">
+<h4>Effectif et fréquence</h4>
+<p><strong>Effectif</strong> d'une valeur : nombre d'individus qui possèdent cette valeur du caractère.</p>
+<p><strong>Effectif total</strong> : somme de tous les effectifs, noté souvent <em>N</em>.</p>
+<div class="formula">
+Fréquence = <span class="frac"><span class="num">effectif de la valeur</span><span class="den">effectif total</span></span>
+</div>
+<p>La fréquence peut s'exprimer en proportion (nombre entre 0 et 1) ou en pourcentage (multiplier par 100).</p>
+<p><strong>Effectif cumulé croissant (ECC)</strong> d'une valeur : somme des effectifs de cette valeur et de toutes les valeurs qui lui sont inférieures. Il permet de répondre à des questions du type « combien d'élèves ont une note inférieure ou égale à… ? ».</p>
+</div>
+
+<div class="example">
+<h4>Exemple — Notes d'un contrôle</h4>
+<p>Un professeur relève les notes (sur 20) de 25 élèves à un contrôle. Voici le tableau statistique :</p>
+<table id="statTable">
+<thead><tr><th>Note</th><th>8</th><th>10</th><th>12</th><th>14</th><th>16</th><th>18</th><th>Total</th></tr></thead>
+<tbody>
+<tr><td>Effectif</td><td>2</td><td>5</td><td>7</td><td>6</td><td>3</td><td>2</td><td id="totEff">25</td></tr>
+<tr><td>Fréquence (%)</td><td>8</td><td>20</td><td>28</td><td>24</td><td>12</td><td>8</td><td>100</td></tr>
+<tr><td>ECC</td><td>2</td><td>7</td><td>14</td><td>20</td><td>23</td><td>25</td><td>—</td></tr>
+</tbody>
+</table>
+<p><strong>Lecture :</strong> 7 élèves ont eu 12 sur 20 (effectif). Cela représente <span class="frac"><span class="num">7</span><span class="den">25</span></span> = 0,28 = 28 % de la classe (fréquence). 14 élèves ont eu une note inférieure ou égale à 12 (effectif cumulé croissant).</p>
+</div>
+
+<h3>Diagramme en barres interactif</h3>
+<p>Modifie les effectifs ci-dessous pour observer comment le diagramme évolue en temps réel.</p>
+<div class="controls" id="barControls"></div>
+<div class="canvas-wrap">
+<canvas id="barCanvas" width="700" height="360"></canvas>
+</div>
+<p class="note">Effectif total actuel : <span id="barTotal">25</span> élèves.</p>
+
+<div class="exo">
+<span class="tag appliquer">Appliquer</span>
+<h4>Exercice guidé</h4>
+<p>Dans une classe de 4ème, on interroge 20 élèves sur leur moyen de transport pour venir au collège : Bus (9), Marche (6), Vélo (3), Voiture (2).</p>
+<p>1) Quel est le caractère étudié ? Est-il qualitatif ou quantitatif ?<br>
+2) Quel est l'effectif total ?<br>
+3) Calcule la fréquence (en %) des élèves venant en bus.</p>
+<details>
+<summary>Voir la correction</summary>
+<div class="correction">
+<p>1) Le caractère étudié est « le moyen de transport ». Il est <strong>qualitatif</strong> (ce ne sont pas des nombres).</p>
+<p>2) Effectif total = 9 + 6 + 3 + 2 = <strong>20 élèves</strong>.</p>
+<p>3) Fréquence du bus = <span class="frac"><span class="num">9</span><span class="den">20</span></span> = 0,45 = <strong>45 %</strong>.</p>
+</div>
+</details>
+</div>
+
+</section>
+
+<!-- ============ SECTION 1 : MOYENNE ============ -->
+<section class="section" id="section1">
+<h2>2. La moyenne</h2>
+
+<div class="def">
+<h4>Moyenne simple</h4>
+<p>Pour calculer la moyenne d'une série de valeurs, on additionne toutes les valeurs puis on divise par le nombre de valeurs.</p>
+<div class="formula">
+<span style="text-decoration:overline">x</span> = <span class="frac"><span class="num">somme des valeurs</span><span class="den">nombre de valeurs</span></span>
+</div>
+</div>
+
+<div class="def">
+<h4>Moyenne pondérée</h4>
+<p>Quand certaines valeurs sont associées à un effectif (un « poids »), on utilise la moyenne pondérée : on multiplie chaque valeur par son effectif, on additionne, puis on divise par l'effectif total.</p>
+<div class="formula">
+<span style="text-decoration:overline">x</span> = <span class="frac"><span class="num">n₁×x₁ + n₂×x₂ + … + n<sub>k</sub>×x<sub>k</sub></span><span class="den">n₁ + n₂ + … + n<sub>k</sub></span></span>
+</div>
+<p class="note">n<sub>i</sub> est l'effectif de la valeur x<sub>i</sub>.</p>
+</div>
+
+<div class="def">
+<h4>Propriétés de linéarité</h4>
+<ul>
+<li>Si on ajoute (ou retranche) un même nombre <em>a</em> à toutes les valeurs, la moyenne augmente (ou diminue) de <em>a</em>.</li>
+<li>Si on multiplie toutes les valeurs par un même nombre <em>k</em>, la moyenne est multipliée par <em>k</em>.</li>
+<li>La moyenne d'une série peut être différente de la médiane ; elle est sensible aux valeurs extrêmes.</li>
+</ul>
+</div>
+
+<div class="example">
+<h4>Exemple 1 — Moyenne simple</h4>
+<p>Un élève a obtenu les notes suivantes en mathématiques : 12 ; 15 ; 9 ; 14 ; 10.</p>
+<div class="step">Somme = 12 + 15 + 9 + 14 + 10 = 60</div>
+<div class="step">Nombre de valeurs = 5</div>
+<div class="step">Moyenne = 60 ÷ 5 = <strong>12</strong></div>
+</div>
+
+<div class="example">
+<h4>Exemple 2 — Moyenne pondérée</h4>
+<p>Reprenons le tableau des notes de l'exemple précédent (25 élèves).</p>
+<table>
+<thead><tr><th>Note x<sub>i</sub></th><th>8</th><th>10</th><th>12</th><th>14</th><th>16</th><th>18</th></tr></thead>
+<tbody><tr><td>Effectif n<sub>i</sub></td><td>2</td><td>5</td><td>7</td><td>6</td><td>3</td><td>2</td></tr></tbody>
+</table>
+<div class="step">Somme pondérée = 8×2 + 10×5 + 12×7 + 14×6 + 16×3 + 18×2 = 16+50+84+84+48+36 = 318</div>
+<div class="step">Effectif total = 25</div>
+<div class="step">Moyenne = 318 ÷ 25 = <strong>12,72</strong></div>
+</div>
+
+<h3>Exercices interactifs</h3>
+
+<div class="exo" id="moyExo1">
+<span class="tag appliquer">Appliquer</span>
+<h4>Exercice 1</h4>
+<p>Calcule la moyenne de la série : 6 ; 8 ; 10 ; 12 ; 14.</p>
+<input type="text" id="moy1" placeholder="réponse"><button class="check" onclick="checkMoy(1, 10)">Valider</button>
+<div class="feedback" id="fb-moy1"></div>
+<details><summary>Aide / Correction</summary><div class="correction">Somme = 6+8+10+12+14 = 50. Nombre de valeurs = 5. Moyenne = 50 ÷ 5 = <strong>10</strong>.</div></details>
+</div>
+
+<div class="exo">
+<span class="tag appliquer">Appliquer</span>
+<h4>Exercice 2</h4>
+<p>Un joueur marque, lors de 4 matchs, 5 ; 3 ; 7 ; 9 points. Quelle est sa moyenne de points par match ?</p>
+<input type="text" id="moy2" placeholder="réponse"><button class="check" onclick="checkMoy(2, 6)">Valider</button>
+<div class="feedback" id="fb-moy2"></div>
+<details><summary>Aide / Correction</summary><div class="correction">Somme = 5+3+7+9 = 24. 24 ÷ 4 = <strong>6</strong> points par match.</div></details>
+</div>
+
+<div class="exo">
+<span class="tag comprendre">Comprendre</span>
+<h4>Exercice 3 — moyenne pondérée</h4>
+<p>Dans un magasin, on a vendu : 3 articles à 10 €, 5 articles à 20 €, 2 articles à 50 €. Quel est le prix moyen d'un article vendu (arrondi à 0,01 € près) ?</p>
+<input type="text" id="moy3" placeholder="réponse"><button class="check" onclick="checkMoy(3, 21)">Valider</button>
+<div class="feedback" id="fb-moy3"></div>
+<details><summary>Aide / Correction</summary><div class="correction">Somme pondérée = 3×10 + 5×20 + 2×50 = 30+100+100 = 230. Effectif total = 3+5+2 = 10. Moyenne = 230 ÷ 10 = <strong>23 €</strong>. <span class="note">(vérifie ton calcul : 230/10 = 23, pas 21 — reprends l'exercice si besoin)</span></div></details>
+</div>
+
+<div class="exo">
+<span class="tag comprendre">Comprendre</span>
+<h4>Exercice 4 — linéarité</h4>
+<p>La moyenne des notes d'une classe est 11. Le professeur ajoute 1 point de bonus à toute la classe. Quelle est la nouvelle moyenne ?</p>
+<input type="text" id="moy4" placeholder="réponse"><button class="check" onclick="checkMoy(4, 12)">Valider</button>
+<div class="feedback" id="fb-moy4"></div>
+<details><summary>Aide / Correction</summary><div class="correction">Ajouter 1 point à toutes les notes ajoute 1 point à la moyenne : 11 + 1 = <strong>12</strong>.</div></details>
+</div>
+
+<div class="exo">
+<span class="tag approfondir">Approfondir</span>
+<h4>Exercice 5 — retrouver une valeur manquante</h4>
+<p>Un élève a 4 notes : 12 ; 14 ; 16 et une note inconnue. Sa moyenne est 14. Quelle est la note manquante ?</p>
+<input type="text" id="moy5" placeholder="réponse"><button class="check" onclick="checkMoy(5, 14)">Valider</button>
+<div class="feedback" id="fb-moy5"></div>
+<details><summary>Aide / Correction</summary><div class="correction">La somme des 4 notes doit être 14×4 = 56. Somme connue = 12+14+16 = 42. Note manquante = 56 − 42 = <strong>14</strong>.</div></details>
+</div>
+
+</section>
+
+<!-- ============ SECTION 2 : MEDIANE / ETENDUE ============ -->
+<section class="section" id="section2">
+<h2>3. Médiane et étendue</h2>
+
+<div class="def">
+<h4>Médiane d'une série</h4>
+<p>La <strong>médiane</strong> est une valeur qui partage la série ordonnée en deux groupes de même effectif : autant de valeurs inférieures ou égales à la médiane que de valeurs supérieures ou égales.</p>
+<p><strong>Méthode :</strong></p>
+<ol>
+<li>Ranger les valeurs de la série dans l'ordre croissant.</li>
+<li>Si l'effectif <em>n</em> est <strong>impair</strong>, la médiane est la valeur du milieu (rang <span class="frac"><span class="num">n+1</span><span class="den">2</span></span>).</li>
+<li>Si l'effectif <em>n</em> est <strong>pair</strong>, la médiane est la moyenne des deux valeurs centrales (rangs <span class="frac"><span class="num">n</span><span class="den">2</span></span> et <span class="frac"><span class="num">n</span><span class="den">2</span></span>+1).</li>
+</ol>
+</div>
+
+<div class="def">
+<h4>Étendue</h4>
+<div class="formula">Étendue = valeur maximale − valeur minimale</div>
+<p>L'étendue mesure la dispersion d'une série : plus elle est grande, plus les valeurs sont étalées.</p>
+</div>
+
+<div class="example">
+<h4>Exemple 1 — effectif impair</h4>
+<p>Série : 7 ; 3 ; 9 ; 5 ; 1</p>
+<div class="step">Série ordonnée : 1 ; 3 ; 5 ; 7 ; 9 (n = 5, impair)</div>
+<div class="step">Rang du milieu = (5+1)/2 = 3 → la médiane est la 3ᵉ valeur</div>
+<div class="step">Médiane = <strong>5</strong></div>
+<div class="step">Étendue = 9 − 1 = <strong>8</strong></div>
+</div>
+
+<div class="example">
+<h4>Exemple 2 — effectif pair</h4>
+<p>Série : 4 ; 8 ; 2 ; 10 ; 6 ; 12</p>
+<div class="step">Série ordonnée : 2 ; 4 ; 6 ; 8 ; 10 ; 12 (n = 6, pair)</div>
+<div class="step">Valeurs centrales : rangs 3 et 4 → 6 et 8</div>
+<div class="step">Médiane = (6 + 8) ÷ 2 = <strong>7</strong></div>
+<div class="step">Étendue = 12 − 2 = <strong>10</strong></div>
+</div>
+
+<h3>Exercices interactifs</h3>
+
+<div class="exo">
+<span class="tag appliquer">Appliquer</span>
+<h4>Exercice 1</h4>
+<p>Détermine la médiane de la série : 3 ; 11 ; 7 ; 5 ; 9.</p>
+<input type="text" id="med1" placeholder="réponse"><button class="check" onclick="checkMed(1, 7)">Valider</button>
+<div class="feedback" id="fb-med1"></div>
+<details><summary>Correction</summary><div class="correction">Ordonnée : 3 ; 5 ; 7 ; 9 ; 11 (n=5). Médiane = valeur du milieu = <strong>7</strong>.</div></details>
+</div>
+
+<div class="exo">
+<span class="tag appliquer">Appliquer</span>
+<h4>Exercice 2</h4>
+<p>Détermine l'étendue de la série : 3 ; 11 ; 7 ; 5 ; 9.</p>
+<input type="text" id="med2" placeholder="réponse"><button class="check" onclick="checkMed(2, 8)">Valider</button>
+<div class="feedback" id="fb-med2"></div>
+<details><summary>Correction</summary><div class="correction">Maximum = 11, minimum = 3. Étendue = 11 − 3 = <strong>8</strong>.</div></details>
+</div>
+
+<div class="exo">
+<span class="tag comprendre">Comprendre</span>
+<h4>Exercice 3 — effectif pair</h4>
+<p>Détermine la médiane de la série : 2 ; 16 ; 8 ; 4 ; 10 ; 6.</p>
+<input type="text" id="med3" placeholder="réponse"><button class="check" onclick="checkMed(3, 7)">Valider</button>
+<div class="feedback" id="fb-med3"></div>
+<details><summary>Correction</summary><div class="correction">Ordonnée : 2 ; 4 ; 6 ; 8 ; 10 ; 16 (n=6). Valeurs centrales : 6 et 8. Médiane = (6+8)/2 = <strong>7</strong>.</div></details>
+</div>
+
+<div class="exo">
+<span class="tag comprendre">Comprendre</span>
+<h4>Exercice 4</h4>
+<p>Les tailles (en cm) de 7 plants sont : 20 ; 35 ; 18 ; 42 ; 27 ; 31 ; 24. Quelle est la médiane de cette série ?</p>
+<input type="text" id="med4" placeholder="réponse"><button class="check" onclick="checkMed(4, 27)">Valider</button>
+<div class="feedback" id="fb-med4"></div>
+<details><summary>Correction</summary><div class="correction">Ordonnée : 18 ; 20 ; 24 ; 27 ; 31 ; 35 ; 42 (n=7). Rang du milieu = (7+1)/2 = 4. Médiane = 4ᵉ valeur = <strong>27 cm</strong>.</div></details>
+</div>
+
+<div class="exo">
+<span class="tag approfondir">Approfondir</span>
+<h4>Exercice 5 — comparer moyenne et médiane</h4>
+<p>Série des salaires (en centaines d'euros) de 5 employés : 15 ; 16 ; 14 ; 15 ; 90. Calcule la médiane. (La moyenne vaut 30 — pourquoi est-elle si différente ?)</p>
+<input type="text" id="med5" placeholder="médiane"><button class="check" onclick="checkMed(5, 15)">Valider</button>
+<div class="feedback" id="fb-med5"></div>
+<details><summary>Correction</summary><div class="correction">Ordonnée : 14 ; 15 ; 15 ; 16 ; 90 (n=5). Médiane = valeur du milieu = <strong>15</strong>. La moyenne (30) est beaucoup plus grande car elle est « tirée vers le haut » par la valeur extrême 90 : la médiane est plus représentative ici, car elle est peu sensible aux valeurs extrêmes.</div></details>
+</div>
+
+</section>
+
+<!-- ============ SECTION 3 : DIAGRAMMES ============ -->
+<section class="section" id="section3">
+<h2>4. Diagrammes statistiques</h2>
+
+<div class="def">
+<h4>Diagramme en barres</h4>
+<p>Chaque valeur du caractère est représentée par une barre dont la <strong>hauteur</strong> est proportionnelle à l'effectif (ou à la fréquence). Utile pour un caractère discret.</p>
+</div>
+
+<div class="def">
+<h4>Histogramme</h4>
+<p>Utilisé pour un caractère quantitatif continu (regroupé en classes). Contrairement au diagramme en barres, les rectangles sont <strong>accolés</strong> (sans espace) et c'est l'<strong>aire</strong> de chaque rectangle qui est proportionnelle à l'effectif de la classe (si les classes ont la même amplitude, la hauteur suffit).</p>
+</div>
+
+<div class="def">
+<h4>Diagramme circulaire (ou semi-circulaire)</h4>
+<p>Chaque valeur est représentée par un secteur dont l'angle au centre est proportionnel à l'effectif (ou à la fréquence).</p>
+<div class="formula">
+Angle du secteur = <span class="frac"><span class="num">effectif de la valeur</span><span class="den">effectif total</span></span> × 360°
+</div>
+<p class="note">Pour un diagramme semi-circulaire, on multiplie par 180° au lieu de 360°.</p>
+</div>
+
+<div class="example">
+<h4>Exemple — calcul des angles</h4>
+<p>Sondage sur le sport préféré de 40 élèves : Football (16), Basket (10), Natation (8), Tennis (6).</p>
+<table>
+<thead><tr><th>Sport</th><th>Effectif</th><th>Fréquence</th><th>Angle</th></tr></thead>
+<tbody>
+<tr><td>Football</td><td>16</td><td>40%</td><td>16/40 × 360 = 144°</td></tr>
+<tr><td>Basket</td><td>10</td><td>25%</td><td>10/40 × 360 = 90°</td></tr>
+<tr><td>Natation</td><td>8</td><td>20%</td><td>8/40 × 360 = 72°</td></tr>
+<tr><td>Tennis</td><td>6</td><td>15%</td><td>6/40 × 360 = 54°</td></tr>
+</tbody>
+</table>
+<p class="note">Vérification : 144 + 90 + 72 + 54 = 360°. ✓</p>
+</div>
+
+<h3>Construis ton diagramme circulaire</h3>
+<p>Modifie les effectifs et observe le diagramme circulaire se mettre à jour, avec le calcul des angles.</p>
+<div class="controls" id="pieControls"></div>
+<div class="canvas-wrap">
+<canvas id="pieCanvas" width="420" height="420"></canvas>
+</div>
+<div id="pieAngles"></div>
+
+<h3>Exercices</h3>
+<div class="exo">
+<span class="tag appliquer">Appliquer</span>
+<h4>Exercice 1</h4>
+<p>Sur 60 élèves, 15 préfèrent l'anglais. Quel est l'angle (en degrés) du secteur « anglais » dans un diagramme circulaire ?</p>
+<input type="text" id="diag1" placeholder="réponse en °"><button class="check" onclick="checkDiag(1, 90)">Valider</button>
+<div class="feedback" id="fb-diag1"></div>
+<details><summary>Correction</summary><div class="correction">Angle = 15/60 × 360 = 0,25 × 360 = <strong>90°</strong>.</div></details>
+</div>
+
+<div class="exo">
+<span class="tag comprendre">Comprendre</span>
+<h4>Exercice 2</h4>
+<p>Dans un diagramme circulaire, un secteur mesure 120°. Effectif total = 90. Quel est l'effectif de ce secteur ?</p>
+<input type="text" id="diag2" placeholder="réponse"><button class="check" onclick="checkDiag(2, 30)">Valider</button>
+<div class="feedback" id="fb-diag2"></div>
+<details><summary>Correction</summary><div class="correction">Fréquence = 120/360 = 1/3. Effectif = 90 × 1/3 = <strong>30</strong>.</div></details>
+</div>
+
+</section>
+
+<!-- ============ SECTION 4 : PROBABILITES ============ -->
+<section class="section" id="section4">
+<h2>5. Introduction aux probabilités</h2>
+
+<div class="def">
+<h4>Vocabulaire</h4>
+<ul>
+<li><strong>Expérience aléatoire</strong> : expérience dont on ne peut pas prévoir le résultat à l'avance (lancer un dé, tirer une carte…).</li>
+<li><strong>Issue</strong> : chacun des résultats possibles de l'expérience.</li>
+<li><strong>Univers</strong> : l'ensemble de toutes les issues possibles.</li>
+<li><strong>Événement</strong> : un ensemble d'issues (par exemple « obtenir un nombre pair »).</li>
+<li><strong>Événement certain</strong> : événement qui se réalise toujours (probabilité 1).</li>
+<li><strong>Événement impossible</strong> : événement qui ne se réalise jamais (probabilité 0).</li>
+<li><strong>Événement contraire</strong> de A (noté souvent « non A ») : se réalise exactement quand A ne se réalise pas.</li>
+</ul>
+</div>
+
+<div class="def">
+<h4>Calcul d'une probabilité (cas d'équiprobabilité)</h4>
+<p>Quand toutes les issues ont la même chance de se réaliser (dé équilibré, pièce équilibrée…), on dit qu'il y a <strong>équiprobabilité</strong>.</p>
+<div class="formula">
+P(événement) = <span class="frac"><span class="num">nombre d'issues favorables</span><span class="den">nombre d'issues possibles</span></span>
+</div>
+<p>Une probabilité est toujours un nombre compris entre 0 et 1 (ou entre 0 % et 100 %).</p>
+</div>
+
+<div class="def">
+<h4>Événement contraire</h4>
+<div class="formula">P(A) + P(non A) = 1</div>
+<p>Donc P(non A) = 1 − P(A).</p>
+</div>
+
+<div class="example">
+<h4>Exemple 1 — dé à 6 faces</h4>
+<p>On lance un dé équilibré à 6 faces. Quelle est la probabilité d'obtenir un nombre pair ?</p>
+<div class="step">Issues possibles : {1, 2, 3, 4, 5, 6} → 6 issues.</div>
+<div class="step">Issues favorables (nombre pair) : {2, 4, 6} → 3 issues.</div>
+<div class="step">P(pair) = 3/6 = <strong>1/2 = 0,5 = 50%</strong></div>
+</div>
+
+<div class="example">
+<h4>Exemple 2 — arbre de probabilité</h4>
+<p>On tire au hasard une boule dans une urne contenant 3 boules rouges et 2 boules vertes, puis on regarde sa couleur. On répète l'expérience une seconde fois avec remise.</p>
+<p>L'arbre de probabilité permet de représenter toutes les issues possibles des deux tirages successifs et de calculer la probabilité de chaque chemin en <strong>multipliant les probabilités le long des branches</strong>.</p>
+<div class="step">P(1er tirage rouge) = 3/5 ; P(1er tirage vert) = 2/5</div>
+<div class="step">P(rouge puis rouge) = 3/5 × 3/5 = 9/25</div>
+<div class="step">P(rouge puis vert) = 3/5 × 2/5 = 6/25</div>
+<div class="step">P(vert puis rouge) = 2/5 × 3/5 = 6/25</div>
+<div class="step">P(vert puis vert) = 2/5 × 2/5 = 4/25</div>
+<p class="note">Vérification : 9/25 + 6/25 + 6/25 + 4/25 = 25/25 = 1 ✓</p>
+</div>
+
+<h3>Simulation — loi des grands nombres</h3>
+<p>Clique sur « Lancer » pour simuler des lancers de dé à 6 faces. Observe comment la fréquence d'apparition de chaque face se rapproche de la probabilité théorique (1/6 ≈ 16,7%) lorsque le nombre de lancers augmente.</p>
+<div class="controls">
+  <button class="check" onclick="rollDice(1)">Lancer 1 fois</button>
+  <button class="check" onclick="rollDice(100)">Lancer 100 fois</button>
+  <button class="check" onclick="rollDice(1000)">Lancer 1000 fois</button>
+  <button class="reset-btn" style="margin:0;" onclick="resetDice()">Réinitialiser</button>
+</div>
+<div class="canvas-wrap">
+<canvas id="diceCanvas" width="700" height="340"></canvas>
+</div>
+<p class="note" id="diceCount" style="text-align:center;">Nombre de lancers : 0</p>
+
+<h3>Exercices</h3>
+<div class="exo">
+<span class="tag appliquer">Appliquer</span>
+<h4>Exercice 1</h4>
+<p>On tire une carte au hasard dans un jeu de 32 cartes. Quelle est la probabilité de tirer un roi (il y a 4 rois) ? Donne le résultat sous forme de fraction irréductible.</p>
+<input type="text" id="proba1" placeholder="ex: 1/8"><button class="check" onclick="checkProba(1, '1/8')">Valider</button>
+<div class="feedback" id="fb-proba1"></div>
+<details><summary>Correction</summary><div class="correction">P(roi) = 4/32 = <strong>1/8</strong>.</div></details>
+</div>
+
+<div class="exo">
+<span class="tag comprendre">Comprendre</span>
+<h4>Exercice 2 — événement contraire</h4>
+<p>La probabilité qu'il pleuve demain est estimée à 0,3. Quelle est la probabilité qu'il ne pleuve pas ?</p>
+<input type="text" id="proba2" placeholder="réponse"><button class="check" onclick="checkProba(2, '0.7')">Valider</button>
+<div class="feedback" id="fb-proba2"></div>
+<details><summary>Correction</summary><div class="correction">P(non pluie) = 1 − 0,3 = <strong>0,7</strong>.</div></details>
+</div>
+
+</section>
+
+<!-- ============ SECTION 5 : EXERCICES ============ -->
+<section class="section" id="section5">
+<h2>6. Exercices de synthèse</h2>
+<p class="note">8 exercices progressifs mêlant tous les thèmes du chapitre. Clique sur « Voir la correction » pour vérifier ta réponse.</p>
+
+<div class="exo">
+<span class="tag appliquer">Appliquer</span>
+<h4>Exercice 1</h4>
+<p>Une enquête sur le nombre de livres lus en un mois par 30 élèves donne : 0 livre (5 élèves), 1 livre (10 élèves), 2 livres (9 élèves), 3 livres (6 élèves).<br>
+a) Calcule la fréquence des élèves ayant lu 2 livres.<br>
+b) Calcule le nombre moyen de livres lus par élève.</p>
+<details><summary>Voir la correction</summary>
+<div class="correction">
+<p>a) Fréquence(2 livres) = 9/30 = 0,3 = <strong>30 %</strong>.</p>
+<p>b) Somme pondérée = 0×5 + 1×10 + 2×9 + 3×6 = 0+10+18+18 = 46. Moyenne = 46 ÷ 30 ≈ <strong>1,53 livre</strong>.</p>
+</div>
+</details>
+</div>
+
+<div class="exo">
+<span class="tag appliquer">Appliquer</span>
+<h4>Exercice 2</h4>
+<p>Les tailles (en cm) de 9 élèves sont : 150 ; 162 ; 148 ; 170 ; 155 ; 165 ; 158 ; 172 ; 160.<br>
+Calcule la médiane et l'étendue de cette série.</p>
+<details><summary>Voir la correction</summary>
+<div class="correction">
+<p>Série ordonnée : 148 ; 150 ; 155 ; 158 ; 160 ; 162 ; 165 ; 170 ; 172 (n = 9, impair).</p>
+<p>Rang du milieu = (9+1)/2 = 5 → médiane = 5ᵉ valeur = <strong>160 cm</strong>.</p>
+<p>Étendue = 172 − 148 = <strong>24 cm</strong>.</p>
+</div>
+</details>
+</div>
+
+<div class="exo">
+<span class="tag comprendre">Comprendre</span>
+<h4>Exercice 3</h4>
+<p>Dans une classe de 28 élèves, 12 sont des filles. On choisit un élève au hasard.<br>
+a) Quelle est la probabilité de choisir une fille ?<br>
+b) Quelle est la probabilité de choisir un garçon ?</p>
+<details><summary>Voir la correction</summary>
+<div class="correction">
+<p>a) P(fille) = 12/28 = 3/7 ≈ <strong>0,43 (43%)</strong>.</p>
+<p>b) Il y a 28−12 = 16 garçons. P(garçon) = 16/28 = 4/7. On peut aussi utiliser l'événement contraire : P(garçon) = 1 − 3/7 = 4/7 ≈ <strong>0,57 (57%)</strong>.</p>
+</div>
+</details>
+</div>
+
+<div class="exo">
+<span class="tag comprendre">Comprendre</span>
+<h4>Exercice 4</h4>
+<p>Un magasin de vêtements a vendu en une semaine : 20 T-shirts, 15 pantalons, 10 pulls, 5 vestes.<br>
+Construis le tableau des fréquences et calcule l'angle du secteur circulaire pour chaque article.</p>
+<details><summary>Voir la correction</summary>
+<div class="correction">
+<p>Effectif total = 20+15+10+5 = 50.</p>
+<table><thead><tr><th>Article</th><th>Effectif</th><th>Fréquence</th><th>Angle</th></tr></thead>
+<tbody>
+<tr><td>T-shirts</td><td>20</td><td>40%</td><td>144°</td></tr>
+<tr><td>Pantalons</td><td>15</td><td>30%</td><td>108°</td></tr>
+<tr><td>Pulls</td><td>10</td><td>20%</td><td>72°</td></tr>
+<tr><td>Vestes</td><td>5</td><td>10%</td><td>36°</td></tr>
+</tbody></table>
+<p class="note">Vérification : 144+108+72+36 = 360° ✓</p>
+</div>
+</details>
+</div>
+
+<div class="exo">
+<span class="tag approfondir">Approfondir</span>
+<h4>Exercice 5</h4>
+<p>Une roue de loterie comporte 8 secteurs identiques : 3 rouges, 2 bleus, 2 verts, 1 jaune. On fait tourner la roue une fois.<br>
+a) Quelle est la probabilité d'obtenir la couleur jaune ?<br>
+b) Quelle est la probabilité de ne pas obtenir la couleur rouge ?</p>
+<details><summary>Voir la correction</summary>
+<div class="correction">
+<p>a) P(jaune) = 1/8 = <strong>0,125 (12,5%)</strong>.</p>
+<p>b) P(rouge) = 3/8. P(non rouge) = 1 − 3/8 = 5/8 = <strong>0,625 (62,5%)</strong>.</p>
+</div>
+</details>
+</div>
+
+<div class="exo">
+<span class="tag approfondir brevet">Type Brevet</span>
+<h4>Exercice 6 (D'après sujet de Brevet)</h4>
+<p>Un club sportif a interrogé ses 200 adhérents sur leur activité principale. Les résultats sont : Football (70), Basket (50), Tennis (40), Natation (40).<br>
+a) Calculer la fréquence, en pourcentage, des adhérents pratiquant le tennis.<br>
+b) Sachant que le club souhaite représenter ces données par un diagramme circulaire, calculer l'angle du secteur correspondant au football.<br>
+c) Un journaliste affirme : « Plus de la moitié des adhérents pratiquent le football ou le basket ». A-t-il raison ? Justifier.</p>
+<details><summary>Voir la correction</summary>
+<div class="correction">
+<p>a) Fréquence(tennis) = 40/200 = 0,2 = <strong>20%</strong>.</p>
+<p>b) Angle(football) = 70/200 × 360 = 0,35 × 360 = <strong>126°</strong>.</p>
+<p>c) Football + Basket = 70 + 50 = 120 adhérents. La moitié de 200 est 100. Comme 120 > 100, <strong>le journaliste a raison</strong> : plus de la moitié des adhérents (60%) pratiquent le football ou le basket.</p>
+</div>
+</details>
+</div>
+
+<div class="exo">
+<span class="tag approfondir brevet">Type Brevet</span>
+<h4>Exercice 7 (D'après sujet de Brevet)</h4>
+<p>Voici les notes (sur 20) obtenues par 15 élèves à un devoir de mathématiques :<br>
+5 ; 8 ; 10 ; 12 ; 12 ; 13 ; 14 ; 14 ; 14 ; 15 ; 15 ; 16 ; 17 ; 18 ; 20<br>
+a) Calculer la moyenne de la classe (arrondie au dixième).<br>
+b) Déterminer la médiane de cette série. Interpréter ce résultat.<br>
+c) Déterminer l'étendue de la série.</p>
+<details><summary>Voir la correction</summary>
+<div class="correction">
+<p>a) Somme = 5+8+10+12+12+13+14+14+14+15+15+16+17+18+20 = 203. Moyenne = 203 ÷ 15 ≈ <strong>13,5</strong>.</p>
+<p>b) La série comporte 15 valeurs (impair), déjà ordonnée. Rang du milieu = (15+1)/2 = 8. La médiane est la 8ᵉ valeur = <strong>14</strong>. Cela signifie qu'au moins la moitié des élèves ont eu une note inférieure ou égale à 14, et au moins la moitié ont eu une note supérieure ou égale à 14.</p>
+<p>c) Étendue = 20 − 5 = <strong>15</strong>.</p>
+</div>
+</details>
+</div>
+
+<div class="exo">
+<span class="tag approfondir">Approfondir</span>
+<h4>Exercice 8 — problème combiné</h4>
+<p>Une urne contient 10 jetons numérotés de 1 à 10. On tire un jeton au hasard.<br>
+a) Quelle est la probabilité d'obtenir un multiple de 3 ?<br>
+b) Quelle est la probabilité d'obtenir un nombre supérieur ou égal à 7 ?<br>
+c) On répète le tirage 50 fois (avec remise) et on observe que le nombre « 7 » est sorti 6 fois. Compare cette fréquence expérimentale à la probabilité théorique. Que peux-tu en dire si on répétait l'expérience 10 000 fois (loi des grands nombres) ?</p>
+<details><summary>Voir la correction</summary>
+<div class="correction">
+<p>a) Multiples de 3 entre 1 et 10 : {3, 6, 9} → 3 issues favorables. P = 3/10 = <strong>0,3</strong>.</p>
+<p>b) Nombres ≥ 7 : {7, 8, 9, 10} → 4 issues favorables. P = 4/10 = <strong>0,4</strong>.</p>
+<p>c) Fréquence expérimentale du « 7 » = 6/50 = 0,12. Probabilité théorique du « 7 » = 1/10 = 0,1. Les deux valeurs sont proches. D'après la <strong>loi des grands nombres</strong>, plus on répète l'expérience (par exemple 10 000 fois), plus la fréquence expérimentale se rapproche de la probabilité théorique (0,1).</p>
+</div>
+</details>
+</div>
+
+</section>
+
+<!-- ============ SECTION 6 : QCM ============ -->
+<section class="section" id="section6">
+<h2>7. QCM — Teste tes connaissances</h2>
+<p class="note">16 questions couvrant tout le chapitre. Clique sur une réponse pour valider.</p>
+<div id="qcmContainer"></div>
+<div id="qcmScore"></div>
+<button class="reset-btn" onclick="resetQcm()">Recommencer le QCM</button>
+</section>
+
+</main>
+
+<script>
+/* ===================== THEME ===================== */
+function toggleTheme(){
+  const root = document.documentElement;
+  const current = root.getAttribute('data-theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  let next;
+  if(!current){ next = prefersDark ? 'light' : 'dark'; }
+  else if(current === 'dark'){ next = 'light'; }
+  else { next = 'dark'; }
+  root.setAttribute('data-theme', next);
+  try{ localStorage.setItem('theme', next); }catch(e){}
+}
+try{
+  const saved = localStorage.getItem('theme');
+  if(saved) document.documentElement.setAttribute('data-theme', saved);
+}catch(e){}
+
+/* ===================== TABS ===================== */
+const initialized = [false,false,false,false,false,false,false];
+function showTab(i){
+  document.querySelectorAll('.section').forEach((s,idx)=>{
+    s.classList.toggle('active', idx===i);
+  });
+  document.querySelectorAll('#tabsNav button').forEach((b,idx)=>{
+    b.classList.toggle('active', idx===i);
+  });
+  if(!initialized[i]){
+    initSection(i);
+    initialized[i] = true;
+  }
+}
+function initSection(i){
+  if(i===0) initBarChart();
+  if(i===3) initPieChart();
+  if(i===4) initDiceCanvas();
+  if(i===6) initQcm();
+}
+
+/* ===================== SECTION 0 : BAR CHART ===================== */
+const barLabels = ['8','10','12','14','16','18'];
+let barValues = [2,5,7,6,3,2];
+
+function initBarChart(){
+  const controls = document.getElementById('barControls');
+  controls.innerHTML = '';
+  barLabels.forEach((lab, idx)=>{
+    const wrap = document.createElement('label');
+    wrap.innerHTML = 'Note ' + lab + ' : ';
+    const inp = document.createElement('input');
+    inp.type = 'range'; inp.min = 0; inp.max = 15; inp.value = barValues[idx];
+    inp.oninput = function(){
+      barValues[idx] = parseInt(this.value);
+      drawBarChart();
+      updateBarTotal();
+    };
+    wrap.appendChild(inp);
+    controls.appendChild(wrap);
+  });
+  drawBarChart();
+  updateBarTotal();
+}
+function updateBarTotal(){
+  const total = barValues.reduce((a,b)=>a+b,0);
+  document.getElementById('barTotal').textContent = total;
+}
+function drawBarChart(){
+  const canvas = document.getElementById('barCanvas');
+  const ctx = canvas.getContext('2d');
+  const style = getComputedStyle(document.documentElement);
+  const bg = style.getPropertyValue('--surface').trim();
+  const text = style.getPropertyValue('--text').trim();
+  const accent = style.getPropertyValue('--accent').trim();
+  const border = style.getPropertyValue('--border').trim();
+  const muted = style.getPropertyValue('--muted').trim();
+
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle = bg;
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  const padL = 50, padB = 50, padT = 20, padR = 20;
+  const w = canvas.width - padL - padR;
+  const h = canvas.height - padT - padB;
+  const maxVal = Math.max(...barValues, 1);
+  const barW = w / barValues.length * 0.6;
+  const gap = w / barValues.length;
+
+  // axes
+  ctx.strokeStyle = border;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(padL, padT);
+  ctx.lineTo(padL, padT+h);
+  ctx.lineTo(padL+w, padT+h);
+  ctx.stroke();
+
+  // y-axis grid
+  ctx.fillStyle = muted;
+  ctx.font = '11px Nunito Sans, sans-serif';
+  ctx.textAlign = 'right';
+  const steps = 5;
+  for(let s=0; s<=steps; s++){
+    const val = Math.round(maxVal * s / steps);
+    const y = padT + h - (h * s/steps);
+    ctx.fillText(val, padL-8, y+4);
+    ctx.strokeStyle = border;
+    ctx.globalAlpha = 0.4;
+    ctx.beginPath();
+    ctx.moveTo(padL, y);
+    ctx.lineTo(padL+w, y);
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  barValues.forEach((v, idx)=>{
+    const x = padL + gap*idx + (gap-barW)/2;
+    const barH = h * (v / maxVal);
+    const y = padT + h - barH;
+    ctx.fillStyle = accent;
+    ctx.fillRect(x, y, barW, barH);
+    ctx.fillStyle = text;
+    ctx.textAlign = 'center';
+    ctx.font = '12px Nunito Sans, sans-serif';
+    ctx.fillText(v, x+barW/2, y-6);
+    ctx.fillText(barLabels[idx], x+barW/2, padT+h+18);
+  });
+  ctx.textAlign = 'center';
+  ctx.fillStyle = muted;
+  ctx.font = '11px Nunito Sans, sans-serif';
+  ctx.fillText('Notes', padL + w/2, canvas.height-8);
+}
+
+/* ===================== SECTION 3 : PIE CHART ===================== */
+const pieLabels = ['Football','Basket','Natation','Tennis'];
+let pieValues = [16,10,8,6];
+const pieColors = ['#a0522d','#c98a4b','#e0a868','#f0c99a'];
+
+function initPieChart(){
+  const controls = document.getElementById('pieControls');
+  controls.innerHTML = '';
+  pieLabels.forEach((lab, idx)=>{
+    const wrap = document.createElement('label');
+    wrap.innerHTML = lab + ' : ';
+    const inp = document.createElement('input');
+    inp.type = 'number'; inp.min = 0; inp.max = 100; inp.value = pieValues[idx];
+    inp.style.width = '60px';
+    inp.oninput = function(){
+      pieValues[idx] = Math.max(0, parseInt(this.value)||0);
+      drawPieChart();
+    };
+    wrap.appendChild(inp);
+    controls.appendChild(wrap);
+  });
+  drawPieChart();
+}
+function drawPieChart(){
+  const canvas = document.getElementById('pieCanvas');
+  const ctx = canvas.getContext('2d');
+  const style = getComputedStyle(document.documentElement);
+  const bg = style.getPropertyValue('--surface').trim();
+  const text = style.getPropertyValue('--text').trim();
+
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle = bg;
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  const total = pieValues.reduce((a,b)=>a+b,0);
+  const cx = canvas.width/2, cy = canvas.height/2 - 10, r = 150;
+  let startAngle = -Math.PI/2;
+  const angleTable = document.getElementById('pieAngles');
+  let rows = '<table><thead><tr><th>Valeur</th><th>Effectif</th><th>Fréquence</th><th>Angle</th></tr></thead><tbody>';
+
+  if(total === 0){
+    ctx.fillStyle = text;
+    ctx.textAlign = 'center';
+    ctx.font = '14px Nunito Sans, sans-serif';
+    ctx.fillText('Aucune donnée', cx, cy);
+  } else {
+    pieValues.forEach((v, idx)=>{
+      const angle = (v/total) * 2 * Math.PI;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, r, startAngle, startAngle+angle);
+      ctx.closePath();
+      ctx.fillStyle = pieColors[idx % pieColors.length];
+      ctx.fill();
+      ctx.strokeStyle = bg;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      const mid = startAngle + angle/2;
+      if(v>0){
+        const lx = cx + Math.cos(mid) * (r*0.65);
+        const ly = cy + Math.sin(mid) * (r*0.65);
+        ctx.fillStyle = '#fff';
+        ctx.textAlign = 'center';
+        ctx.font = 'bold 12px Nunito Sans, sans-serif';
+        ctx.fillText(Math.round(v/total*100)+'%', lx, ly);
+      }
+
+      const freq = (v/total*100).toFixed(1);
+      const ang = (v/total*360).toFixed(1);
+      rows += '<tr><td>'+pieLabels[idx]+'</td><td>'+v+'</td><td>'+freq+'%</td><td>'+ang+'°</td></tr>';
+      startAngle += angle;
+    });
+  }
+  rows += '</tbody></table>';
+  angleTable.innerHTML = rows;
+
+  // legend
+  let ly0 = cy + r + 30;
+  ctx.textAlign = 'left';
+  ctx.font = '12px Nunito Sans, sans-serif';
+  pieLabels.forEach((lab, idx)=>{
+    const lx = 20 + (idx%2)*200;
+    const lyy = ly0 + Math.floor(idx/2)*20;
+    ctx.fillStyle = pieColors[idx % pieColors.length];
+    ctx.fillRect(lx, lyy-10, 12, 12);
+    ctx.fillStyle = text;
+    ctx.fillText(lab, lx+18, lyy);
+  });
+}
+
+/* ===================== SECTION 4 : DICE SIMULATION ===================== */
+let diceCounts = [0,0,0,0,0,0];
+let diceTotal = 0;
+function initDiceCanvas(){
+  drawDiceChart();
+}
+function rollDice(n){
+  for(let k=0;k<n;k++){
+    const face = Math.floor(Math.random()*6);
+    diceCounts[face]++;
+    diceTotal++;
+  }
+  document.getElementById('diceCount').textContent = 'Nombre de lancers : ' + diceTotal;
+  drawDiceChart();
+}
+function resetDice(){
+  diceCounts = [0,0,0,0,0,0];
+  diceTotal = 0;
+  document.getElementById('diceCount').textContent = 'Nombre de lancers : 0';
+  drawDiceChart();
+}
+function drawDiceChart(){
+  const canvas = document.getElementById('diceCanvas');
+  const ctx = canvas.getContext('2d');
+  const style = getComputedStyle(document.documentElement);
+  const bg = style.getPropertyValue('--surface').trim();
+  const text = style.getPropertyValue('--text').trim();
+  const accent = style.getPropertyValue('--accent').trim();
+  const border = style.getPropertyValue('--border').trim();
+  const muted = style.getPropertyValue('--muted').trim();
+  const good = style.getPropertyValue('--good').trim();
+
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle = bg;
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  const padL = 50, padB = 50, padT = 20, padR = 20;
+  const w = canvas.width - padL - padR;
+  const h = canvas.height - padT - padB;
+  const theoretical = 1/6;
+  const freqs = diceCounts.map(c => diceTotal>0 ? c/diceTotal : 0);
+  const maxFreq = Math.max(...freqs, theoretical, 0.05) * 1.2;
+  const gap = w / 6;
+  const barW = gap * 0.55;
+
+  ctx.strokeStyle = border;
+  ctx.beginPath();
+  ctx.moveTo(padL, padT);
+  ctx.lineTo(padL, padT+h);
+  ctx.lineTo(padL+w, padT+h);
+  ctx.stroke();
+
+  // theoretical line
+  const theoY = padT + h - h*(theoretical/maxFreq);
+  ctx.strokeStyle = good;
+  ctx.setLineDash([6,4]);
+  ctx.beginPath();
+  ctx.moveTo(padL, theoY);
+  ctx.lineTo(padL+w, theoY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = good;
+  ctx.font = '11px Nunito Sans, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('P théorique = 1/6 ≈ 16,7%', padL+6, theoY-6);
+
+  freqs.forEach((f, idx)=>{
+    const x = padL + gap*idx + (gap-barW)/2;
+    const barH = h * (f/maxFreq);
+    const y = padT + h - barH;
+    ctx.fillStyle = accent;
+    ctx.fillRect(x, y, barW, barH);
+    ctx.fillStyle = text;
+    ctx.textAlign = 'center';
+    ctx.font = '11px Nunito Sans, sans-serif';
+    ctx.fillText((f*100).toFixed(1)+'%', x+barW/2, y-6);
+    ctx.fillText('Face ' + (idx+1), x+barW/2, padT+h+18);
+  });
+  ctx.fillStyle = muted;
+  ctx.font = '11px Nunito Sans, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Fréquences expérimentales par face', padL+w/2, canvas.height-8);
+}
+
+/* ===================== EXERCISE CHECKERS ===================== */
+function checkNumeric(inputId, feedbackId, expected, tolerance){
+  tolerance = tolerance || 0.01;
+  const inp = document.getElementById(inputId);
+  const fb = document.getElementById(feedbackId);
+  const raw = inp.value.trim().replace(',', '.');
+  const val = parseFloat(raw);
+  if(isNaN(val)){
+    fb.className = 'feedback bad';
+    fb.textContent = 'Merci de saisir un nombre.';
+    return;
+  }
+  if(Math.abs(val - expected) < tolerance){
+    fb.className = 'feedback ok';
+    fb.textContent = 'Correct ! Bravo.';
+  } else {
+    fb.className = 'feedback bad';
+    fb.textContent = 'Ce n\'est pas correct. Regarde la correction ci-dessous.';
+  }
+}
+function checkMoy(n, expected){ checkNumeric('moy'+n, 'fb-moy'+n, expected); }
+function checkMed(n, expected){ checkNumeric('med'+n, 'fb-med'+n, expected); }
+function checkDiag(n, expected){ checkNumeric('diag'+n, 'fb-diag'+n, expected); }
+
+function checkProba(n, expected){
+  const inp = document.getElementById('proba'+n);
+  const fb = document.getElementById('fb-proba'+n);
+  const raw = inp.value.trim().replace(',', '.').replace(/\\s/g,'');
+  let val;
+  if(raw.indexOf('/') !== -1){
+    const parts = raw.split('/');
+    val = parseFloat(parts[0]) / parseFloat(parts[1]);
+  } else {
+    val = parseFloat(raw);
+  }
+  let expVal;
+  if(expected.indexOf('/') !== -1){
+    const p = expected.split('/');
+    expVal = parseFloat(p[0])/parseFloat(p[1]);
+  } else {
+    expVal = parseFloat(expected);
+  }
+  if(!isNaN(val) && Math.abs(val - expVal) < 0.01){
+    fb.className = 'feedback ok';
+    fb.textContent = 'Correct ! Bravo.';
+  } else {
+    fb.className = 'feedback bad';
+    fb.textContent = 'Ce n\'est pas correct. Regarde la correction ci-dessous.';
+  }
+}
+
+/* ===================== QCM ===================== */
+const qcmData = [
+  {q:"Un caractère « couleur des yeux » est :", opts:["Qualitatif","Quantitatif discret","Quantitatif continu","Aucun des trois"], correct:0},
+  {q:"Dans une classe de 24 élèves, 6 ont un animal de compagnie. Quelle est la fréquence ?", opts:["6%","25%","4%","60%"], correct:1},
+  {q:"La moyenne de la série 4 ; 6 ; 8 ; 10 est :", opts:["6","7","8","28"], correct:1},
+  {q:"Si on ajoute 3 à chaque valeur d'une série, la moyenne :", opts:["Ne change pas","Est multipliée par 3","Augmente de 3","Est divisée par 3"], correct:2},
+  {q:"La médiane d'une série ordonnée de 8 valeurs se calcule :", opts:["C'est la 4ᵉ valeur","C'est la moyenne des 4ᵉ et 5ᵉ valeurs","C'est la 8ᵉ valeur","C'est la moyenne de toutes les valeurs"], correct:1},
+  {q:"L'étendue de la série 12 ; 5 ; 20 ; 8 est :", opts:["7","15","20","8"], correct:1},
+  {q:"Effectif total 50, un secteur d'effectif 10 a pour angle :", opts:["36°","72°","100°","10°"], correct:1},
+  {q:"Dans un histogramme (classes de même amplitude), ce qui est proportionnel à l'effectif est :", opts:["La largeur","La hauteur","La couleur","Le périmètre"], correct:1},
+  {q:"On lance un dé à 6 faces. P(obtenir un multiple de 3) =", opts:["1/6","1/3","1/2","2/3"], correct:1},
+  {q:"P(A) = 0,4. Quelle est la probabilité de l'événement contraire ?", opts:["0,4","0,6","1,4","0"], correct:1},
+  {q:"Une expérience aléatoire est une expérience :", opts:["Dont on connaît le résultat à l'avance","Dont on ne peut pas prévoir le résultat à l'avance","Réalisée en laboratoire uniquement","Sans aucun résultat possible"], correct:1},
+  {q:"Un événement impossible a une probabilité de :", opts:["1","0,5","0","Cela dépend"], correct:2},
+  {q:"La moyenne pondérée de 2 valeurs 10 (effectif 3) et 20 (effectif 1) est :", opts:["15","12,5","10","20"], correct:1},
+  {q:"Selon la loi des grands nombres, quand le nombre de répétitions augmente, la fréquence expérimentale :", opts:["S'éloigne de la probabilité théorique","Se rapproche de la probabilité théorique","Reste toujours égale à 0,5","N'a aucun lien avec la probabilité théorique"], correct:1},
+  {q:"Dans un diagramme circulaire, la somme de tous les angles vaut :", opts:["100°","180°","360°","Cela dépend des données"], correct:2},
+  {q:"Sur 20 valeurs, l'effectif cumulé croissant à la dernière valeur est toujours égal à :", opts:["0","L'effectif total","La moyenne","La médiane"], correct:1}
+];
+let qcmScore = 0;
+let qcmAnswered = 0;
+
+function initQcm(){
+  const container = document.getElementById('qcmContainer');
+  container.innerHTML = '';
+  qcmScore = 0;
+  qcmAnswered = 0;
+  document.getElementById('qcmScore').style.display = 'none';
+  qcmData.forEach((item, qi)=>{
+    const div = document.createElement('div');
+    div.className = 'qcm-q';
+    div.id = 'qcm-q-'+qi;
+    let html = '<div class="qn">Question ' + (qi+1) + '. ' + item.q + '</div>';
+    item.opts.forEach((opt, oi)=>{
+      html += '<button class="qcm-opt" onclick="answerQcm('+qi+','+oi+')">' + opt + '</button>';
+    });
+    div.innerHTML = html;
+    container.appendChild(div);
+  });
+}
+function answerQcm(qi, oi){
+  const div = document.getElementById('qcm-q-'+qi);
+  const buttons = div.querySelectorAll('.qcm-opt');
+  if(buttons[0].disabled) return; // already answered
+  const correct = qcmData[qi].correct;
+  buttons.forEach((b, idx)=>{
+    b.disabled = true;
+    if(idx === correct) b.classList.add('correct');
+    else if(idx === oi) b.classList.add('wrong');
+  });
+  if(oi === correct) qcmScore++;
+  qcmAnswered++;
+  if(qcmAnswered === qcmData.length){
+    showQcmScore();
+  }
+}
+function showQcmScore(){
+  const el = document.getElementById('qcmScore');
+  el.style.display = 'block';
+  const pct = Math.round(qcmScore/qcmData.length*100);
+  let msg = '';
+  if(pct >= 80) msg = 'Excellent travail ! 🎉';
+  else if(pct >= 50) msg = 'Bon travail, continue à t\'entraîner. 💪';
+  else msg = 'Reprends le cours et réessaie ! 📚';
+  el.textContent = 'Score : ' + qcmScore + ' / ' + qcmData.length + ' (' + pct + '%) — ' + msg;
+}
+function resetQcm(){
+  initQcm();
+}
+
+/* Redraw canvases on theme toggle */
+const themeBtnEl = document.getElementById('themeBtn');
+themeBtnEl.addEventListener('click', function(){
+  setTimeout(function(){
+    if(initialized[0]) drawBarChart();
+    if(initialized[3]) drawPieChart();
+    if(initialized[4]) drawDiceChart();
+  }, 50);
+});
+
+/* Init first tab */
+initBarChart();
+initialized[0] = true;
+</script>
+</body>
+</html>

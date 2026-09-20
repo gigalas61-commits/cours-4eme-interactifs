@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fractions : opérations</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f5f2ed;--surface:#ffffff;--surface2:#ebe6de;--text:#2c2418;--heading:#8b4513;
+  --muted:#6b5a48;--border:#d4c8b8;--accent:#a0522d;--accent-light:#faf5ef;
+  --radius:10px;--shadow:0 2px 8px rgba(0,0,0,.08);
+}
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#161210;--surface:#221c18;--surface2:#302820;--text:#ddd0c0;--heading:#e0a868;
+    --muted:#9a8878;--border:#403428;--accent:#d08840;--accent-light:#1e1610;
+    --shadow:0 2px 8px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161210;--surface:#221c18;--surface2:#302820;--text:#ddd0c0;--heading:#e0a868;
+  --muted:#9a8878;--border:#403428;--accent:#d08840;--accent-light:#1e1610;
+  --shadow:0 2px 8px rgba(0,0,0,.3);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Nunito Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.7;
+  min-height:100vh;
+}
+h1,h2,h3,h4{
+  font-family:'Cormorant Garamond',serif;
+  color:var(--heading);
+  line-height:1.3;
+}
+.container{max-width:860px;margin:0 auto;padding:16px}
+header{text-align:center;padding:32px 16px 20px;position:relative}
+header h1{font-size:2rem;font-weight:700;margin-bottom:4px}
+header p{color:var(--muted);font-size:.95rem}
+.badge{
+  display:inline-block;background:var(--accent);color:#fff;
+  font-size:.75rem;font-weight:700;padding:3px 12px;border-radius:20px;
+  position:absolute;top:16px;right:16px;letter-spacing:.5px;
+}
+.theme-toggle{
+  position:absolute;top:16px;left:16px;background:var(--surface2);
+  border:1px solid var(--border);border-radius:20px;padding:4px 10px;
+  cursor:pointer;font-size:1.1rem;line-height:1;
+}
+nav{
+  display:flex;gap:4px;overflow-x:auto;padding:0 16px 12px;
+  max-width:860px;margin:0 auto;scrollbar-width:thin;
+  -webkit-overflow-scrolling:touch;
+}
+nav button{
+  flex-shrink:0;background:var(--surface2);border:1.5px solid var(--border);
+  color:var(--muted);font-family:'Nunito Sans',sans-serif;font-size:.82rem;
+  font-weight:600;padding:8px 14px;border-radius:var(--radius);
+  cursor:pointer;transition:all .2s;white-space:nowrap;
+}
+nav button:hover{border-color:var(--accent);color:var(--accent)}
+nav button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.tab{
+  display:none;background:var(--surface);border-radius:var(--radius);
+  padding:28px 24px;margin:0 16px;box-shadow:var(--shadow);
+  border:1px solid var(--border);
+}
+.tab.active{display:block}
+.tab h2{font-size:1.55rem;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--border)}
+.tab h3{font-size:1.2rem;margin:22px 0 10px}
+.tab h4{font-size:1.05rem;margin:14px 0 8px;color:var(--accent)}
+.tab p,.tab li{margin-bottom:8px}
+.tab ul,.tab ol{padding-left:22px;margin-bottom:12px}
+.rule-box{
+  background:var(--accent-light);border-left:4px solid var(--accent);
+  padding:14px 18px;border-radius:0 var(--radius) var(--radius) 0;margin:14px 0;
+}
+.rule-box strong{color:var(--heading)}
+.example{
+  background:var(--surface2);padding:14px 18px;border-radius:var(--radius);
+  margin:12px 0;border:1px solid var(--border);
+}
+.example .label{
+  font-weight:700;color:var(--accent);font-size:.85rem;
+  text-transform:uppercase;margin-bottom:6px;
+}
+.frac{
+  display:inline-flex;flex-direction:column;align-items:center;
+  vertical-align:middle;margin:0 3px;
+}
+.frac .num{
+  border-bottom:1.5px solid currentColor;padding:0 4px 2px;
+  text-align:center;font-weight:600;
+}
+.frac .den{padding:2px 4px 0;text-align:center;font-weight:600}
+.big-frac .num,.big-frac .den{font-size:1.15em;padding:0 6px 2px}
+canvas{display:block;margin:14px auto;border-radius:var(--radius);max-width:100%}
+details{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--radius);margin:10px 0;padding:0;
+}
+details summary{
+  cursor:pointer;padding:10px 16px;font-weight:600;color:var(--accent);
+  list-style:none;display:flex;align-items:center;gap:8px;
+}
+details summary::before{
+  content:'>';display:inline-block;transition:transform .2s;font-weight:700;
+}
+details[open] summary::before{transform:rotate(90deg)}
+details .content{padding:4px 16px 14px}
+.exercise-input{
+  display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0;
+}
+.exercise-input input[type="number"]{
+  border:1.5px solid var(--border);border-radius:6px;padding:6px 10px;
+  font-size:.95rem;width:60px;text-align:center;background:var(--surface);
+  color:var(--text);font-family:'Nunito Sans',sans-serif;
+}
+.exercise-input input[type="number"]:focus{outline:none;border-color:var(--accent)}
+.exercise-input input[type="range"]{accent-color:var(--accent)}
+.btn{
+  background:var(--accent);color:#fff;border:none;padding:7px 16px;
+  border-radius:6px;cursor:pointer;font-family:'Nunito Sans',sans-serif;
+  font-weight:600;font-size:.88rem;transition:opacity .2s;
+}
+.btn:hover{opacity:.85}
+.btn-outline{
+  background:transparent;color:var(--accent);border:1.5px solid var(--accent);
+}
+.btn-outline:hover{background:var(--accent-light)}
+.feedback{margin:6px 0;font-weight:600;font-size:.9rem;min-height:22px}
+.feedback.correct{color:#2e7d32}
+.feedback.wrong{color:#c62828}
+.qcm-option{
+  display:block;background:var(--surface2);border:1.5px solid var(--border);
+  border-radius:8px;padding:10px 16px;margin:6px 0;cursor:pointer;
+  transition:all .15s;font-size:.95rem;
+}
+.qcm-option:hover{border-color:var(--accent)}
+.qcm-option.selected{border-color:var(--accent);background:var(--accent-light)}
+.qcm-option.correct-answer{border-color:#2e7d32;background:rgba(46,125,50,.1)}
+.qcm-option.wrong-answer{border-color:#c62828;background:rgba(198,40,40,.08)}
+.qcm-question{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--radius);padding:16px 18px;margin:14px 0;
+}
+.qcm-question h4{margin-top:0}
+.score-box{
+  text-align:center;padding:20px;background:var(--accent-light);
+  border-radius:var(--radius);border:2px solid var(--accent);
+  margin-top:16px;font-size:1.1rem;
+}
+.score-box .score-num{
+  font-family:'Cormorant Garamond',serif;font-size:2.4rem;
+  font-weight:700;color:var(--accent);
+}
+.step{
+  background:var(--surface2);border-radius:8px;padding:10px 14px;
+  margin:6px 0;border-left:3px solid var(--accent);
+}
+.diff-label{
+  display:inline-block;font-size:.7rem;font-weight:700;text-transform:uppercase;
+  padding:2px 8px;border-radius:10px;margin-bottom:6px;letter-spacing:.5px;
+}
+.diff-1{background:#c8e6c9;color:#2e7d32}
+.diff-2{background:#fff9c4;color:#f9a825}
+.diff-3{background:#ffccbc;color:#d84315}
+.warning{
+  background:#fff3e0;border-left:4px solid #e65100;padding:10px 14px;
+  border-radius:0 var(--radius) var(--radius) 0;margin:10px 0;
+  font-size:.9rem;color:#bf360c;
+}
+.method-list{counter-reset:meth;list-style:none;padding-left:0}
+.method-list li{counter-increment:meth;padding:6px 0 6px 32px;position:relative}
+.method-list li::before{
+  content:counter(meth);position:absolute;left:0;top:6px;
+  background:var(--accent);color:#fff;width:22px;height:22px;
+  border-radius:50%;text-align:center;line-height:22px;font-size:.78rem;font-weight:700;
+}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+footer{text-align:center;padding:24px 16px;color:var(--muted);font-size:.8rem}
+@media(max-width:600px){
+  header h1{font-size:1.5rem}
+  .tab{padding:18px 14px;margin:0 8px}
+  nav{padding:0 8px 10px;gap:3px}
+  nav button{padding:7px 10px;font-size:.76rem}
+  .container{padding:10px}
+  .badge{top:10px;right:10px;font-size:.68rem}
+  .theme-toggle{top:10px;left:10px}
+  .two-col{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<header>
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Changer le theme">&#x1F313;</button>
+  <span class="badge">4eme</span>
+  <h1>Fractions : operations</h1>
+  <p>Cours interactif &mdash; Cycle 4</p>
+</header>
+<nav id="tabs-nav"></nav>
+<div class="container" id="tabs-container"></div>
+<footer>Cours interactif &mdash; Mathematiques 4eme &mdash; Fractions : operations</footer>
+
+<script>
+/* ========== GLOBALS ========== */
+var TAB_NAMES=["Rappels","Addition / Soustraction","Multiplication","Division",
+               "Problemes","Exercices","QCM"];
+var tabsLoaded=new Array(TAB_NAMES.length).fill(false);
+var currentTab=0;
+
+/* Fraction HTML helpers */
+function F(n,d){
+  return '<span class="frac"><span class="num">'+n+'</span><span class="den">'+d+'</span></span>';
+}
+function FB(n,d){
+  return '<span class="frac big-frac"><span class="num">'+n+'</span><span class="den">'+d+'</span></span>';
+}
+
+/* Math helpers */
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=b;b=a%b;a=t;}return a;}
+function lcm(a,b){return Math.abs(a*b)/gcd(a,b);}
+
+/* Read CSS custom properties for canvas drawing */
+function getCSS(v){
+  try{return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+  catch(e){return '';}
+}
+
+/* Theme toggle */
+function toggleTheme(){
+  var r=document.documentElement;
+  if(r.getAttribute('data-theme')==='dark') r.setAttribute('data-theme','light');
+  else r.setAttribute('data-theme','dark');
+  /* Redraw all loaded canvases */
+  tabsLoaded.forEach(function(loaded,i){
+    if(loaded){var c=document.getElementById('canvas-'+i);if(c) initCanvas(i);}
+  });
+}
+
+/* ========== NAV / TABS SETUP ========== */
+(function buildNav(){
+  var nav=document.getElementById('tabs-nav');
+  var cont=document.getElementById('tabs-container');
+  TAB_NAMES.forEach(function(name,i){
+    var b=document.createElement('button');
+    b.textContent=name;
+    b.onclick=function(){showTab(i);};
+    if(i===0) b.className='active';
+    nav.appendChild(b);
+    var d=document.createElement('div');
+    d.className='tab'+(i===0?' active':'');
+    d.id='tab-'+i;
+    cont.appendChild(d);
+  });
+  initSection(0);
+})();
+
+function showTab(i){
+  document.querySelectorAll('nav button').forEach(function(b,j){
+    b.className=(j===i)?'active':'';
+  });
+  document.querySelectorAll('.tab').forEach(function(t,j){
+    t.className=(j===i)?'tab active':'tab';
+  });
+  currentTab=i;
+  if(!tabsLoaded[i]) initSection(i);
+}
+
+function initSection(i){
+  tabsLoaded[i]=true;
+  var el=document.getElementById('tab-'+i);
+  switch(i){
+    case 0:buildRappels(el);break;
+    case 1:buildAddSub(el);break;
+    case 2:buildMultiplication(el);break;
+    case 3:buildDivision(el);break;
+    case 4:buildProblemes(el);break;
+    case 5:buildExercices(el);break;
+    case 6:buildQCM(el);break;
+  }
+}
+
+/* Canvas init dispatcher */
+function initCanvas(i){
+  if(i===0){
+    var n=parseInt(document.getElementById('vis-num').value)||3;
+    var d=parseInt(document.getElementById('vis-den').value)||4;
+    drawVis(n,d);
+  }
+  if(i===1) drawAddBars();
+  if(i===2) drawRectArea();
+  if(i===3) drawDivisionVis();
+}
+
+/* ======================================================
+   TAB 0 : RAPPELS
+   ====================================================== */
+function buildRappels(el){
+  el.innerHTML=
+  '<h2>Rappels sur les fractions</h2>'+
+
+  '<h3>1. Ecriture fractionnaire</h3>'+
+  '<p>Une <strong>fraction</strong> est le quotient de deux nombres entiers. '+
+  'On ecrit '+F('a','b')+' ou <strong>a</strong> est le <em>numerateur</em> '+
+  'et <strong>b</strong> le <em>denominateur</em> (b &ne; 0).</p>'+
+  '<div class="rule-box"><strong>Vocabulaire :</strong><br>'+
+  '&bull; Le <em>numerateur</em> indique combien de parts on prend.<br>'+
+  '&bull; Le <em>denominateur</em> indique en combien de parts egales l\'unite est divisee.<br>'+
+  '&bull; Le denominateur ne peut <strong>jamais</strong> etre egal a zero.</div>'+
+  '<div class="example"><div class="label">Exemples</div>'+
+  '<p>'+F('3','4')+' = 3 &divide; 4 = 0,75 &nbsp;&mdash;&nbsp; '+
+  F('7','2')+' = 3,5 &nbsp;&mdash;&nbsp; '+
+  F('5','1')+' = 5 &nbsp;&mdash;&nbsp; '+
+  F('1','3')+' &asymp; 0,333...</p>'+
+  '<p>Une fraction est superieure a 1 lorsque le numerateur est plus grand que le denominateur : '+
+  F('9','4')+' = 2,25 &gt; 1</p></div>'+
+
+  '<h3>2. Fractions egales</h3>'+
+  '<div class="rule-box"><strong>Propriete fondamentale :</strong> On ne change pas la valeur d\'une '+
+  'fraction en multipliant (ou divisant) le numerateur et le denominateur par un meme nombre non nul.<br>'+
+  FB('a','b')+' = '+FB('a &times; k','b &times; k')+' pour tout k &ne; 0</div>'+
+  '<div class="example"><div class="label">Exemples</div>'+
+  '<p>'+F('2','3')+' = '+F('2 &times; 4','3 &times; 4')+' = '+F('8','12')+
+  ' &nbsp;&mdash;&nbsp; '+F('5','10')+' = '+F('5 &divide; 5','10 &divide; 5')+' = '+F('1','2')+'</p>'+
+  '<p>On peut verifier sur la droite graduee : '+F('2','3')+' et '+F('8','12')+
+  ' designent le meme point.</p></div>'+
+
+  '<h3>3. Simplification de fractions</h3>'+
+  '<p>Simplifier une fraction, c\'est diviser le numerateur et le denominateur par un meme '+
+  'diviseur commun. Le but est d\'obtenir la <strong>fraction irreductible</strong>.</p>'+
+  '<div class="rule-box"><strong>Fraction irreductible :</strong> Une fraction est irreductible '+
+  'lorsque le numerateur et le denominateur n\'ont aucun diviseur commun autre que 1. '+
+  'Pour l\'obtenir, on divise par le <strong>PGCD</strong>.</div>'+
+  '<div class="example"><div class="label">Exemple detaille</div>'+
+  '<div class="step">Simplifier '+F('18','24')+'</div>'+
+  '<div class="step">Diviseurs de 18 : 1, 2, 3, 6, 9, 18</div>'+
+  '<div class="step">Diviseurs de 24 : 1, 2, 3, 4, 6, 8, 12, 24</div>'+
+  '<div class="step">PGCD(18, 24) = 6</div>'+
+  '<div class="step">'+F('18','24')+' = '+F('18 &divide; 6','24 &divide; 6')+' = '+F('3','4')+
+  ' &larr; fraction irreductible</div></div>'+
+
+  '<h3>4. PGCD &mdash; rappel de la methode</h3>'+
+  '<p>Le <strong>PGCD</strong> (Plus Grand Commun Diviseur) de deux entiers est le plus grand nombre '+
+  'qui divise les deux. On utilise l\'<em>algorithme d\'Euclide</em> (divisions successives) :</p>'+
+  '<div class="example"><div class="label">Methode : algorithme d\'Euclide</div>'+
+  '<p>PGCD(48, 18) :</p>'+
+  '<div class="step">48 = 18 &times; 2 + <strong>12</strong></div>'+
+  '<div class="step">18 = 12 &times; 1 + <strong>6</strong></div>'+
+  '<div class="step">12 = 6 &times; 2 + <strong>0</strong> &larr; le reste est nul</div>'+
+  '<div class="step">Le dernier reste non nul est <strong>6</strong>, donc PGCD(48, 18) = 6</div></div>'+
+  '<div class="example"><div class="label">Autre exemple</div>'+
+  '<p>PGCD(56, 42) :</p>'+
+  '<div class="step">56 = 42 &times; 1 + 14</div>'+
+  '<div class="step">42 = 14 &times; 3 + 0</div>'+
+  '<div class="step">PGCD(56, 42) = <strong>14</strong></div></div>'+
+
+  '<h3>5. Outil interactif : simplification</h3>'+
+  '<p>Entre un numerateur et un denominateur pour voir la simplification :</p>'+
+  '<div class="exercise-input">'+
+  '<input id="simp-num" type="number" value="12" min="1" max="999"> / '+
+  '<input id="simp-den" type="number" value="18" min="1" max="999"> '+
+  '<button class="btn" onclick="doSimplify()">Simplifier</button></div>'+
+  '<div id="simp-result" class="feedback"></div>'+
+
+  '<h3>6. Comparaison de fractions</h3>'+
+  '<div class="rule-box"><strong>Pour comparer deux fractions</strong>, on les reduit au meme '+
+  'denominateur puis on compare les numerateurs.</div>'+
+  '<div class="example"><div class="label">Exemple</div>'+
+  '<p>Comparer '+F('3','4')+' et '+F('5','6')+' :</p>'+
+  '<div class="step">Denominateur commun : 12</div>'+
+  '<div class="step">'+F('3','4')+' = '+F('9','12')+' et '+F('5','6')+' = '+F('10','12')+'</div>'+
+  '<div class="step">9 &lt; 10 donc '+F('3','4')+' &lt; '+F('5','6')+'</div></div>'+
+
+  '<h3>7. Visualisation interactive</h3>'+
+  '<p>Deplace les curseurs pour voir la fraction sur le disque et la barre :</p>'+
+  '<div class="exercise-input">'+
+  '<label>Numerateur : <input id="vis-num" type="range" min="0" max="8" value="3"></label> &nbsp;'+
+  '<label>Denominateur : <input id="vis-den" type="range" min="1" max="12" value="4"></label> &nbsp;'+
+  '<span id="vis-label" style="font-weight:700">'+F('3','4')+'</span></div>'+
+  '<canvas id="canvas-0" width="500" height="220"></canvas>';
+
+  document.getElementById('vis-num').oninput=
+  document.getElementById('vis-den').oninput=function(){updateVis();};
+  setTimeout(function(){initCanvas(0);},50);
+}
+
+function doSimplify(){
+  var n=parseInt(document.getElementById('simp-num').value)||1;
+  var d=parseInt(document.getElementById('simp-den').value)||1;
+  var res=document.getElementById('simp-result');
+  if(d===0){res.innerHTML='<span class="wrong">Le denominateur ne peut pas etre 0 !</span>';return;}
+  var g=gcd(n,d);
+  if(g===1) res.innerHTML=F(n,d)+' est deja <strong>irreductible</strong>.';
+  else res.innerHTML='PGCD('+n+', '+d+') = '+g+' &rarr; '+F(n,d)+' = '+F(n/g,d/g);
+}
+
+function updateVis(){
+  var n=parseInt(document.getElementById('vis-num').value);
+  var d=parseInt(document.getElementById('vis-den').value);
+  document.getElementById('vis-label').innerHTML=F(n,d);
+  drawVis(n,d);
+}
+
+function drawVis(n,d){
+  var c=document.getElementById('canvas-0');if(!c)return;
+  var ctx=c.getContext('2d');
+  var W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);
+  var bg=getCSS('--surface2')||'#ebe6de';
+  var acc=getCSS('--accent')||'#a0522d';
+  var brd=getCSS('--border')||'#d4c8b8';
+  var txt=getCSS('--text')||'#2c2418';
+  var hd=getCSS('--heading')||'#8b4513';
+  /* --- Disc --- */
+  var cx=120,cy=105,r=80;
+  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle=bg;ctx.fill();
+  ctx.strokeStyle=brd;ctx.lineWidth=1.5;ctx.stroke();
+  for(var i=0;i<d;i++){
+    var angle=-Math.PI/2+i*2*Math.PI/d;
+    ctx.beginPath();ctx.moveTo(cx,cy);
+    ctx.lineTo(cx+r*Math.cos(angle),cy+r*Math.sin(angle));
+    ctx.strokeStyle=brd;ctx.stroke();
+  }
+  for(var i=0;i<Math.min(n,d);i++){
+    var a1=-Math.PI/2+i*2*Math.PI/d;
+    var a2=-Math.PI/2+(i+1)*2*Math.PI/d;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,a1,a2);ctx.closePath();
+    ctx.fillStyle=acc;ctx.globalAlpha=.55;ctx.fill();ctx.globalAlpha=1;
+  }
+  /* --- Bar --- */
+  var bx=260,by=50,bw=220,bh=40;
+  ctx.fillStyle=bg;ctx.fillRect(bx,by,bw,bh);
+  ctx.strokeStyle=brd;ctx.lineWidth=1.5;ctx.strokeRect(bx,by,bw,bh);
+  var partW=bw/d;
+  for(var i=0;i<Math.min(n,d);i++){
+    ctx.fillStyle=acc;ctx.globalAlpha=.55;
+    ctx.fillRect(bx+i*partW,by,partW,bh);ctx.globalAlpha=1;
+  }
+  for(var i=1;i<d;i++){
+    ctx.beginPath();ctx.moveTo(bx+i*partW,by);
+    ctx.lineTo(bx+i*partW,by+bh);ctx.strokeStyle=brd;ctx.stroke();
+  }
+  /* --- Decimal bar (proportion) --- */
+  var pct=d>0?Math.min(n/d,1):0;
+  var dby=120,dbh=20;
+  ctx.fillStyle=bg;ctx.fillRect(bx,dby,bw,dbh);ctx.strokeStyle=brd;ctx.strokeRect(bx,dby,bw,dbh);
+  ctx.fillStyle=acc;ctx.globalAlpha=.55;ctx.fillRect(bx,dby,bw*pct,dbh);ctx.globalAlpha=1;
+  /* --- Labels --- */
+  ctx.fillStyle=txt;ctx.font='600 14px Nunito Sans,sans-serif';ctx.textAlign='center';
+  ctx.fillText(n+'/'+d+(n>d?' (> 1)':''),bx+bw/2,by+bh+20);
+  ctx.fillText('Disque',cx,cy+r+22);
+  ctx.fillText('Barre fractionnee',bx+bw/2,by-10);
+  var decVal=d>0?(n/d).toFixed(3):'--';
+  ctx.fillText('Valeur decimale : '+decVal,bx+bw/2,dby+dbh+20);
+  ctx.fillText('Proportion',bx+bw/2,dby-6);
+}
+
+/* ======================================================
+   TAB 1 : ADDITION / SOUSTRACTION
+   ====================================================== */
+function buildAddSub(el){
+  el.innerHTML=
+  '<h2>Addition et soustraction de fractions</h2>'+
+
+  '<h3>1. Meme denominateur</h3>'+
+  '<div class="rule-box"><strong>Regle :</strong> Pour additionner (ou soustraire) des fractions '+
+  'de <em>meme denominateur</em>, on additionne (ou soustrait) les numerateurs et on garde le denominateur.<br>'+
+  FB('a','c')+' + '+FB('b','c')+' = '+FB('a + b','c')+
+  ' &nbsp;&nbsp;&nbsp; '+FB('a','c')+' &minus; '+FB('b','c')+' = '+FB('a &minus; b','c')+'</div>'+
+  '<div class="example"><div class="label">Exemples</div>'+
+  '<p>'+F('3','7')+' + '+F('2','7')+' = '+F('3 + 2','7')+' = '+F('5','7')+'</p>'+
+  '<p>'+F('11','5')+' &minus; '+F('4','5')+' = '+F('11 &minus; 4','5')+' = '+F('7','5')+'</p></div>'+
+  '<div class="warning"><strong>Erreur frequente :</strong> On n\'additionne PAS les denominateurs ! '+
+  F('3','7')+' + '+F('2','7')+' &ne; '+F('5','14')+'</div>'+
+
+  '<h3>2. Denominateurs differents</h3>'+
+  '<div class="rule-box"><strong>Methode en 4 etapes :</strong><br>'+
+  '<ol class="method-list">'+
+  '<li>Trouver le <strong>denominateur commun</strong> (le PPCM des denominateurs)</li>'+
+  '<li>Convertir chaque fraction avec ce nouveau denominateur</li>'+
+  '<li>Additionner (ou soustraire) les numerateurs</li>'+
+  '<li>Simplifier le resultat si possible</li></ol></div>'+
+
+  '<div class="example"><div class="label">Exemple detaille n&deg;1</div>'+
+  '<p>Calculer '+F('2','3')+' + '+F('1','4')+'</p>'+
+  '<div class="step"><strong>Etape 1 :</strong> PPCM(3, 4) = 12 &rarr; denominateur commun : 12</div>'+
+  '<div class="step"><strong>Etape 2 :</strong> '+F('2','3')+' = '+F('2 &times; 4','3 &times; 4')+' = '+F('8','12')+
+  ' &nbsp;et&nbsp; '+F('1','4')+' = '+F('1 &times; 3','4 &times; 3')+' = '+F('3','12')+'</div>'+
+  '<div class="step"><strong>Etape 3 :</strong> '+F('8','12')+' + '+F('3','12')+' = '+F('11','12')+'</div>'+
+  '<div class="step"><strong>Etape 4 :</strong> PGCD(11,12)=1, deja irreductible.</div></div>'+
+
+  '<div class="example"><div class="label">Exemple detaille n&deg;2</div>'+
+  '<p>Calculer '+F('5','6')+' &minus; '+F('1','4')+'</p>'+
+  '<div class="step">PPCM(6, 4) = 12</div>'+
+  '<div class="step">'+F('5','6')+' = '+F('10','12')+' &nbsp;et&nbsp; '+F('1','4')+' = '+F('3','12')+'</div>'+
+  '<div class="step">'+F('10','12')+' &minus; '+F('3','12')+' = '+F('7','12')+'</div></div>'+
+
+  '<h3>3. Additionner avec un entier</h3>'+
+  '<div class="rule-box">Un entier n s\'ecrit '+F('n','1')+', donc '+
+  'n + '+F('a','b')+' = '+F('n &times; b','b')+' + '+F('a','b')+' = '+F('n&times;b + a','b')+'</div>'+
+  '<div class="example"><div class="label">Exemple</div>'+
+  '2 + '+F('3','5')+' = '+F('10','5')+' + '+F('3','5')+' = '+F('13','5')+'</div>'+
+
+  '<h3>4. Exercices interactifs</h3>'+
+  '<p><strong>a)</strong> Calculer '+F('3','5')+' + '+F('1','3')+' = ?</p>'+
+  '<div class="exercise-input">'+
+  '<span>Den. commun :</span> <input id="as-dc" type="number" placeholder="?"> &nbsp;'+
+  '<span>Resultat : </span><input id="as-rn" type="number" placeholder="num"> / '+
+  '<input id="as-rd" type="number" placeholder="den"> '+
+  '<button class="btn" onclick="checkAddSub1()">Verifier</button></div>'+
+  '<div id="as-fb1" class="feedback"></div>'+
+
+  '<p style="margin-top:16px"><strong>b)</strong> Calculer '+F('5','6')+' &minus; '+F('1','4')+' = ?</p>'+
+  '<div class="exercise-input">'+
+  '<span>Resultat : </span><input id="as2-rn" type="number" placeholder="num"> / '+
+  '<input id="as2-rd" type="number" placeholder="den"> '+
+  '<button class="btn" onclick="checkAddSub2()">Verifier</button></div>'+
+  '<div id="as2-fb" class="feedback"></div>'+
+
+  '<p style="margin-top:16px"><strong>c)</strong> Calculer '+F('7','10')+' + '+F('2','15')+' = ?</p>'+
+  '<div class="exercise-input">'+
+  '<span>Resultat : </span><input id="as3-rn" type="number" placeholder="num"> / '+
+  '<input id="as3-rd" type="number" placeholder="den"> '+
+  '<button class="btn" onclick="checkAddSub3()">Verifier</button></div>'+
+  '<div id="as3-fb" class="feedback"></div>'+
+
+  '<p style="margin-top:16px"><strong>d)</strong> Calculer 3 &minus; '+F('5','8')+' = ?</p>'+
+  '<div class="exercise-input">'+
+  '<span>Resultat : </span><input id="as4-rn" type="number" placeholder="num"> / '+
+  '<input id="as4-rd" type="number" placeholder="den"> '+
+  '<button class="btn" onclick="checkAddSub4()">Verifier</button></div>'+
+  '<div id="as4-fb" class="feedback"></div>'+
+
+  '<h3>5. Visualisation &mdash; barres de fractions</h3>'+
+  '<p>Comparez '+F('2','3')+', '+F('3','4')+' et '+F('5','6')+' sur les barres ci-dessous :</p>'+
+  '<canvas id="canvas-1" width="500" height="220"></canvas>';
+
+  setTimeout(function(){initCanvas(1);},50);
+}
+
+function checkFrac(inpN,inpD,expectN,expectD,fbId){
+  var n=parseInt(document.getElementById(inpN).value);
+  var d=parseInt(document.getElementById(inpD).value);
+  var fb=document.getElementById(fbId);
+  if(isNaN(n)||isNaN(d)||d===0){
+    fb.className='feedback wrong';
+    fb.textContent='Remplis les deux champs (denominateur ≠ 0).';return;
+  }
+  if(n*expectD===expectN*d){
+    fb.className='feedback correct';
+    fb.textContent='Bravo, c\'est correct !';
+  } else {
+    fb.className='feedback wrong';
+    fb.textContent='Ce n\'est pas la bonne reponse. Reessaie !';
+  }
+}
+
+function checkAddSub1(){
+  var dc=parseInt(document.getElementById('as-dc').value);
+  var fb=document.getElementById('as-fb1');
+  if(dc!==15){
+    fb.className='feedback wrong';
+    fb.textContent='Le denominateur commun n\'est pas correct (pense au PPCM de 5 et 3).';return;
+  }
+  checkFrac('as-rn','as-rd',14,15,'as-fb1');
+}
+function checkAddSub2(){checkFrac('as2-rn','as2-rd',7,12,'as2-fb');}
+function checkAddSub3(){checkFrac('as3-rn','as3-rd',5,6,'as3-fb');}
+function checkAddSub4(){checkFrac('as4-rn','as4-rd',19,8,'as4-fb');}
+
+function drawAddBars(){
+  var c=document.getElementById('canvas-1');if(!c)return;
+  var ctx=c.getContext('2d');var W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);
+  var bg=getCSS('--surface2')||'#ebe6de';
+  var acc=getCSS('--accent')||'#a0522d';
+  var brd=getCSS('--border')||'#d4c8b8';
+  var txt=getCSS('--text')||'#2c2418';
+  var bx=60,bw=380,bh=32;
+  var fracs=[{n:2,d:3,label:'2/3'},{n:3,d:4,label:'3/4'},{n:5,d:6,label:'5/6'}];
+  fracs.forEach(function(fr,idx){
+    var by=25+idx*60;
+    ctx.fillStyle=bg;ctx.fillRect(bx,by,bw,bh);
+    ctx.strokeStyle=brd;ctx.lineWidth=1.5;ctx.strokeRect(bx,by,bw,bh);
+    var pw=bw/fr.d;
+    for(var i=0;i<fr.n;i++){
+      ctx.fillStyle=acc;ctx.globalAlpha=.5;
+      ctx.fillRect(bx+i*pw,by,pw,bh);ctx.globalAlpha=1;
+    }
+    for(var i=1;i<fr.d;i++){
+      ctx.beginPath();ctx.moveTo(bx+i*pw,by);
+      ctx.lineTo(bx+i*pw,by+bh);ctx.strokeStyle=brd;ctx.stroke();
+    }
+    ctx.fillStyle=txt;ctx.font='600 13px Nunito Sans,sans-serif';
+    ctx.textAlign='right';ctx.fillText(fr.label+' =',bx-8,by+22);
+    /* Decimal value at right */
+    ctx.textAlign='left';
+    ctx.fillText((fr.n/fr.d).toFixed(3),bx+bw+10,by+22);
+  });
+  ctx.textAlign='center';ctx.font='600 13px Nunito Sans,sans-serif';
+  ctx.fillStyle=txt;
+  ctx.fillText('On constate : 2/3 < 3/4 < 5/6',bx+bw/2,210);
+}
+
+/* ======================================================
+   TAB 2 : MULTIPLICATION
+   ====================================================== */
+function buildMultiplication(el){
+  el.innerHTML=
+  '<h2>Multiplication de fractions</h2>'+
+
+  '<h3>1. Regle du produit</h3>'+
+  '<div class="rule-box"><strong>Regle :</strong> Pour multiplier deux fractions, on multiplie '+
+  'les numerateurs entre eux et les denominateurs entre eux.<br>'+
+  FB('a','b')+' &times; '+FB('c','d')+' = '+FB('a &times; c','b &times; d')+'</div>'+
+  '<div class="example"><div class="label">Exemples</div>'+
+  '<p>'+F('3','5')+' &times; '+F('2','7')+' = '+F('3 &times; 2','5 &times; 7')+' = '+F('6','35')+'</p>'+
+  '<p>'+F('4','3')+' &times; '+F('5','2')+' = '+F('20','6')+' = '+F('10','3')+'</p></div>'+
+  '<div class="warning"><strong>Attention :</strong> Contrairement a l\'addition, on multiplie '+
+  'directement les numerateurs ET les denominateurs.</div>'+
+
+  '<h3>2. Simplification avant calcul</h3>'+
+  '<p>Pour eviter les grands nombres, on peut <strong>simplifier en croix</strong> avant de multiplier : '+
+  'on simplifie un numerateur avec un denominateur de l\'<em>autre</em> fraction.</p>'+
+  '<div class="example"><div class="label">Exemple 1</div>'+
+  '<p>'+F('4','9')+' &times; '+F('3','8')+'</p>'+
+  '<div class="step">4 et 8 ont un facteur commun 4 : 4&divide;4=1, 8&divide;4=2</div>'+
+  '<div class="step">3 et 9 ont un facteur commun 3 : 3&divide;3=1, 9&divide;3=3</div>'+
+  '<div class="step">'+F('1','3')+' &times; '+F('1','2')+' = '+F('1','6')+'</div></div>'+
+  '<div class="example"><div class="label">Exemple 2</div>'+
+  '<p>'+F('15','8')+' &times; '+F('4','25')+'</p>'+
+  '<div class="step">15 et 25 : PGCD=5 &rarr; 15&divide;5=3, 25&divide;5=5</div>'+
+  '<div class="step">4 et 8 : PGCD=4 &rarr; 4&divide;4=1, 8&divide;4=2</div>'+
+  '<div class="step">'+F('3','2')+' &times; '+F('1','5')+' = '+F('3','10')+'</div></div>'+
+
+  '<h3>3. Multiplier par un entier</h3>'+
+  '<div class="rule-box">Un entier n s\'ecrit '+F('n','1')+'. Donc : '+
+  'n &times; '+F('a','b')+' = '+F('n &times; a','b')+'</div>'+
+  '<div class="example"><div class="label">Exemples</div>'+
+  '<p>5 &times; '+F('3','4')+' = '+F('15','4')+' &nbsp;&mdash;&nbsp; '+
+  '7 &times; '+F('2','3')+' = '+F('14','3')+'</p></div>'+
+
+  '<h3>4. Produit et signe</h3>'+
+  '<div class="rule-box"><strong>Regle des signes :</strong><br>'+
+  '&bull; (+) &times; (+) = (+) &nbsp;&mdash;&nbsp; (&minus;) &times; (&minus;) = (+)<br>'+
+  '&bull; (+) &times; (&minus;) = (&minus;) &nbsp;&mdash;&nbsp; (&minus;) &times; (+) = (&minus;)</div>'+
+  '<div class="example"><div class="label">Exemple</div>'+
+  F('&minus;3','5')+' &times; '+F('2','&minus;7')+' = '+F('(&minus;3)&times;2','5&times;(&minus;7)')+
+  ' = '+F('&minus;6','&minus;35')+' = '+F('6','35')+'</div>'+
+
+  '<h3>5. Exercices interactifs</h3>'+
+  '<p><strong>a)</strong> '+F('2','3')+' &times; '+F('5','4')+' = ?</p>'+
+  '<div class="exercise-input"><input id="m1-n" type="number" placeholder="num"> / '+
+  '<input id="m1-d" type="number" placeholder="den"> '+
+  '<button class="btn" onclick="checkMul(1,10,12)">Verifier</button></div>'+
+  '<div id="m1-fb" class="feedback"></div>'+
+
+  '<p><strong>b)</strong> '+F('7','6')+' &times; '+F('3','14')+' = ? (simplifie !)</p>'+
+  '<div class="exercise-input"><input id="m2-n" type="number" placeholder="num"> / '+
+  '<input id="m2-d" type="number" placeholder="den"> '+
+  '<button class="btn" onclick="checkMul(2,1,4)">Verifier</button></div>'+
+  '<div id="m2-fb" class="feedback"></div>'+
+
+  '<p><strong>c)</strong> 6 &times; '+F('5','9')+' = ?</p>'+
+  '<div class="exercise-input"><input id="m3-n" type="number" placeholder="num"> / '+
+  '<input id="m3-d" type="number" placeholder="den"> '+
+  '<button class="btn" onclick="checkMul(3,10,3)">Verifier</button></div>'+
+  '<div id="m3-fb" class="feedback"></div>'+
+
+  '<p><strong>d)</strong> '+F('8','15')+' &times; '+F('5','12')+' = ?</p>'+
+  '<div class="exercise-input"><input id="m4-n" type="number" placeholder="num"> / '+
+  '<input id="m4-d" type="number" placeholder="den"> '+
+  '<button class="btn" onclick="checkMul(4,2,9)">Verifier</button></div>'+
+  '<div id="m4-fb" class="feedback"></div>'+
+
+  '<h3>6. Visualisation : l\'aire du rectangle</h3>'+
+  '<p>Le produit '+F('2','3')+' &times; '+F('3','4')+
+  ' correspond a l\'aire coloree d\'un rectangle dont les cotes mesurent '+
+  F('2','3')+' et '+F('3','4')+' d\'une unite :</p>'+
+  '<canvas id="canvas-2" width="500" height="300"></canvas>';
+
+  setTimeout(function(){initCanvas(2);},50);
+}
+
+function checkMul(num,eN,eD){
+  checkFrac('m'+num+'-n','m'+num+'-d',eN,eD,'m'+num+'-fb');
+}
+
+function drawRectArea(){
+  var c=document.getElementById('canvas-2');if(!c)return;
+  var ctx=c.getContext('2d');var W=c.width,H=c.height;ctx.clearRect(0,0,W,H);
+  var bg=getCSS('--surface2')||'#ebe6de';
+  var acc=getCSS('--accent')||'#a0522d';
+  var brd=getCSS('--border')||'#d4c8b8';
+  var txt=getCSS('--text')||'#2c2418';
+  var ox=90,oy=30,sw=300,sh=210;
+  var cw=sw/3,rh=sh/4;
+  /* Full grid background */
+  ctx.fillStyle=bg;ctx.fillRect(ox,oy,sw,sh);
+  /* Colored area: 2 cols x 3 rows = 6 out of 12 cells */
+  for(var r=0;r<3;r++){
+    for(var cc=0;cc<2;cc++){
+      ctx.fillStyle=acc;ctx.globalAlpha=.45;
+      ctx.fillRect(ox+cc*cw,oy+r*rh,cw,rh);ctx.globalAlpha=1;
+    }
+  }
+  /* Grid lines */
+  ctx.strokeStyle=brd;ctx.lineWidth=1;
+  for(var i=0;i<=3;i++){
+    ctx.beginPath();ctx.moveTo(ox+i*cw,oy);ctx.lineTo(ox+i*cw,oy+sh);ctx.stroke();
+  }
+  for(var i=0;i<=4;i++){
+    ctx.beginPath();ctx.moveTo(ox,oy+i*rh);ctx.lineTo(ox+sw,oy+i*rh);ctx.stroke();
+  }
+  ctx.strokeStyle=txt;ctx.lineWidth=2;ctx.strokeRect(ox,oy,sw,sh);
+  /* Highlight boundary of colored zone */
+  ctx.strokeStyle=acc;ctx.lineWidth=2.5;
+  ctx.strokeRect(ox,oy,2*cw,3*rh);
+  /* Labels */
+  ctx.fillStyle=txt;ctx.font='600 13px Nunito Sans,sans-serif';ctx.textAlign='center';
+  ctx.fillText('← 2/3 de la largeur →',ox+cw,oy+sh+20);
+  ctx.save();ctx.translate(ox-20,oy+rh*1.5);ctx.rotate(-Math.PI/2);
+  ctx.fillText('3/4 de la hauteur',0,0);ctx.restore();
+  /* Result text */
+  ctx.fillStyle=acc;ctx.font='700 14px Nunito Sans,sans-serif';
+  ctx.fillText('Cases colorees : 2×3 = 6',ox+sw/2,oy+sh+44);
+  ctx.fillText('Cases totales : 3×4 = 12',ox+sw/2,oy+sh+62);
+  ctx.fillText('Aire = 6/12 = 1/2',ox+sw/2,oy+sh+82);
+}
+
+/* ======================================================
+   TAB 3 : DIVISION
+   ====================================================== */
+function buildDivision(el){
+  el.innerHTML=
+  '<h2>Division de fractions</h2>'+
+
+  '<h3>1. Inverse d\'une fraction</h3>'+
+  '<div class="rule-box"><strong>Definition :</strong> L\'<em>inverse</em> d\'un nombre non nul '+
+  F('a','b')+' est le nombre '+F('b','a')+'. Leur produit vaut toujours 1.<br>'+
+  F('a','b')+' &times; '+F('b','a')+' = '+F('a &times; b','b &times; a')+' = 1</div>'+
+  '<div class="example"><div class="label">Exemples d\'inverses</div>'+
+  '<p>&bull; L\'inverse de '+F('3','5')+' est '+F('5','3')+
+  ' &nbsp;&mdash;&nbsp; Verification : '+F('3','5')+' &times; '+F('5','3')+' = '+F('15','15')+' = 1</p>'+
+  '<p>&bull; L\'inverse de 4 = '+F('4','1')+' est '+F('1','4')+
+  ' &nbsp;&mdash;&nbsp; Verification : 4 &times; '+F('1','4')+' = '+F('4','4')+' = 1</p>'+
+  '<p>&bull; L\'inverse de '+F('1','7')+' est '+F('7','1')+' = 7</p></div>'+
+  '<div class="warning"><strong>Attention :</strong> Le nombre 0 n\'a pas d\'inverse '+
+  '(on ne peut pas diviser par zero).</div>'+
+
+  '<h3>2. Regle de la division</h3>'+
+  '<div class="rule-box"><strong>Regle :</strong> Diviser par une fraction, c\'est '+
+  '<em>multiplier par son inverse</em>.<br>'+
+  FB('a','b')+' &divide; '+FB('c','d')+' = '+FB('a','b')+' &times; '+FB('d','c')+
+  ' = '+FB('a &times; d','b &times; c')+'</div>'+
+  '<div class="example"><div class="label">Exemple detaille</div>'+
+  '<p>Calculer '+F('3','4')+' &divide; '+F('2','5')+'</p>'+
+  '<div class="step"><strong>Etape 1 :</strong> On identifie l\'inverse de '+F('2','5')+' : c\'est '+F('5','2')+'</div>'+
+  '<div class="step"><strong>Etape 2 :</strong> On remplace la division par une multiplication : '+
+  F('3','4')+' &times; '+F('5','2')+'</div>'+
+  '<div class="step"><strong>Etape 3 :</strong> On multiplie : '+F('3 &times; 5','4 &times; 2')+' = '+F('15','8')+'</div></div>'+
+
+  '<h3>3. Cas particulier : diviser par un entier</h3>'+
+  '<div class="rule-box">'+F('a','b')+' &divide; n = '+F('a','b')+' &times; '+F('1','n')+
+  ' = '+F('a','b &times; n')+'</div>'+
+  '<div class="example"><div class="label">Exemples</div>'+
+  '<p>'+F('5','6')+' &divide; 3 = '+F('5','6')+' &times; '+F('1','3')+' = '+F('5','18')+'</p>'+
+  '<p>'+F('7','4')+' &divide; 2 = '+F('7','8')+'</p></div>'+
+
+  '<h3>4. Cas particulier : un entier divise par une fraction</h3>'+
+  '<div class="rule-box">n &divide; '+F('a','b')+' = n &times; '+F('b','a')+' = '+F('n &times; b','a')+'</div>'+
+  '<div class="example"><div class="label">Exemple</div>'+
+  '5 &divide; '+F('2','7')+' = 5 &times; '+F('7','2')+' = '+F('35','2')+'</div>'+
+
+  '<h3>5. Enchainement d\'operations</h3>'+
+  '<div class="example"><div class="label">Exemple</div>'+
+  '<p>Calculer '+F('2','3')+' &divide; '+F('4','9')+' &times; '+F('3','5')+'</p>'+
+  '<div class="step">D\'abord la division : '+F('2','3')+' &times; '+F('9','4')+' = '+F('18','12')+' = '+F('3','2')+'</div>'+
+  '<div class="step">Puis la multiplication : '+F('3','2')+' &times; '+F('3','5')+' = '+F('9','10')+'</div></div>'+
+
+  '<h3>6. Exercices progressifs</h3>'+
+  '<p><strong>a)</strong> '+F('4','5')+' &divide; '+F('2','3')+' = ?</p>'+
+  '<div class="exercise-input"><input id="d1-n" type="number" placeholder="num"> / '+
+  '<input id="d1-d" type="number" placeholder="den"> '+
+  '<button class="btn" onclick="checkDiv(1,12,10)">Verifier</button></div>'+
+  '<div id="d1-fb" class="feedback"></div>'+
+
+  '<p><strong>b)</strong> '+F('7','8')+' &divide; '+F('7','4')+' = ?</p>'+
+  '<div class="exercise-input"><input id="d2-n" type="number" placeholder="num"> / '+
+  '<input id="d2-d" type="number" placeholder="den"> '+
+  '<button class="btn" onclick="checkDiv(2,1,2)">Verifier</button></div>'+
+  '<div id="d2-fb" class="feedback"></div>'+
+
+  '<p><strong>c)</strong> '+F('9','10')+' &divide; 3 = ?</p>'+
+  '<div class="exercise-input"><input id="d3-n" type="number" placeholder="num"> / '+
+  '<input id="d3-d" type="number" placeholder="den"> '+
+  '<button class="btn" onclick="checkDiv(3,3,10)">Verifier</button></div>'+
+  '<div id="d3-fb" class="feedback"></div>'+
+
+  '<p><strong>d)</strong> 5 &divide; '+F('2','7')+' = ?</p>'+
+  '<div class="exercise-input"><input id="d4-n" type="number" placeholder="num"> / '+
+  '<input id="d4-d" type="number" placeholder="den"> '+
+  '<button class="btn" onclick="checkDiv(4,35,2)">Verifier</button></div>'+
+  '<div id="d4-fb" class="feedback"></div>'+
+
+  '<p><strong>e)</strong> '+F('5','12')+' &divide; '+F('10','9')+' = ?</p>'+
+  '<div class="exercise-input"><input id="d5-n" type="number" placeholder="num"> / '+
+  '<input id="d5-d" type="number" placeholder="den"> '+
+  '<button class="btn" onclick="checkDiv(5,3,8)">Verifier</button></div>'+
+  '<div id="d5-fb" class="feedback"></div>'+
+
+  '<h3>7. Visualisation : partager en parts fractionnaires</h3>'+
+  '<p>Combien de fois '+F('1','4')+' entre dans '+F('3','4')+' ? Reponse : 3 fois (car '+
+  F('3','4')+' &divide; '+F('1','4')+' = 3).</p>'+
+  '<canvas id="canvas-3" width="500" height="160"></canvas>';
+
+  setTimeout(function(){initCanvas(3);},50);
+}
+
+function checkDiv(num,eN,eD){
+  checkFrac('d'+num+'-n','d'+num+'-d',eN,eD,'d'+num+'-fb');
+}
+
+function drawDivisionVis(){
+  var c=document.getElementById('canvas-3');if(!c)return;
+  var ctx=c.getContext('2d');var W=c.width,H=c.height;ctx.clearRect(0,0,W,H);
+  var bg=getCSS('--surface2')||'#ebe6de';
+  var acc=getCSS('--accent')||'#a0522d';
+  var brd=getCSS('--border')||'#d4c8b8';
+  var txt=getCSS('--text')||'#2c2418';
+  var bx=60,bw=380,bh=40;
+  /* Full bar divided in 4 */
+  var by=25;
+  ctx.fillStyle=bg;ctx.fillRect(bx,by,bw,bh);
+  ctx.strokeStyle=brd;ctx.lineWidth=1.5;ctx.strokeRect(bx,by,bw,bh);
+  var pw=bw/4;
+  /* Color 3 parts */
+  for(var i=0;i<3;i++){
+    ctx.fillStyle=acc;ctx.globalAlpha=.5;
+    ctx.fillRect(bx+i*pw,by,pw,bh);ctx.globalAlpha=1;
+  }
+  /* Dividers and bracket markers */
+  var colors=['#c62828','#2e7d32','#1565c0'];
+  for(var i=0;i<4;i++){
+    ctx.beginPath();ctx.moveTo(bx+i*pw,by);
+    ctx.lineTo(bx+i*pw,by+bh);ctx.strokeStyle=brd;ctx.lineWidth=1.5;ctx.stroke();
+  }
+  /* Brackets for each 1/4 */
+  for(var i=0;i<3;i++){
+    var x1=bx+i*pw+2,x2=bx+(i+1)*pw-2,bby=by+bh+12;
+    ctx.strokeStyle=colors[i];ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(x1,bby);ctx.lineTo(x1,bby+8);
+    ctx.lineTo(x2,bby+8);ctx.lineTo(x2,bby);ctx.stroke();
+    ctx.fillStyle=colors[i];ctx.font='700 12px Nunito Sans,sans-serif';ctx.textAlign='center';
+    ctx.fillText('1/4',(x1+x2)/2,bby+24);
+  }
+  ctx.fillStyle=txt;ctx.font='600 13px Nunito Sans,sans-serif';ctx.textAlign='right';
+  ctx.fillText('3/4 :',bx-8,by+26);
+  ctx.textAlign='center';
+  ctx.fillText('3/4 ÷ 1/4 = 3 (on peut placer 3 parts de 1/4 dans 3/4)',bx+bw/2,by+bh+54);
+}
+
+/* ======================================================
+   TAB 4 : PROBLEMES
+   ====================================================== */
+function buildProblemes(el){
+  el.innerHTML=
+  '<h2>Problemes avec des fractions</h2>'+
+
+  '<h3>1. Fraction d\'une quantite</h3>'+
+  '<div class="rule-box"><strong>Prendre '+F('a','b')+' d\'une quantite Q</strong>, '+
+  'c\'est calculer Q &times; '+F('a','b')+' = '+F('Q &times; a','b')+'<br>'+
+  '<em>Methode :</em> on divise par le denominateur, puis on multiplie par le numerateur.</div>'+
+  '<div class="example"><div class="label">Exemple</div>'+
+  '<p>Les '+F('3','4')+' de 240 eleves sont demi-pensionnaires.</p>'+
+  '<div class="step">240 &divide; 4 = 60 (on trouve un quart)</div>'+
+  '<div class="step">60 &times; 3 = 180 (on prend trois quarts)</div>'+
+  '<div class="step">Il y a <strong>180 eleves</strong> demi-pensionnaires.</div></div>'+
+
+  '<h3>2. Pourcentages et fractions</h3>'+
+  '<div class="rule-box">Un pourcentage est une fraction de denominateur 100 :<br>'+
+  '25 % = '+F('25','100')+' = '+F('1','4')+' &nbsp;&mdash;&nbsp; '+
+  '50 % = '+F('1','2')+' &nbsp;&mdash;&nbsp; '+
+  '75 % = '+F('3','4')+' &nbsp;&mdash;&nbsp; '+
+  '20 % = '+F('1','5')+'</div>'+
+  '<div class="example"><div class="label">Exemple</div>'+
+  '<p>35 % de 200 = '+F('35','100')+' &times; 200 = '+F('7000','100')+' = <strong>70</strong></p></div>'+
+
+  '<h3>3. Probleme 1 &mdash; Recette de cuisine</h3>'+
+  '<div class="example"><p>Une recette de crepes pour <strong>8 personnes</strong> necessite '+
+  F('3','4')+' de litre de lait. Quelle quantite de lait faut-il pour <strong>6 personnes</strong> ?</p></div>'+
+  '<details><summary>Voir la correction</summary><div class="content">'+
+  '<div class="step"><strong>Pour 1 personne :</strong> '+F('3','4')+' &divide; 8 = '+F('3','4')+
+  ' &times; '+F('1','8')+' = '+F('3','32')+' L</div>'+
+  '<div class="step"><strong>Pour 6 personnes :</strong> 6 &times; '+F('3','32')+' = '+F('18','32')+
+  ' = '+F('9','16')+' L</div>'+
+  '<p>Il faut <strong>'+F('9','16')+' de litre</strong> de lait (&asymp; 0,5625 L).</p></div></details>'+
+
+  '<h3>4. Probleme 2 &mdash; Repartition</h3>'+
+  '<div class="example"><p>Dans une classe de 30 eleves, '+F('2','5')+' font de l\'anglais LV1, '+
+  F('1','3')+' font de l\'allemand LV1 et le reste fait de l\'espagnol LV1. '+
+  'Combien d\'eleves font de l\'espagnol ?</p></div>'+
+  '<details><summary>Voir la correction</summary><div class="content">'+
+  '<div class="step">Anglais : '+F('2','5')+' &times; 30 = 12 eleves</div>'+
+  '<div class="step">Allemand : '+F('1','3')+' &times; 30 = 10 eleves</div>'+
+  '<div class="step">Espagnol : 30 &minus; 12 &minus; 10 = <strong>8 eleves</strong></div>'+
+  '<p>Verification par les fractions : 1 &minus; '+F('2','5')+' &minus; '+F('1','3')+' = '+
+  F('15','15')+' &minus; '+F('6','15')+' &minus; '+F('5','15')+' = '+F('4','15')+
+  ' et '+F('4','15')+' &times; 30 = 8 &check;</p></div></details>'+
+
+  '<h3>5. Probleme 3 &mdash; Remises successives</h3>'+
+  '<div class="example"><p>Un article coute 80 &euro;. Il beneficie d\'une remise de '+F('1','5')+
+  ', puis d\'une seconde remise de '+F('1','4')+' sur le prix reduit. Quel est le prix final ?</p></div>'+
+  '<details><summary>Voir la correction</summary><div class="content">'+
+  '<div class="step">1re remise : '+F('1','5')+' &times; 80 = 16 &euro; &rarr; prix = 80 &minus; 16 = 64 &euro;</div>'+
+  '<div class="step">2e remise : '+F('1','4')+' &times; 64 = 16 &euro; &rarr; prix = 64 &minus; 16 = <strong>48 &euro;</strong></div>'+
+  '<p><em>Autre methode :</em> prix = 80 &times; (1 &minus; '+F('1','5')+') &times; (1 &minus; '+F('1','4')+
+  ') = 80 &times; '+F('4','5')+' &times; '+F('3','4')+' = 80 &times; '+F('12','20')+
+  ' = 80 &times; '+F('3','5')+' = <strong>48 &euro;</strong></p></div></details>'+
+
+  '<h3>6. Probleme 4 &mdash; Piscine</h3>'+
+  '<div class="example"><p>Une piscine est remplie aux '+F('2','3')+'. On rajoute '+F('1','6')+
+  ' de sa capacite. Quelle fraction de la piscine est remplie ? '+
+  'Si la piscine a une capacite de 54 m&sup3;, quel volume d\'eau contient-elle ?</p></div>'+
+  '<details><summary>Voir la correction</summary><div class="content">'+
+  '<div class="step">Fraction remplie : '+F('2','3')+' + '+F('1','6')+' = '+F('4','6')+
+  ' + '+F('1','6')+' = '+F('5','6')+'</div>'+
+  '<div class="step">Volume : '+F('5','6')+' &times; 54 = '+F('270','6')+' = <strong>45 m&sup3;</strong></div></div></details>'+
+
+  '<h3>7. Probleme 5 &mdash; Partage d\'heritage</h3>'+
+  '<div class="example"><p>Un terrain de 1 200 m&sup2; est partage entre trois enfants. '+
+  'L\'aine recoit '+F('5','12')+' du terrain, le cadet recoit '+F('1','3')+
+  ' et le benjamin recoit le reste. Quelle surface recoit chaque enfant ?</p></div>'+
+  '<details><summary>Voir la correction</summary><div class="content">'+
+  '<div class="step">Aine : '+F('5','12')+' &times; 1200 = 500 m&sup2;</div>'+
+  '<div class="step">Cadet : '+F('1','3')+' &times; 1200 = '+F('1','3')+' = '+F('4','12')+
+  ' du terrain, soit 400 m&sup2;</div>'+
+  '<div class="step">Fraction du benjamin : 1 &minus; '+F('5','12')+' &minus; '+F('4','12')+' = '+F('3','12')+' = '+F('1','4')+'</div>'+
+  '<div class="step">Benjamin : '+F('1','4')+' &times; 1200 = <strong>300 m&sup2;</strong></div>'+
+  '<p>Verification : 500 + 400 + 300 = 1200 m&sup2; &check;</p></div></details>'+
+
+  '<h3>8. Probleme 6 &mdash; Vitesse et distance</h3>'+
+  '<div class="example"><p>Un cycliste parcourt '+F('3','5')+' d\'un trajet de 45 km le matin, '+
+  'puis '+F('1','4')+' du trajet l\'apres-midi. Quelle distance lui reste-t-il ?</p></div>'+
+  '<details><summary>Voir la correction</summary><div class="content">'+
+  '<div class="step">Matin : '+F('3','5')+' &times; 45 = 27 km</div>'+
+  '<div class="step">Apres-midi : '+F('1','4')+' &times; 45 = 11,25 km</div>'+
+  '<div class="step">Total parcouru : '+F('3','5')+' + '+F('1','4')+' = '+F('12','20')+' + '+F('5','20')+' = '+F('17','20')+' du trajet</div>'+
+  '<div class="step">Reste : 1 &minus; '+F('17','20')+' = '+F('3','20')+' soit '+F('3','20')+' &times; 45 = '+F('135','20')+
+  ' = <strong>6,75 km</strong></div></div></details>';
+}
+
+/* ======================================================
+   TAB 5 : EXERCICES
+   ====================================================== */
+function buildExercices(el){
+  el.innerHTML=
+  '<h2>Exercices</h2>'+
+
+  '<div class="diff-label diff-1">Appliquer</div>'+
+  '<h3>Exercice 1 &mdash; Simplifier des fractions</h3>'+
+  '<p>Simplifier au maximum chaque fraction :</p>'+
+  '<p>a) '+F('12','18')+' &nbsp; b) '+F('35','49')+' &nbsp; c) '+F('24','60')+' &nbsp; d) '+F('48','72')+' &nbsp; e) '+F('45','75')+'</p>'+
+  '<details><summary>Correction</summary><div class="content">'+
+  '<p>a) PGCD(12,18) = 6 &rarr; '+F('12&divide;6','18&divide;6')+' = '+F('2','3')+'</p>'+
+  '<p>b) PGCD(35,49) = 7 &rarr; '+F('35&divide;7','49&divide;7')+' = '+F('5','7')+'</p>'+
+  '<p>c) PGCD(24,60) = 12 &rarr; '+F('24&divide;12','60&divide;12')+' = '+F('2','5')+'</p>'+
+  '<p>d) PGCD(48,72) = 24 &rarr; '+F('48&divide;24','72&divide;24')+' = '+F('2','3')+'</p>'+
+  '<p>e) PGCD(45,75) = 15 &rarr; '+F('45&divide;15','75&divide;15')+' = '+F('3','5')+'</p></div></details>'+
+
+  '<h3>Exercice 2 &mdash; Additions et soustractions</h3>'+
+  '<p>Calculer et simplifier :</p>'+
+  '<p>a) '+F('3','8')+' + '+F('5','8')+' &nbsp; b) '+F('2','5')+' + '+F('3','10')+
+  ' &nbsp; c) '+F('1','3')+' + '+F('2','7')+' &nbsp; d) '+F('7','9')+' &minus; '+F('1','3')+
+  ' &nbsp; e) '+F('11','12')+' &minus; '+F('3','4')+'</p>'+
+  '<details><summary>Correction</summary><div class="content">'+
+  '<p>a) '+F('3+5','8')+' = '+F('8','8')+' = <strong>1</strong></p>'+
+  '<p>b) '+F('4','10')+' + '+F('3','10')+' = '+F('7','10')+'</p>'+
+  '<p>c) '+F('7','21')+' + '+F('6','21')+' = '+F('13','21')+'</p>'+
+  '<p>d) '+F('7','9')+' &minus; '+F('3','9')+' = '+F('4','9')+'</p>'+
+  '<p>e) '+F('11','12')+' &minus; '+F('9','12')+' = '+F('2','12')+' = '+F('1','6')+'</p></div></details>'+
+
+  '<h3>Exercice 3 &mdash; Soustractions avec entier</h3>'+
+  '<p>Calculer :</p>'+
+  '<p>a) '+F('5','6')+' &minus; '+F('1','3')+' &nbsp; b) '+F('7','12')+' &minus; '+F('1','4')+
+  ' &nbsp; c) 2 &minus; '+F('3','7')+' &nbsp; d) 4 &minus; '+F('7','3')+'</p>'+
+  '<details><summary>Correction</summary><div class="content">'+
+  '<p>a) '+F('5','6')+' &minus; '+F('2','6')+' = '+F('3','6')+' = '+F('1','2')+'</p>'+
+  '<p>b) '+F('7','12')+' &minus; '+F('3','12')+' = '+F('4','12')+' = '+F('1','3')+'</p>'+
+  '<p>c) '+F('14','7')+' &minus; '+F('3','7')+' = '+F('11','7')+'</p>'+
+  '<p>d) '+F('12','3')+' &minus; '+F('7','3')+' = '+F('5','3')+'</p></div></details>'+
+
+  '<div class="diff-label diff-2">Comprendre</div>'+
+  '<h3>Exercice 4 &mdash; Multiplications</h3>'+
+  '<p>Calculer et simplifier :</p>'+
+  '<p>a) '+F('3','4')+' &times; '+F('8','9')+' &nbsp; b) '+F('5','6')+' &times; '+F('12','25')+
+  ' &nbsp; c) '+F('7','10')+' &times; '+F('5','21')+' &nbsp; d) '+F('9','16')+' &times; '+F('8','3')+'</p>'+
+  '<details><summary>Correction</summary><div class="content">'+
+  '<p>a) Simplification croisee : 3 et 9 par 3, 8 et 4 par 4 &rarr; '+F('1','1')+' &times; '+F('2','3')+' = '+F('2','3')+'</p>'+
+  '<p>b) 5 et 25 par 5, 12 et 6 par 6 &rarr; '+F('1','1')+' &times; '+F('2','5')+' = '+F('2','5')+'</p>'+
+  '<p>c) 7 et 21 par 7, 5 et 10 par 5 &rarr; '+F('1','2')+' &times; '+F('1','3')+' = '+F('1','6')+'</p>'+
+  '<p>d) 9 et 3 par 3, 8 et 16 par 8 &rarr; '+F('3','2')+' &times; '+F('1','1')+' = '+F('3','2')+'</p></div></details>'+
+
+  '<h3>Exercice 5 &mdash; Divisions</h3>'+
+  '<p>Calculer et simplifier :</p>'+
+  '<p>a) '+F('3','5')+' &divide; '+F('6','7')+' &nbsp; b) '+F('4','9')+' &divide; '+F('2','3')+
+  ' &nbsp; c) '+F('5','8')+' &divide; 10 &nbsp; d) 6 &divide; '+F('3','4')+'</p>'+
+  '<details><summary>Correction</summary><div class="content">'+
+  '<p>a) '+F('3','5')+' &times; '+F('7','6')+' = '+F('21','30')+' = '+F('7','10')+'</p>'+
+  '<p>b) '+F('4','9')+' &times; '+F('3','2')+' = '+F('12','18')+' = '+F('2','3')+'</p>'+
+  '<p>c) '+F('5','8')+' &times; '+F('1','10')+' = '+F('5','80')+' = '+F('1','16')+'</p>'+
+  '<p>d) 6 &times; '+F('4','3')+' = '+F('24','3')+' = <strong>8</strong></p></div></details>'+
+
+  '<div class="diff-label diff-3">Approfondir</div>'+
+  '<h3>Exercice 6 &mdash; Priorites operatoires</h3>'+
+  '<p>Calculer A = '+F('2','3')+' + '+F('1','4')+' &times; '+F('2','5')+'</p>'+
+  '<details><summary>Correction</summary><div class="content">'+
+  '<p><strong>Priorite a la multiplication :</strong></p>'+
+  '<div class="step">'+F('1','4')+' &times; '+F('2','5')+' = '+F('2','20')+' = '+F('1','10')+'</div>'+
+  '<div class="step">A = '+F('2','3')+' + '+F('1','10')+' = '+F('20','30')+' + '+F('3','30')+' = '+F('23','30')+'</div></div></details>'+
+
+  '<h3>Exercice 7 &mdash; Expression avec parentheses</h3>'+
+  '<p>Calculer B = ('+F('5','6')+' &minus; '+F('1','3')+') &times; '+F('9','4')+'</p>'+
+  '<details><summary>Correction</summary><div class="content">'+
+  '<p><strong>Parenthese d\'abord :</strong></p>'+
+  '<div class="step">'+F('5','6')+' &minus; '+F('2','6')+' = '+F('3','6')+' = '+F('1','2')+'</div>'+
+  '<div class="step">B = '+F('1','2')+' &times; '+F('9','4')+' = '+F('9','8')+'</div></div></details>'+
+
+  '<h3>Exercice 8 &mdash; Probleme complet</h3>'+
+  '<p>Un reservoir de 72 litres est rempli au '+F('5','8')+'. On utilise '+F('1','3')+
+  ' de l\'eau qu\'il contient. Combien de litres reste-t-il ?</p>'+
+  '<details><summary>Correction</summary><div class="content">'+
+  '<div class="step">Eau au depart : '+F('5','8')+' &times; 72 = 45 litres</div>'+
+  '<div class="step">Eau utilisee : '+F('1','3')+' &times; 45 = 15 litres</div>'+
+  '<div class="step">Eau restante : 45 &minus; 15 = <strong>30 litres</strong></div>'+
+  '<p><em>Methode fractionnaire :</em> reste = '+F('5','8')+' &times; (1 &minus; '+F('1','3')+
+  ') &times; 72 = '+F('5','8')+' &times; '+F('2','3')+' &times; 72 = '+F('10','24')+
+  ' &times; 72 = '+F('5','12')+' &times; 72 = 30 L</p></div></details>';
+}
+
+/* ======================================================
+   TAB 6 : QCM
+   ====================================================== */
+var qcmData=[
+  {q:'La fraction irreductible de '+F('12','16')+' est :',
+   opts:[F('4','6'),F('3','4'),F('6','8'),F('2','3')],ans:1},
+  {q:'Calculer '+F('3','5')+' + '+F('1','5')+' :',
+   opts:[F('4','10'),F('4','5'),F('2','5'),F('3','25')],ans:1},
+  {q:'Calculer '+F('2','3')+' + '+F('1','6')+' :',
+   opts:[F('3','9'),F('5','6'),F('1','2'),F('3','6')],ans:1},
+  {q:'Calculer '+F('7','8')+' &minus; '+F('3','8')+' :',
+   opts:[F('4','8'),F('1','2'),F('10','8'),F('4','16')],ans:1},
+  {q:'Calculer '+F('5','6')+' &minus; '+F('2','3')+' :',
+   opts:[F('3','3'),F('1','2'),F('1','6'),F('3','6')],ans:2},
+  {q:'Calculer '+F('2','5')+' &times; '+F('3','4')+' :',
+   opts:[F('6','20'),F('5','9'),F('3','10'),F('6','9')],ans:2},
+  {q:'Calculer '+F('4','7')+' &times; '+F('7','8')+' :',
+   opts:[F('28','56'),F('1','2'),F('4','8'),F('11','15')],ans:1},
+  {q:'Quel est l\'inverse de '+F('3','5')+' ?',
+   opts:[F('5','3'),F('3','5'),F('&minus;3','5'),F('1','15')],ans:0},
+  {q:'Calculer '+F('3','4')+' &divide; '+F('1','2')+' :',
+   opts:[F('3','8'),F('3','2'),F('6','4'),F('2','3')],ans:1},
+  {q:'Calculer '+F('5','9')+' &divide; '+F('10','3')+' :',
+   opts:[F('50','27'),F('1','6'),F('15','90'),F('2','9')],ans:1},
+  {q:'Les '+F('3','5')+' de 45 = ?',
+   opts:['25','27','30','15'],ans:1},
+  {q:'25 % est egal a :',
+   opts:[F('1','5'),F('1','3'),F('1','4'),F('1','25')],ans:2},
+  {q:'Simplifier '+F('36','48')+' :',
+   opts:[F('9','12'),F('6','8'),F('3','4'),F('12','16')],ans:2},
+  {q:F('2','3')+' + '+F('1','4')+' &times; '+F('2','5')+' = ?<br><small>(attention aux priorites !)</small>',
+   opts:[F('23','30'),F('6','15'),F('11','15'),F('4','15')],ans:0},
+  {q:'Le PGCD de 28 et 42 est :',
+   opts:['7','14','6','21'],ans:1},
+  {q:'Calculer 3 &minus; '+F('5','4')+' :',
+   opts:[F('7','4'),F('1','4'),F('&minus;2','4'),F('8','4')],ans:0},
+  {q:'Calculer '+F('8','15')+' &divide; '+F('4','5')+' :',
+   opts:[F('32','75'),F('2','3'),F('8','12'),F('40','60')],ans:1},
+  {q:'Quelle fraction de 120 donne 40 ?',
+   opts:[F('1','4'),F('1','3'),F('2','5'),F('1','2')],ans:1},
+];
+
+function buildQCM(el){
+  var html='<h2>QCM &mdash; Auto-evaluation</h2>'+
+  '<p>Reponds aux '+qcmData.length+' questions puis verifie ton score. '+
+  'Les bonnes reponses s\'afficheront en vert.</p>';
+  qcmData.forEach(function(item,i){
+    html+='<div class="qcm-question" id="qq-'+i+'">'+
+    '<h4>Question '+(i+1)+' / '+qcmData.length+'</h4><p>'+item.q+'</p>';
+    item.opts.forEach(function(opt,j){
+      html+='<label class="qcm-option" id="qo-'+i+'-'+j+'" onclick="selectQCM('+i+','+j+')">'+
+        '<input type="radio" name="qcm'+i+'" style="display:none"> '+opt+'</label>';
+    });
+    html+='</div>';
+  });
+  html+='<div style="text-align:center;margin-top:20px">'+
+  '<button class="btn" onclick="gradeQCM()" style="padding:12px 32px;font-size:1rem">'+
+  'Corriger le QCM</button> &nbsp;'+
+  '<button class="btn btn-outline" onclick="resetQCM()" style="padding:12px 24px;font-size:1rem">'+
+  'Recommencer</button></div>';
+  html+='<div id="qcm-score"></div>';
+  el.innerHTML=html;
+}
+
+var qcmAnswers=new Array(qcmData.length).fill(-1);
+
+function selectQCM(qi,oi){
+  qcmAnswers[qi]=oi;
+  for(var j=0;j<qcmData[qi].opts.length;j++){
+    var lbl=document.getElementById('qo-'+qi+'-'+j);
+    lbl.className=(j===oi)?'qcm-option selected':'qcm-option';
+  }
+}
+
+function gradeQCM(){
+  var score=0;
+  qcmData.forEach(function(item,i){
+    for(var j=0;j<item.opts.length;j++){
+      var lbl=document.getElementById('qo-'+i+'-'+j);
+      if(j===item.ans){
+        lbl.className='qcm-option correct-answer';
+      } else if(j===qcmAnswers[i]&&j!==item.ans){
+        lbl.className='qcm-option wrong-answer';
+      } else {
+        lbl.className='qcm-option';
+      }
+    }
+    if(qcmAnswers[i]===item.ans) score++;
+  });
+  var pct=Math.round(100*score/qcmData.length);
+  var msg;
+  if(pct>=90) msg='Excellent travail ! Tu maitrises parfaitement les fractions !';
+  else if(pct>=75) msg='Tres bien ! Quelques petits points a revoir.';
+  else if(pct>=55) msg='Assez bien. Revois les regles avant de recommencer.';
+  else if(pct>=35) msg='Des efforts sont necessaires. Relis bien le cours.';
+  else msg='Reprends le cours depuis le debut et refais les exercices.';
+  document.getElementById('qcm-score').innerHTML=
+    '<div class="score-box"><div class="score-num">'+score+' / '+qcmData.length+
+    '</div><p>'+pct+' % &mdash; '+msg+'</p></div>';
+}
+
+function resetQCM(){
+  qcmAnswers=new Array(qcmData.length).fill(-1);
+  qcmData.forEach(function(item,i){
+    for(var j=0;j<item.opts.length;j++){
+      document.getElementById('qo-'+i+'-'+j).className='qcm-option';
+    }
+  });
+  document.getElementById('qcm-score').innerHTML='';
+}
+</script>
+</body>
+</html>

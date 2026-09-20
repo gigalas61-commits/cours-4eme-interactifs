@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Équations du premier degré — 4ème</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f5f2ed;--surface:#ffffff;--surface2:#ebe6de;--text:#2c2418;
+  --heading:#8b4513;--muted:#6b5a48;--border:#d4c8b8;--accent:#a0522d;
+  --accent-light:#faf5ef;--radius:10px;--shadow:0 2px 8px rgba(0,0,0,.08);
+}
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#161210;--surface:#221c18;--surface2:#302820;--text:#ddd0c0;
+    --heading:#e0a868;--muted:#9a8878;--border:#403428;--accent:#d08840;
+    --accent-light:#1e1610;--shadow:0 2px 8px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161210;--surface:#221c18;--surface2:#302820;--text:#ddd0c0;
+  --heading:#e0a868;--muted:#9a8878;--border:#403428;--accent:#d08840;
+  --accent-light:#1e1610;--shadow:0 2px 8px rgba(0,0,0,.3);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text);
+  line-height:1.7;min-height:100vh;padding:0 16px;
+}
+h1,h2,h3{font-family:'Cormorant Garamond',serif;color:var(--heading);line-height:1.3;}
+.container{max-width:860px;margin:0 auto;padding:24px 0 48px;}
+
+/* Header */
+header{text-align:center;padding:32px 0 16px;position:relative;}
+header h1{font-size:2rem;font-weight:700;margin-bottom:4px;}
+header p{color:var(--muted);font-size:.95rem;}
+.badge{
+  display:inline-block;background:var(--accent);color:#fff;font-size:.75rem;
+  font-weight:700;padding:3px 12px;border-radius:20px;margin-bottom:10px;letter-spacing:.5px;
+}
+.theme-toggle{
+  position:absolute;top:32px;right:0;background:var(--surface2);border:1px solid var(--border);
+  border-radius:20px;padding:4px 12px;cursor:pointer;font-size:1.1rem;line-height:1;
+}
+
+/* Tabs */
+.tabs{
+  display:flex;flex-wrap:wrap;gap:4px;border-bottom:2px solid var(--border);
+  margin:20px 0 0;padding-bottom:0;
+}
+.tab-btn{
+  background:none;border:none;padding:8px 14px;font-family:'Nunito Sans',sans-serif;
+  font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;
+  border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .2s,border-color .2s;
+  white-space:nowrap;
+}
+.tab-btn:hover{color:var(--heading);}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
+.tab-content{display:none;padding:24px 0;animation:fadeIn .3s ease;}
+.tab-content.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* Cards */
+.card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:20px 24px;margin:16px 0;box-shadow:var(--shadow);
+}
+.definition{
+  border-left:4px solid var(--accent);background:var(--accent-light);
+  padding:16px 20px;border-radius:0 var(--radius) var(--radius) 0;margin:16px 0;
+}
+.definition strong{color:var(--heading);}
+.method{
+  background:var(--surface);border:2px dashed var(--accent);border-radius:var(--radius);
+  padding:16px 20px;margin:16px 0;
+}
+.method h3{font-size:1.1rem;margin-bottom:8px;}
+.example{background:var(--surface2);border-radius:var(--radius);padding:16px 20px;margin:12px 0;}
+.example h3{font-size:1rem;margin-bottom:6px;}
+.warning{
+  background:var(--accent-light);border:1px solid var(--accent);border-radius:var(--radius);
+  padding:14px 18px;margin:14px 0;font-size:.92rem;
+}
+.warning strong{color:var(--accent);}
+.eq{
+  font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;
+  color:var(--heading);text-align:center;margin:10px 0;letter-spacing:.5px;
+}
+.step{display:flex;align-items:flex-start;gap:10px;margin:6px 0;}
+.step-num{
+  background:var(--accent);color:#fff;width:24px;height:24px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:.75rem;
+  font-weight:700;flex-shrink:0;margin-top:2px;
+}
+
+/* Exercises */
+.exercise{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:16px 20px;margin:14px 0;
+}
+.exercise h3{font-size:1rem;color:var(--accent);margin-bottom:8px;}
+.exercise input[type="number"],.exercise input[type="text"],
+.interactive-zone input[type="text"],.interactive-zone input[type="number"]{
+  width:80px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;
+  background:var(--surface2);color:var(--text);font-size:.95rem;text-align:center;
+  font-family:'Nunito Sans',sans-serif;
+}
+.exercise button,.btn{
+  background:var(--accent);color:#fff;border:none;border-radius:6px;
+  padding:6px 16px;font-family:'Nunito Sans',sans-serif;font-size:.85rem;
+  font-weight:600;cursor:pointer;transition:opacity .2s;
+}
+.btn:hover{opacity:.85;}
+.feedback{margin-top:8px;padding:8px 12px;border-radius:6px;font-size:.9rem;font-weight:600;}
+.feedback.correct{background:#e8f5e9;color:#2e7d32;}
+.feedback.wrong{background:#fbe9e7;color:#c62828;}
+:root[data-theme="dark"] .feedback.correct,
+:root:not([data-theme="light"]) .feedback.correct{background:#1b3a1b;color:#81c784;}
+:root[data-theme="dark"] .feedback.wrong,
+:root:not([data-theme="light"]) .feedback.wrong{background:#3a1b1b;color:#e57373;}
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .feedback.correct{background:#1b3a1b;color:#81c784;}
+  :root:not([data-theme="light"]) .feedback.wrong{background:#3a1b1b;color:#e57373;}
+}
+
+/* Details / corrections */
+details{margin:10px 0;}
+details summary{cursor:pointer;color:var(--accent);font-weight:600;font-size:.9rem;padding:4px 0;}
+details summary:hover{text-decoration:underline;}
+details .correction{
+  padding:10px 16px;background:var(--accent-light);border-radius:0 0 var(--radius) var(--radius);
+  margin-top:4px;font-size:.92rem;line-height:1.8;
+}
+.correction .eq{font-size:1.05rem;text-align:left;margin:4px 0;}
+
+/* Canvas */
+canvas{
+  display:block;margin:12px auto;border-radius:var(--radius);border:1px solid var(--border);
+  max-width:100%;background:var(--surface);
+}
+
+/* QCM */
+.qcm-q{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:16px 20px;margin:12px 0;
+}
+.qcm-q p.q-text{font-weight:600;margin-bottom:8px;}
+.qcm-q label{
+  display:block;padding:6px 12px;margin:4px 0;border-radius:6px;cursor:pointer;
+  transition:background .15s;font-size:.93rem;
+}
+.qcm-q label:hover{background:var(--surface2);}
+.qcm-q input[type="radio"]{margin-right:8px;accent-color:var(--accent);}
+.qcm-q.answered-right{border-color:#4caf50;}
+.qcm-q.answered-wrong{border-color:#e53935;}
+.score-box{
+  text-align:center;padding:24px;background:var(--surface);border:2px solid var(--accent);
+  border-radius:var(--radius);margin:20px 0;font-size:1.2rem;font-weight:700;color:var(--heading);
+}
+
+/* Tags */
+.level-tag{
+  display:inline-block;font-size:.7rem;font-weight:700;padding:2px 8px;
+  border-radius:10px;margin-left:6px;vertical-align:middle;
+}
+.level-tag.vert{background:#c8e6c9;color:#2e7d32;}
+.level-tag.orange{background:#ffe0b2;color:#e65100;}
+.level-tag.rouge{background:#ffcdd2;color:#c62828;}
+
+/* Interactive zones */
+.interactive-zone{
+  background:var(--surface2);border-radius:var(--radius);padding:16px;margin:14px 0;text-align:center;
+}
+.interactive-zone button{margin:4px;}
+.flex-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;}
+
+/* Progress bar for QCM */
+.progress-bar{
+  height:8px;background:var(--surface2);border-radius:4px;overflow:hidden;margin:12px 0;
+}
+.progress-fill{height:100%;background:var(--accent);border-radius:4px;transition:width .4s ease;}
+
+/* Responsive */
+@media(max-width:600px){
+  header h1{font-size:1.5rem;}
+  .tab-btn{padding:6px 8px;font-size:.78rem;}
+  .card,.exercise,.qcm-q{padding:14px 16px;}
+  .container{padding:16px 0 40px;}
+  body{padding:0 16px;}
+  .eq{font-size:1.05rem;}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Changer de theme">&#9789;</button>
+  <span class="badge">4eme</span>
+  <h1>Equations du premier degre</h1>
+  <p>Cours interactif &mdash; College</p>
+</header>
+<nav class="tabs" id="tabNav"></nav>
+<div id="tabPanels"></div>
+</div>
+
+<script>
+/* ===== Theme ===== */
+function toggleTheme(){
+  var r=document.documentElement;
+  var cur=r.getAttribute('data-theme');
+  r.setAttribute('data-theme', cur==='dark' ? 'light' : 'dark');
+}
+function cssVar(v){
+  return getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+}
+
+/* ===== Tab System ===== */
+var TAB_NAMES=["Vocabulaire","Resoudre","Avec fractions","Avec parentheses","Mise en equation","Exercices","QCM"];
+var initialized=[];
+var nav=document.getElementById('tabNav');
+var panels=document.getElementById('tabPanels');
+
+TAB_NAMES.forEach(function(name,i){
+  var btn=document.createElement('button');
+  btn.className='tab-btn';
+  btn.textContent=name;
+  btn.onclick=function(){showTab(i);};
+  nav.appendChild(btn);
+  var div=document.createElement('div');
+  div.className='tab-content';
+  div.id='tab'+i;
+  panels.appendChild(div);
+});
+
+function showTab(i){
+  document.querySelectorAll('.tab-btn').forEach(function(b,j){b.classList.toggle('active',j===i);});
+  document.querySelectorAll('.tab-content').forEach(function(d,j){d.classList.toggle('active',j===i);});
+  if(!initialized[i]){initSection(i);initialized[i]=true;}
+}
+
+/* ===== Lazy Section Builders ===== */
+function initSection(idx){
+  var el=document.getElementById('tab'+idx);
+  switch(idx){
+    case 0: buildVocabulaire(el); break;
+    case 1: buildResoudre(el); break;
+    case 2: buildFractions(el); break;
+    case 3: buildParentheses(el); break;
+    case 4: buildMiseEnEquation(el); break;
+    case 5: buildExercices(el); break;
+    case 6: buildQCM(el); break;
+  }
+}
+
+/* ===== Shared helpers ===== */
+function simpleFb(inId, fbId, answer){
+  var v=parseFloat(document.getElementById(inId).value);
+  var fb=document.getElementById(fbId);
+  fb.style.display='block';
+  if(v===answer){
+    fb.className='feedback correct';
+    fb.textContent='Bravo ! La reponse est '+answer+'.';
+  } else {
+    fb.className='feedback wrong';
+    fb.textContent='Ce n\'est pas la bonne reponse. Reessaie !';
+  }
+}
+
+function makeFbDiv(id){
+  return '<div id="'+id+'" class="feedback" style="display:none"></div>';
+}
+
+/* ================================================================
+   TAB 0 : VOCABULAIRE
+   ================================================================ */
+function buildVocabulaire(el){
+  el.innerHTML=
+  '<h2>Vocabulaire des equations</h2>'+
+  '<p>Avant de resoudre une equation, il faut bien comprendre le vocabulaire.</p>'+
+
+  '<div class="definition">'+
+  '<strong>Equation :</strong> Une equation est une egalite comportant un ou plusieurs '+
+  'nombres inconnus, souvent notes <em>x</em>. Resoudre une equation, c\'est trouver la '+
+  '(ou les) valeur(s) de l\'inconnue qui rendent l\'egalite vraie.</div>'+
+
+  '<div class="definition">'+
+  '<strong>Inconnue :</strong> La lettre (souvent <em>x</em>) qui represente le nombre '+
+  'que l\'on cherche. On peut aussi utiliser <em>y</em>, <em>t</em>, etc.</div>'+
+
+  '<div class="definition">'+
+  '<strong>Membres :</strong> Dans l\'equation <em>3x + 5 = 2x &minus; 1</em>, le '+
+  '<strong>membre de gauche</strong> est <em>3x + 5</em> et le <strong>membre de droite</strong> '+
+  'est <em>2x &minus; 1</em>. Le signe <em>=</em> separe les deux membres.</div>'+
+
+  '<div class="definition">'+
+  '<strong>Solution :</strong> La valeur de <em>x</em> qui verifie l\'egalite. On dit '+
+  'que ce nombre <em>est solution</em> de l\'equation.</div>'+
+
+  '<div class="definition">'+
+  '<strong>Verification :</strong> On remplace <em>x</em> par la valeur trouvee dans les deux '+
+  'membres. Si les resultats sont egaux, la solution est correcte.</div>'+
+
+  '<div class="card">'+
+  '<h3>Schema : identifier les elements</h3>'+
+  '<p>L\'equation <span class="eq">5x &minus; 3 = 2x + 9</span></p>'+
+  '<canvas id="cvVoc" width="520" height="140"></canvas>'+
+  '</div>'+
+
+  '<div class="warning"><strong>Attention :</strong> Une equation n\'est pas un calcul. '+
+  'On ne peut pas lire de gauche a droite comme une operation. C\'est une balance : '+
+  'les deux cotes doivent etre egaux.</div>'+
+
+  '<h3 style="margin-top:24px;">Exercices interactifs</h3>'+
+
+  '<div class="exercise"><h3>Exercice 1 &mdash; Tester si un nombre est solution</h3>'+
+  '<p>Equation : <span class="eq">2x + 3 = 11</span></p>'+
+  '<p>Est-ce que <em>x</em> = <input type="number" id="vocIn1" value="4" style="width:60px"> est solution ?</p>'+
+  '<button class="btn" onclick="checkVoc1()">Verifier</button>'+
+  makeFbDiv('vocFb1')+'</div>'+
+
+  '<div class="exercise"><h3>Exercice 2 &mdash; Trouver la solution</h3>'+
+  '<p>Equation : <span class="eq">3x &minus; 6 = 9</span></p>'+
+  '<p>x = <input type="number" id="vocIn2" style="width:60px"> '+
+  '<button class="btn" onclick="checkVoc2()">Verifier</button></p>'+
+  makeFbDiv('vocFb2')+
+  '<details><summary>Voir la correction</summary><div class="correction">'+
+  '<div class="eq">3x = 9 + 6 = 15</div>'+
+  '<div class="eq">x = 15 / 3 = 5</div></div></details></div>'+
+
+  '<div class="exercise"><h3>Exercice 3 &mdash; Identifier les membres</h3>'+
+  '<p>Equation : <span class="eq">7 &minus; 4x = 2x + 1</span></p>'+
+  '<p>Membre de gauche : <input type="text" id="vocIn3" style="width:140px" placeholder="ex: 7 - 4x"> '+
+  '<button class="btn" onclick="checkVoc3()">Verifier</button></p>'+
+  makeFbDiv('vocFb3')+'</div>'+
+
+  '<div class="exercise"><h3>Exercice 4 &mdash; Verification interactive</h3>'+
+  '<p>Equation : <span class="eq">5x &minus; 3 = 2x + 9</span></p>'+
+  '<p>On vous dit que x = 4. Calculez chaque membre :</p>'+
+  '<p>Membre gauche : 5 &times; 4 &minus; 3 = <input type="number" id="vocIn4a" style="width:60px"></p>'+
+  '<p>Membre droit : 2 &times; 4 + 9 = <input type="number" id="vocIn4b" style="width:60px"></p>'+
+  '<button class="btn" onclick="checkVoc4()">Verifier</button>'+
+  makeFbDiv('vocFb4')+'</div>';
+
+  setTimeout(drawVocCanvas, 50);
+}
+
+function drawVocCanvas(){
+  var c=document.getElementById('cvVoc');
+  if(!c) return;
+  var ctx=c.getContext('2d');
+  var w=c.width, h=c.height;
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle=cssVar('--surface');
+  ctx.fillRect(0,0,w,h);
+  /* Main equation */
+  ctx.font='700 22px Cormorant Garamond, serif';
+  ctx.textAlign='center';
+  ctx.fillStyle=cssVar('--heading');
+  ctx.fillText('5x - 3  =  2x + 9', w/2, 36);
+  /* Arrows and labels */
+  ctx.font='600 13px Nunito Sans, sans-serif';
+  ctx.fillStyle=cssVar('--accent');
+  /* Left bracket */
+  ctx.strokeStyle=cssVar('--accent');
+  ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.moveTo(110,44); ctx.lineTo(110,62); ctx.lineTo(220,62); ctx.lineTo(220,44);
+  ctx.stroke();
+  ctx.fillText('Membre de gauche', 165, 80);
+  /* Right bracket */
+  ctx.beginPath();
+  ctx.moveTo(290,44); ctx.lineTo(290,62); ctx.lineTo(400,62); ctx.lineTo(400,44);
+  ctx.stroke();
+  ctx.fillText('Membre de droite', 345, 80);
+  /* Equal sign label */
+  ctx.fillStyle=cssVar('--muted');
+  ctx.beginPath();
+  ctx.moveTo(w/2, 44); ctx.lineTo(w/2, 95);
+  ctx.strokeStyle=cssVar('--border');
+  ctx.lineWidth=1;
+  ctx.stroke();
+  ctx.fillText('Signe egal', w/2, 108);
+  /* Inconnue */
+  ctx.fillStyle=cssVar('--heading');
+  ctx.font='600 12px Nunito Sans, sans-serif';
+  ctx.fillText('x = inconnue', w/2, 130);
+}
+
+function checkVoc1(){
+  var v=parseFloat(document.getElementById('vocIn1').value);
+  var fb=document.getElementById('vocFb1');
+  fb.style.display='block';
+  var left=2*v+3, right=11;
+  if(left===right){
+    fb.className='feedback correct';
+    fb.textContent='Oui ! 2 x '+v+' + 3 = '+left+' = 11. C\'est solution !';
+  } else {
+    fb.className='feedback wrong';
+    fb.textContent='Non. 2 x '+v+' + 3 = '+left+', or 11 est attendu. Pas solution.';
+  }
+}
+function checkVoc2(){
+  var v=parseFloat(document.getElementById('vocIn2').value);
+  var fb=document.getElementById('vocFb2');
+  fb.style.display='block';
+  if(v===5){
+    fb.className='feedback correct';
+    fb.textContent='Bravo ! 3 x 5 - 6 = 9.';
+  } else {
+    fb.className='feedback wrong';
+    fb.textContent='Non. 3 x '+v+' - 6 = '+(3*v-6)+', pas 9.';
+  }
+}
+function checkVoc3(){
+  var v=document.getElementById('vocIn3').value.replace(/\s/g,'').toLowerCase();
+  var fb=document.getElementById('vocFb3');
+  fb.style.display='block';
+  if(v==='7-4x'){
+    fb.className='feedback correct';
+    fb.textContent='Correct ! Le membre de gauche est 7 - 4x.';
+  } else {
+    fb.className='feedback wrong';
+    fb.textContent='Relis l\'equation : tout ce qui est a gauche du signe = forme le membre de gauche.';
+  }
+}
+function checkVoc4(){
+  var a=parseFloat(document.getElementById('vocIn4a').value);
+  var b=parseFloat(document.getElementById('vocIn4b').value);
+  var fb=document.getElementById('vocFb4');
+  fb.style.display='block';
+  if(a===17 && b===17){
+    fb.className='feedback correct';
+    fb.textContent='Parfait ! Les deux membres valent 17, donc x = 4 est bien solution.';
+  } else if(a===17){
+    fb.className='feedback wrong';
+    fb.textContent='Le membre gauche est correct (17), mais verifiez le membre droit : 2 x 4 + 9 = ?';
+  } else if(b===17){
+    fb.className='feedback wrong';
+    fb.textContent='Le membre droit est correct (17), mais verifiez le membre gauche : 5 x 4 - 3 = ?';
+  } else {
+    fb.className='feedback wrong';
+    fb.textContent='Recalculez : 5 x 4 - 3 et 2 x 4 + 9.';
+  }
+}
+
+/* ================================================================
+   TAB 1 : RESOUDRE
+   ================================================================ */
+var bal={lx:3, ln:3, rx:1, rn:9};
+
+function buildResoudre(el){
+  el.innerHTML=
+  '<h2>Resoudre une equation du premier degre</h2>'+
+  '<p>Resoudre, c\'est trouver la valeur de <em>x</em> qui rend l\'egalite vraie.</p>'+
+
+  '<div class="method"><h3>Methode en 3 etapes</h3>'+
+  '<div class="step"><span class="step-num">1</span><span><strong>Transposer</strong> : '+
+  'regrouper les termes en <em>x</em> d\'un cote et les nombres de l\'autre. '+
+  'Quand un terme change de membre, il change de signe.</span></div>'+
+  '<div class="step"><span class="step-num">2</span><span><strong>Reduire</strong> : '+
+  'simplifier chaque membre (additionner les termes semblables).</span></div>'+
+  '<div class="step"><span class="step-num">3</span><span><strong>Isoler <em>x</em></strong> : '+
+  'diviser les deux membres par le coefficient de <em>x</em>.</span></div></div>'+
+
+  '<div class="example"><h3>Exemple detaille : 5x &minus; 3 = 2x + 9</h3>'+
+  '<p><strong>Etape 1 :</strong> On passe +2x a gauche (il devient &minus;2x) et &minus;3 a droite (il devient +3).</p>'+
+  '<div class="eq">5x &minus; 2x = 9 + 3</div>'+
+  '<p><strong>Etape 2 :</strong> On reduit.</p>'+
+  '<div class="eq">3x = 12</div>'+
+  '<p><strong>Etape 3 :</strong> On divise par 3.</p>'+
+  '<div class="eq">x = 12 &divide; 3 = 4</div>'+
+  '<p><strong>Verification :</strong> Gauche = 5&times;4 &minus; 3 = 17. Droite = 2&times;4 + 9 = 17. Egal !</p></div>'+
+
+  '<div class="warning"><strong>Regle d\'or :</strong> Ce que l\'on fait a un membre, on le fait aussi a l\'autre. '+
+  'Une equation est comme une balance en equilibre.</div>'+
+
+  '<h3 style="margin-top:20px">Balance interactive</h3>'+
+  '<p style="color:var(--muted);font-size:.9rem">L\'equation est <strong>3x + 3 = x + 9</strong>. '+
+  'Utilisez les boutons pour isoler x pas a pas.</p>'+
+  '<div class="interactive-zone" id="balanceZone">'+
+  '<canvas id="cvBalance" width="520" height="230"></canvas>'+
+  '<p id="balEq" class="eq" style="margin:6px 0"></p>'+
+  '<div class="flex-row">'+
+  '<button class="btn" onclick="balAction(\'subx\')"> &minus;x des 2 cotes</button>'+
+  '<button class="btn" onclick="balAction(\'sub3\')"> &minus;3 des 2 cotes</button>'+
+  '<button class="btn" onclick="balAction(\'div2\')"> &divide;2 les 2 cotes</button>'+
+  '<button class="btn" onclick="balReset()" style="background:var(--muted)">Reinitialiser</button>'+
+  '</div>'+
+  '<div id="balFb" class="feedback" style="display:none"></div>'+
+  '</div>'+
+
+  '<h3 style="margin-top:20px">Exercices guides</h3>'+
+
+  '<div class="exercise"><h3>Exercice 1 <span class="level-tag vert">Appliquer</span></h3>'+
+  '<p>Resoudre : <span class="eq">4x + 1 = 17</span></p>'+
+  '<p>x = <input type="number" id="resIn1" style="width:60px"> '+
+  '<button class="btn" onclick="simpleFb(\'resIn1\',\'resFb1\',4)">Verifier</button></p>'+
+  makeFbDiv('resFb1')+
+  '<details><summary>Voir la correction</summary><div class="correction">'+
+  '<div class="eq">4x + 1 = 17</div>'+
+  '<div class="eq">4x = 17 &minus; 1 = 16</div>'+
+  '<div class="eq">x = 16 &divide; 4 = 4</div></div></details></div>'+
+
+  '<div class="exercise"><h3>Exercice 2 <span class="level-tag orange">Comprendre</span></h3>'+
+  '<p>Resoudre : <span class="eq">7x &minus; 5 = 3x + 11</span></p>'+
+  '<p>x = <input type="number" id="resIn2" style="width:60px"> '+
+  '<button class="btn" onclick="simpleFb(\'resIn2\',\'resFb2\',4)">Verifier</button></p>'+
+  makeFbDiv('resFb2')+
+  '<details><summary>Voir la correction</summary><div class="correction">'+
+  '<div class="eq">7x &minus; 5 = 3x + 11</div>'+
+  '<div class="eq">7x &minus; 3x = 11 + 5</div>'+
+  '<div class="eq">4x = 16</div>'+
+  '<div class="eq">x = 4</div></div></details></div>'+
+
+  '<div class="exercise"><h3>Exercice 3 <span class="level-tag orange">Comprendre</span></h3>'+
+  '<p>Resoudre : <span class="eq">9 &minus; 2x = x + 3</span></p>'+
+  '<p>x = <input type="number" id="resIn3" style="width:60px"> '+
+  '<button class="btn" onclick="simpleFb(\'resIn3\',\'resFb3\',2)">Verifier</button></p>'+
+  makeFbDiv('resFb3')+
+  '<details><summary>Voir la correction</summary><div class="correction">'+
+  '<div class="eq">9 &minus; 2x = x + 3</div>'+
+  '<div class="eq">9 &minus; 3 = x + 2x</div>'+
+  '<div class="eq">6 = 3x</div>'+
+  '<div class="eq">x = 2</div></div></details></div>';
+
+  balReset();
+}
+
+function balReset(){
+  bal={lx:3, ln:3, rx:1, rn:9};
+  balUpdate();
+}
+
+function balFmt(coef, cst){
+  var parts=[];
+  if(coef===1) parts.push('x');
+  else if(coef===-1) parts.push('-x');
+  else if(coef!==0) parts.push(coef+'x');
+  if(cst>0 && parts.length) parts.push('+ '+cst);
+  else if(cst<0) parts.push('- '+(-cst));
+  else if(cst>0) parts.push(''+cst);
+  else if(cst===0 && !parts.length) parts.push('0');
+  return parts.join(' ');
+}
+
+function balUpdate(){
+  var eqEl=document.getElementById('balEq');
+  if(eqEl) eqEl.textContent=balFmt(bal.lx,bal.ln)+' = '+balFmt(bal.rx,bal.rn);
+  drawBalance();
+  var fb=document.getElementById('balFb');
+  if(!fb) return;
+  if(bal.lx===1 && bal.ln===0 && bal.rx===0){
+    fb.style.display='block';
+    fb.className='feedback correct';
+    fb.textContent='Bravo ! x = '+bal.rn+' ! La balance est resolue.';
+  } else if(bal.rx===0 && bal.lx>1 && bal.ln===0){
+    fb.style.display='block';
+    fb.className='feedback correct';
+    fb.textContent='Presque ! '+bal.lx+'x = '+bal.rn+'. Divisez par '+bal.lx+' !';
+  } else {
+    fb.style.display='none';
+  }
+}
+
+function balAction(op){
+  if(op==='subx'){bal.lx--; bal.rx--;}
+  else if(op==='sub3'){bal.ln-=3; bal.rn-=3;}
+  else if(op==='div2'){
+    if(bal.lx%2===0 && bal.ln%2===0 && bal.rx%2===0 && bal.rn%2===0){
+      bal.lx/=2; bal.ln/=2; bal.rx/=2; bal.rn/=2;
+    }
+  }
+  balUpdate();
+}
+
+function drawBalance(){
+  var c=document.getElementById('cvBalance');
+  if(!c) return;
+  var ctx=c.getContext('2d');
+  var w=c.width, h=c.height;
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle=cssVar('--surface');
+  ctx.fillRect(0,0,w,h);
+
+  var leftW=bal.lx+bal.ln;
+  var rightW=bal.rx+bal.rn;
+  var tilt=Math.max(-12, Math.min(12, (rightW-leftW)*1.5));
+
+  ctx.save();
+  ctx.translate(w/2, h-30);
+
+  /* Base triangle */
+  ctx.fillStyle=cssVar('--muted');
+  ctx.beginPath();
+  ctx.moveTo(-30, 0); ctx.lineTo(30, 0); ctx.lineTo(0, -25); ctx.closePath();
+  ctx.fill();
+
+  /* Beam */
+  ctx.save();
+  ctx.rotate(tilt * Math.PI / 180);
+  ctx.strokeStyle=cssVar('--heading');
+  ctx.lineWidth=4;
+  ctx.beginPath();
+  ctx.moveTo(-210, -25);
+  ctx.lineTo(210, -25);
+  ctx.stroke();
+
+  /* Left pan */
+  ctx.fillStyle=cssVar('--surface2');
+  ctx.strokeStyle=cssVar('--border');
+  ctx.lineWidth=2;
+  [-180, 180].forEach(function(px){
+    /* Chains */
+    ctx.strokeStyle=cssVar('--border');
+    ctx.lineWidth=1;
+    ctx.beginPath();
+    ctx.moveTo(px, -25);
+    ctx.lineTo(px, -5);
+    ctx.stroke();
+    /* Pan */
+    ctx.fillStyle=cssVar('--surface2');
+    ctx.strokeStyle=cssVar('--border');
+    ctx.lineWidth=2;
+    ctx.beginPath();
+    ctx.moveTo(px-45, -5);
+    ctx.lineTo(px+45, -5);
+    ctx.lineTo(px+35, 15);
+    ctx.lineTo(px-35, 15);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+  });
+
+  /* Labels on pans */
+  ctx.font='700 15px Nunito Sans, sans-serif';
+  ctx.textAlign='center';
+  ctx.fillStyle=cssVar('--accent');
+  ctx.fillText(balFmt(bal.lx, bal.ln), -180, -35);
+  ctx.fillText(balFmt(bal.rx, bal.rn), 180, -35);
+
+  ctx.restore();
+  ctx.restore();
+}
+
+/* ================================================================
+   TAB 2 : FRACTIONS
+   ================================================================ */
+function buildFractions(el){
+  el.innerHTML=
+  '<h2>Equations avec des fractions</h2>'+
+  '<p>Les fractions rendent les equations plus impressionnantes, mais la strategie reste simple.</p>'+
+
+  '<div class="method"><h3>Strategie</h3>'+
+  '<p><strong>Multiplier chaque terme</strong> des deux membres par le <strong>denominateur commun</strong> '+
+  '(PPCM des denominateurs) pour supprimer toutes les fractions, puis resoudre normalement.</p></div>'+
+
+  '<div class="example"><h3>Exemple 1 : x/2 + 3 = 5</h3>'+
+  '<p>On multiplie tout par 2 :</p>'+
+  '<div class="eq">2 &times; (x/2) + 2 &times; 3 = 2 &times; 5</div>'+
+  '<div class="eq">x + 6 = 10</div>'+
+  '<div class="eq">x = 4</div>'+
+  '<p><strong>Verification :</strong> 4/2 + 3 = 2 + 3 = 5. Correct !</p></div>'+
+
+  '<div class="example"><h3>Exemple 2 : (2x &minus; 1)/3 = (x + 2)/2</h3>'+
+  '<p>Les denominateurs sont 3 et 2. PPCM = 6. On multiplie tout par 6 :</p>'+
+  '<div class="eq">6 &times; (2x&minus;1)/3 = 6 &times; (x+2)/2</div>'+
+  '<div class="eq">2(2x &minus; 1) = 3(x + 2)</div>'+
+  '<div class="eq">4x &minus; 2 = 3x + 6</div>'+
+  '<div class="eq">4x &minus; 3x = 6 + 2</div>'+
+  '<div class="eq">x = 8</div></div>'+
+
+  '<h3 style="margin-top:18px">Generateur d\'exercices</h3>'+
+  '<div class="interactive-zone">'+
+  '<p id="fracGenQ" class="eq" style="font-size:1.2rem;margin:10px 0"></p>'+
+  '<p>x = <input type="number" id="fracGenIn" style="width:70px"> '+
+  '<button class="btn" onclick="checkFracGen()">Verifier</button></p>'+
+  '<div id="fracGenFb" class="feedback" style="display:none"></div>'+
+  '<button class="btn" onclick="newFracGen()" style="margin-top:8px;background:var(--muted)">Nouveau</button></div>'+
+
+  '<h3 style="margin-top:18px">Exercices progressifs</h3>'+
+
+  '<div class="exercise"><h3>Exercice 1 <span class="level-tag vert">Appliquer</span></h3>'+
+  '<p>Resoudre : <span class="eq">x/3 + 1 = 4</span></p>'+
+  '<p>x = <input type="number" id="frIn1" style="width:60px"> '+
+  '<button class="btn" onclick="simpleFb(\'frIn1\',\'frFb1\',9)">Verifier</button></p>'+
+  makeFbDiv('frFb1')+
+  '<details><summary>Correction</summary><div class="correction">'+
+  '<div class="eq">x/3 = 4 &minus; 1 = 3</div>'+
+  '<div class="eq">x = 3 &times; 3 = 9</div></div></details></div>'+
+
+  '<div class="exercise"><h3>Exercice 2 <span class="level-tag orange">Comprendre</span></h3>'+
+  '<p>Resoudre : <span class="eq">x/4 &minus; 2 = x/6</span></p>'+
+  '<p>x = <input type="number" id="frIn2" style="width:60px"> '+
+  '<button class="btn" onclick="simpleFb(\'frIn2\',\'frFb2\',24)">Verifier</button></p>'+
+  makeFbDiv('frFb2')+
+  '<details><summary>Correction</summary><div class="correction">'+
+  '<p>Denominateur commun : 12. On multiplie tout par 12.</p>'+
+  '<div class="eq">12 &times; x/4 &minus; 12 &times; 2 = 12 &times; x/6</div>'+
+  '<div class="eq">3x &minus; 24 = 2x</div>'+
+  '<div class="eq">3x &minus; 2x = 24</div>'+
+  '<div class="eq">x = 24</div></div></details></div>'+
+
+  '<div class="exercise"><h3>Exercice 3 <span class="level-tag rouge">Approfondir</span></h3>'+
+  '<p>Resoudre : <span class="eq">(3x + 1)/5 = (x &minus; 3)/2</span></p>'+
+  '<p>x = <input type="number" id="frIn3" style="width:60px"> '+
+  '<button class="btn" onclick="simpleFb(\'frIn3\',\'frFb3\',-17)">Verifier</button></p>'+
+  makeFbDiv('frFb3')+
+  '<details><summary>Correction</summary><div class="correction">'+
+  '<p>Denominateur commun : 10. On multiplie tout par 10.</p>'+
+  '<div class="eq">2(3x + 1) = 5(x &minus; 3)</div>'+
+  '<div class="eq">6x + 2 = 5x &minus; 15</div>'+
+  '<div class="eq">6x &minus; 5x = &minus;15 &minus; 2</div>'+
+  '<div class="eq">x = &minus;17</div></div></details></div>';
+
+  newFracGen();
+}
+
+/* Fraction generator */
+var fracGenAns=0;
+var fracPool=[
+  {q:'x/5 + 2 = 7', a:25},
+  {q:'x/3 - 4 = 1', a:15},
+  {q:'x/2 + x/4 = 6', a:8},
+  {q:'2x/3 = 10', a:15},
+  {q:'(x + 1)/4 = 3', a:11},
+  {q:'x/6 + 5 = x/3', a:30},
+  {q:'(x - 2)/5 = 3', a:17}
+];
+var fracPoolIdx=0;
+
+function newFracGen(){
+  var item=fracPool[fracPoolIdx % fracPool.length];
+  fracPoolIdx++;
+  fracGenAns=item.a;
+  document.getElementById('fracGenQ').textContent=item.q;
+  document.getElementById('fracGenIn').value='';
+  document.getElementById('fracGenFb').style.display='none';
+}
+
+function checkFracGen(){
+  var v=parseFloat(document.getElementById('fracGenIn').value);
+  var fb=document.getElementById('fracGenFb');
+  fb.style.display='block';
+  if(v===fracGenAns){
+    fb.className='feedback correct';
+    fb.textContent='Correct ! x = '+fracGenAns;
+  } else {
+    fb.className='feedback wrong';
+    fb.textContent='Pas tout a fait. Reessaie !';
+  }
+}
+
+/* ================================================================
+   TAB 3 : PARENTHESES
+   ================================================================ */
+function buildParentheses(el){
+  el.innerHTML=
+  '<h2>Equations avec parentheses</h2>'+
+  '<p>Quand une equation contient des parentheses, il faut d\'abord les <strong>developper</strong> '+
+  'avant de resoudre.</p>'+
+
+  '<div class="method"><h3>Rappel : la distributivite</h3>'+
+  '<div class="eq">a(b + c) = ab + ac</div>'+
+  '<div class="eq">a(b &minus; c) = ab &minus; ac</div>'+
+  '<p>Attention au signe devant la parenthese, surtout le signe <strong>moins</strong> :</p>'+
+  '<div class="eq">&minus;(b + c) = &minus;b &minus; c</div>'+
+  '<div class="eq">&minus;(b &minus; c) = &minus;b + c</div></div>'+
+
+  '<div class="example"><h3>Exemple : 3(2x &minus; 1) = 5(x + 2)</h3>'+
+  '<div class="eq">6x &minus; 3 = 5x + 10</div>'+
+  '<div class="eq">6x &minus; 5x = 10 + 3</div>'+
+  '<div class="eq">x = 13</div>'+
+  '<p><strong>Verification :</strong> 3(26&minus;1) = 3&times;25 = 75. 5(13+2) = 5&times;15 = 75. OK !</p></div>'+
+
+  '<div class="example"><h3>Exemple avec signe moins : 4x &minus; (2x + 5) = 7</h3>'+
+  '<p>Le signe &minus; devant la parenthese change les signes a l\'interieur.</p>'+
+  '<div class="eq">4x &minus; 2x &minus; 5 = 7</div>'+
+  '<div class="eq">2x = 12</div>'+
+  '<div class="eq">x = 6</div></div>'+
+
+  '<h3 style="margin-top:18px">Entrainement au developpement</h3>'+
+  '<div class="interactive-zone">'+
+  '<p>Developper : <strong id="parExpr">4(x - 3)</strong></p>'+
+  '<p>Resultat : <input type="text" id="parIn" style="width:150px" placeholder="ex: 4x - 12"> '+
+  '<button class="btn" onclick="checkPar()">Verifier</button></p>'+
+  '<div id="parFb" class="feedback" style="display:none"></div>'+
+  '<button class="btn" onclick="newParExpr()" style="margin-top:8px;background:var(--muted)">Autre expression</button></div>'+
+
+  '<h3 style="margin-top:18px">Exercices</h3>'+
+
+  '<div class="exercise"><h3>Exercice 1 <span class="level-tag vert">Appliquer</span></h3>'+
+  '<p>Resoudre : <span class="eq">2(x + 5) = 18</span></p>'+
+  '<p>x = <input type="number" id="parEx1" style="width:60px"> '+
+  '<button class="btn" onclick="simpleFb(\'parEx1\',\'parFb1\',4)">Verifier</button></p>'+
+  makeFbDiv('parFb1')+
+  '<details><summary>Correction</summary><div class="correction">'+
+  '<div class="eq">2x + 10 = 18</div>'+
+  '<div class="eq">2x = 8</div>'+
+  '<div class="eq">x = 4</div></div></details></div>'+
+
+  '<div class="exercise"><h3>Exercice 2 <span class="level-tag orange">Comprendre</span></h3>'+
+  '<p>Resoudre : <span class="eq">5(x &minus; 2) &minus; 3(x + 1) = 7</span></p>'+
+  '<p>x = <input type="number" id="parEx2" style="width:60px"> '+
+  '<button class="btn" onclick="simpleFb(\'parEx2\',\'parFb2\',10)">Verifier</button></p>'+
+  makeFbDiv('parFb2')+
+  '<details><summary>Correction</summary><div class="correction">'+
+  '<div class="eq">5x &minus; 10 &minus; 3x &minus; 3 = 7</div>'+
+  '<div class="eq">2x &minus; 13 = 7</div>'+
+  '<div class="eq">2x = 20</div>'+
+  '<div class="eq">x = 10</div></div></details></div>'+
+
+  '<div class="exercise"><h3>Exercice 3 <span class="level-tag rouge">Approfondir</span></h3>'+
+  '<p>Resoudre : <span class="eq">&minus;2(3x + 4) = 4(1 &minus; 2x)</span></p>'+
+  '<p>x = <input type="number" id="parEx3" style="width:60px"> '+
+  '<button class="btn" onclick="simpleFb(\'parEx3\',\'parFb3\',6)">Verifier</button></p>'+
+  makeFbDiv('parFb3')+
+  '<details><summary>Correction</summary><div class="correction">'+
+  '<div class="eq">&minus;6x &minus; 8 = 4 &minus; 8x</div>'+
+  '<div class="eq">&minus;6x + 8x = 4 + 8</div>'+
+  '<div class="eq">2x = 12</div>'+
+  '<div class="eq">x = 6</div></div></details></div>'+
+
+  '<div class="exercise"><h3>Exercice 4 <span class="level-tag rouge">Approfondir</span></h3>'+
+  '<p>Resoudre : <span class="eq">3(4x + 1) &minus; 2(5x &minus; 3) = 15</span></p>'+
+  '<p>x = <input type="number" id="parEx4" style="width:60px"> '+
+  '<button class="btn" onclick="simpleFb(\'parEx4\',\'parFb4\',3)">Verifier</button></p>'+
+  makeFbDiv('parFb4')+
+  '<details><summary>Correction</summary><div class="correction">'+
+  '<div class="eq">12x + 3 &minus; 10x + 6 = 15</div>'+
+  '<div class="eq">2x + 9 = 15</div>'+
+  '<div class="eq">2x = 6</div>'+
+  '<div class="eq">x = 3</div></div></details></div>';
+
+  parExprs=[
+    {a:4, b:-3, ans:'4x-12'},
+    {a:-2, b:5, ans:'-2x+10'},
+    {a:3, b:7, ans:'3x+21'},
+    {a:-5, b:-2, ans:'-5x+10'},
+    {a:6, b:1, ans:'6x+6'},
+    {a:-1, b:4, ans:'-x+4'},
+    {a:7, b:-1, ans:'7x-7'}
+  ];
+  parIdx=0;
+}
+
+var parExprs=[], parIdx=0;
+
+function newParExpr(){
+  parIdx=(parIdx+1) % parExprs.length;
+  var e=parExprs[parIdx];
+  var sign=e.b >= 0 ? '+ '+e.b : '- '+(-e.b);
+  document.getElementById('parExpr').textContent=e.a+'(x '+sign+')';
+  document.getElementById('parIn').value='';
+  document.getElementById('parFb').style.display='none';
+}
+
+function checkPar(){
+  var e=parExprs[parIdx];
+  var v=document.getElementById('parIn').value.replace(/\s/g,'').toLowerCase();
+  var fb=document.getElementById('parFb');
+  fb.style.display='block';
+  /* Normalize expected */
+  var expected=e.ans.replace(/\s/g,'');
+  /* Accept variations */
+  var ok=(v===expected);
+  if(!ok && expected.indexOf('+-')>=0) ok=(v===expected.replace('+-','-'));
+  if(!ok && expected.indexOf('-+')>=0) ok=(v===expected.replace('-+','-'));
+  if(ok){
+    fb.className='feedback correct';
+    fb.textContent='Correct !';
+  } else {
+    var nice=e.ans.replace(/-/g,' - ').replace(/\+/g,' + ').replace(/  /g,' ').trim();
+    fb.className='feedback wrong';
+    fb.textContent='Le resultat attendu est : '+nice;
+  }
+}
+
+/* ================================================================
+   TAB 4 : MISE EN EQUATION
+   ================================================================ */
+function buildMiseEnEquation(el){
+  el.innerHTML=
+  '<h2>Mise en equation d\'un probleme</h2>'+
+  '<p>La mise en equation est l\'art de traduire un probleme en langage mathematique.</p>'+
+
+  '<div class="method"><h3>Methode en 4 etapes</h3>'+
+  '<div class="step"><span class="step-num">1</span><span><strong>Choix de l\'inconnue</strong> : '+
+  'decider ce que represente <em>x</em> et le noter clairement.</span></div>'+
+  '<div class="step"><span class="step-num">2</span><span><strong>Mise en equation</strong> : '+
+  'traduire les phrases de l\'enonce en egalite mathematique.</span></div>'+
+  '<div class="step"><span class="step-num">3</span><span><strong>Resolution</strong> : '+
+  'resoudre l\'equation obtenue.</span></div>'+
+  '<div class="step"><span class="step-num">4</span><span><strong>Conclusion</strong> : '+
+  'repondre a la question posee avec une <em>phrase</em>.</span></div></div>'+
+
+  '<div class="card"><h3>Traductions utiles</h3>'+
+  '<table style="width:100%;font-size:.92rem;border-collapse:collapse">'+
+  '<tr style="background:var(--surface2)"><td style="padding:6px 10px"><em>Le double de x</em></td><td>2x</td></tr>'+
+  '<tr><td style="padding:6px 10px"><em>Le triple de x</em></td><td>3x</td></tr>'+
+  '<tr style="background:var(--surface2)"><td style="padding:6px 10px"><em>x augmente de 5</em></td><td>x + 5</td></tr>'+
+  '<tr><td style="padding:6px 10px"><em>x diminue de 3</em></td><td>x &minus; 3</td></tr>'+
+  '<tr style="background:var(--surface2)"><td style="padding:6px 10px"><em>La moitie de x</em></td><td>x/2</td></tr>'+
+  '<tr><td style="padding:6px 10px"><em>Le tiers de x</em></td><td>x/3</td></tr>'+
+  '</table></div>'+
+
+  '<div class="example"><h3>Probleme 1 &mdash; Les ages</h3>'+
+  '<p>Marie a 3 ans de plus que Paul. La somme de leurs ages est 29 ans. Quel age a chacun ?</p>'+
+  '<p><em>Soit x l\'age de Paul.</em> Alors Marie a x + 3 ans.</p>'+
+  '<div class="eq">x + (x + 3) = 29</div>'+
+  '<div class="eq">2x + 3 = 29</div>'+
+  '<div class="eq">2x = 26</div>'+
+  '<div class="eq">x = 13</div>'+
+  '<p><strong>Paul a 13 ans et Marie a 16 ans.</strong></p></div>'+
+
+  '<div class="example"><h3>Probleme 2 &mdash; Geometrie</h3>'+
+  '<p>Le perimetre d\'un rectangle est 54 cm. Sa longueur vaut le double de sa largeur.</p>'+
+  '<p><em>Soit x la largeur.</em> La longueur vaut 2x.</p>'+
+  '<div class="eq">2(x + 2x) = 54</div>'+
+  '<div class="eq">6x = 54</div>'+
+  '<div class="eq">x = 9</div>'+
+  '<p><strong>Largeur = 9 cm, longueur = 18 cm.</strong></p></div>'+
+
+  '<h3 style="margin-top:18px">Visualisation du rectangle</h3>'+
+  '<div class="interactive-zone">'+
+  '<canvas id="cvRect" width="420" height="200"></canvas>'+
+  '</div>'+
+
+  '<h3 style="margin-top:18px">Exercices</h3>'+
+
+  '<div class="exercise"><h3>Probleme 1 <span class="level-tag vert">Appliquer</span></h3>'+
+  '<p>Un nombre augmente de 7 donne 25. Quel est ce nombre ?</p>'+
+  '<p>x = <input type="number" id="meqIn0" style="width:60px"> '+
+  '<button class="btn" onclick="simpleFb(\'meqIn0\',\'meqFb0\',18)">Verifier</button></p>'+
+  makeFbDiv('meqFb0')+
+  '<details><summary>Correction</summary><div class="correction">'+
+  '<div class="eq">x + 7 = 25</div><div class="eq">x = 18</div></div></details></div>'+
+
+  '<div class="exercise"><h3>Probleme 2 <span class="level-tag orange">Comprendre</span></h3>'+
+  '<p>Un cahier coute 2 euros de plus qu\'un stylo. J\'achete 3 cahiers et 2 stylos pour 19 euros. '+
+  'Quel est le prix d\'un stylo ?</p>'+
+  '<p>Prix du stylo = <input type="number" id="meqIn1" step="0.1" style="width:70px"> euros '+
+  '<button class="btn" onclick="checkMeq1()">Verifier</button></p>'+
+  makeFbDiv('meqFb1')+
+  '<details><summary>Correction</summary><div class="correction">'+
+  '<p>Soit x le prix d\'un stylo. Un cahier coute x + 2 euros.</p>'+
+  '<div class="eq">3(x + 2) + 2x = 19</div>'+
+  '<div class="eq">3x + 6 + 2x = 19</div>'+
+  '<div class="eq">5x = 13</div>'+
+  '<div class="eq">x = 2,6</div>'+
+  '<p>Un stylo coute 2,60 euros et un cahier 4,60 euros.</p></div></details></div>'+
+
+  '<div class="exercise"><h3>Probleme 3 <span class="level-tag rouge">Approfondir</span></h3>'+
+  '<p>Un pere a 4 fois l\'age de son fils. Dans 10 ans, il n\'aura plus que le double de son age. '+
+  'Quel est l\'age actuel du fils ?</p>'+
+  '<p>Age du fils : <input type="number" id="meqIn2" style="width:60px"> ans '+
+  '<button class="btn" onclick="simpleFb(\'meqIn2\',\'meqFb2\',5)">Verifier</button></p>'+
+  makeFbDiv('meqFb2')+
+  '<details><summary>Correction</summary><div class="correction">'+
+  '<p>Soit x l\'age du fils. Le pere a 4x ans.</p>'+
+  '<p>Dans 10 ans : fils = x + 10, pere = 4x + 10.</p>'+
+  '<div class="eq">4x + 10 = 2(x + 10)</div>'+
+  '<div class="eq">4x + 10 = 2x + 20</div>'+
+  '<div class="eq">2x = 10</div>'+
+  '<div class="eq">x = 5</div>'+
+  '<p>Le fils a 5 ans et le pere 20 ans.</p></div></details></div>'+
+
+  '<div class="exercise"><h3>Probleme 4 <span class="level-tag rouge">Approfondir</span></h3>'+
+  '<p>Un triangle isocele a un perimetre de 32 cm. Le cote different mesure 2 cm de plus que chacun '+
+  'des cotes egaux. Quelle est la longueur de chaque cote ?</p>'+
+  '<p>Cote egal : <input type="number" id="meqIn3" style="width:60px"> cm '+
+  '<button class="btn" onclick="simpleFb(\'meqIn3\',\'meqFb3\',10)">Verifier</button></p>'+
+  makeFbDiv('meqFb3')+
+  '<details><summary>Correction</summary><div class="correction">'+
+  '<p>Soit x la longueur d\'un cote egal. Le cote different mesure x + 2.</p>'+
+  '<div class="eq">x + x + (x + 2) = 32</div>'+
+  '<div class="eq">3x + 2 = 32</div>'+
+  '<div class="eq">3x = 30</div>'+
+  '<div class="eq">x = 10</div>'+
+  '<p>Les cotes egaux mesurent 10 cm et le troisieme cote 12 cm.</p></div></details></div>';
+
+  setTimeout(drawRect, 50);
+}
+
+function checkMeq1(){
+  var v=parseFloat(document.getElementById('meqIn1').value);
+  var fb=document.getElementById('meqFb1');
+  fb.style.display='block';
+  if(v===2.6){
+    fb.className='feedback correct';
+    fb.textContent='Bravo ! Un stylo coute 2,60 euros.';
+  } else {
+    fb.className='feedback wrong';
+    fb.textContent='Pas exact. Indice : 5x = 13.';
+  }
+}
+
+function drawRect(){
+  var c=document.getElementById('cvRect');
+  if(!c) return;
+  var ctx=c.getContext('2d');
+  var w=c.width, h=c.height;
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle=cssVar('--surface');
+  ctx.fillRect(0,0,w,h);
+
+  var rw=260, rh=110;
+  var rx=(w-rw)/2, ry=(h-rh)/2;
+  ctx.strokeStyle=cssVar('--accent');
+  ctx.lineWidth=2;
+  ctx.strokeRect(rx, ry, rw, rh);
+  ctx.fillStyle=cssVar('--accent-light');
+  ctx.fillRect(rx, ry, rw, rh);
+
+  ctx.font='600 16px Nunito Sans, sans-serif';
+  ctx.textAlign='center';
+  ctx.fillStyle=cssVar('--heading');
+  ctx.fillText('Longueur = 2x = 18 cm', rx + rw/2, ry + rh/2 + 5);
+
+  ctx.save();
+  ctx.translate(rx - 18, ry + rh/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.fillText('x = 9 cm', 0, 0);
+  ctx.restore();
+
+  ctx.fillStyle=cssVar('--muted');
+  ctx.font='400 13px Nunito Sans, sans-serif';
+  ctx.fillText('Perimetre = 2(9 + 18) = 54 cm', w/2, h - 10);
+}
+
+/* ================================================================
+   TAB 5 : EXERCICES
+   ================================================================ */
+function buildExercices(el){
+  var exos=[
+    {lvl:'vert', tag:'Appliquer', title:'Exercice 1',
+     enonce:'Resoudre : 6x &minus; 4 = 20', sol:4,
+     corr:'<div class="eq">6x = 20 + 4 = 24</div><div class="eq">x = 24 &divide; 6 = 4</div>'+
+     '<p>Verification : 6&times;4 &minus; 4 = 24 &minus; 4 = 20. OK !</p>'},
+
+    {lvl:'vert', tag:'Appliquer', title:'Exercice 2',
+     enonce:'Resoudre : 3x + 7 = x + 15', sol:4,
+     corr:'<div class="eq">3x &minus; x = 15 &minus; 7</div><div class="eq">2x = 8</div><div class="eq">x = 4</div>'},
+
+    {lvl:'orange', tag:'Comprendre', title:'Exercice 3',
+     enonce:'Resoudre : 2(x &minus; 3) + 5 = 3x &minus; 4', sol:3,
+     corr:'<div class="eq">2x &minus; 6 + 5 = 3x &minus; 4</div>'+
+     '<div class="eq">2x &minus; 1 = 3x &minus; 4</div>'+
+     '<div class="eq">&minus;1 + 4 = 3x &minus; 2x</div>'+
+     '<div class="eq">x = 3</div>'},
+
+    {lvl:'orange', tag:'Comprendre', title:'Exercice 4',
+     enonce:'Resoudre : x/2 + x/3 = 10', sol:12,
+     corr:'<p>On multiplie tout par 6 (PPCM de 2 et 3) :</p>'+
+     '<div class="eq">3x + 2x = 60</div><div class="eq">5x = 60</div><div class="eq">x = 12</div>'},
+
+    {lvl:'orange', tag:'Comprendre', title:'Exercice 5',
+     enonce:'Un nombre augmente de sa moitie vaut 36. Quel est ce nombre ?', sol:24,
+     corr:'<p>Soit x le nombre.</p>'+
+     '<div class="eq">x + x/2 = 36</div>'+
+     '<p>On multiplie par 2 :</p>'+
+     '<div class="eq">2x + x = 72</div><div class="eq">3x = 72</div><div class="eq">x = 24</div>'},
+
+    {lvl:'rouge', tag:'Approfondir', title:'Exercice 6 &mdash; Type Brevet',
+     enonce:'Trois nombres entiers consecutifs ont pour somme 72. Quels sont ces nombres ?',
+     sol:23, hint:'Le plus petit',
+     corr:'<p>Soit x le plus petit. Les trois nombres sont x, x+1, x+2.</p>'+
+     '<div class="eq">x + (x+1) + (x+2) = 72</div>'+
+     '<div class="eq">3x + 3 = 72</div><div class="eq">3x = 69</div><div class="eq">x = 23</div>'+
+     '<p>Les trois nombres sont <strong>23, 24 et 25</strong>.</p>'+
+     '<p>Verification : 23 + 24 + 25 = 72. OK !</p>'},
+
+    {lvl:'rouge', tag:'Approfondir', title:'Exercice 7 &mdash; Type Brevet',
+     enonce:'On considere un rectangle dont la longueur est le triple de la largeur. '+
+     'Son perimetre est 56 cm. Quelles sont ses dimensions ?',
+     sol:7, hint:'La largeur',
+     corr:'<p>Soit x la largeur. Longueur = 3x.</p>'+
+     '<div class="eq">2(x + 3x) = 56</div><div class="eq">2 &times; 4x = 56</div>'+
+     '<div class="eq">8x = 56</div><div class="eq">x = 7</div>'+
+     '<p>Largeur = 7 cm, longueur = 21 cm.</p>'+
+     '<p>Verification : 2(7+21) = 2&times;28 = 56. OK !</p>'},
+
+    {lvl:'rouge', tag:'Approfondir', title:'Exercice 8',
+     enonce:'Resoudre : (3x + 2)/4 + 1 = (x + 8)/2', sol:10,
+     corr:'<p>Denominateur commun : 4. On multiplie tout par 4.</p>'+
+     '<div class="eq">(3x + 2) + 4 = 2(x + 8)</div>'+
+     '<div class="eq">3x + 6 = 2x + 16</div>'+
+     '<div class="eq">3x &minus; 2x = 16 &minus; 6</div>'+
+     '<div class="eq">x = 10</div>'+
+     '<p>Verification : (32)/4 + 1 = 8 + 1 = 9. (18)/2 = 9. OK !</p>'}
+  ];
+
+  var html='<h2>Exercices recapitulatifs</h2>'+
+    '<p style="color:var(--muted)">8 exercices progressifs pour tester ta maitrise du chapitre.</p>'+
+    '<div class="progress-bar"><div class="progress-fill" id="exoProgress" style="width:0%"></div></div>'+
+    '<p style="text-align:center;font-size:.85rem;color:var(--muted)" id="exoCount">0 / '+exos.length+' reussis</p>';
+
+  exos.forEach(function(ex, i){
+    html+='<div class="exercise" id="exoBlock'+i+'">'+
+      '<h3>'+ex.title+' <span class="level-tag '+ex.lvl+'">'+ex.tag+'</span></h3>'+
+      '<p>'+ex.enonce+'</p>'+
+      '<p>'+(ex.hint || 'x')+' = <input type="number" id="exoIn'+i+'" step="any" style="width:70px"> '+
+      '<button class="btn" onclick="checkExo('+i+','+ex.sol+')">Verifier</button></p>'+
+      makeFbDiv('exoFb'+i)+
+      '<details><summary>Voir la correction detaillee</summary>'+
+      '<div class="correction">'+ex.corr+'</div></details></div>';
+  });
+  el.innerHTML=html;
+  window._exoTotal=exos.length;
+  window._exoDone=[];
+}
+
+function checkExo(i, answer){
+  var v=parseFloat(document.getElementById('exoIn'+i).value);
+  var fb=document.getElementById('exoFb'+i);
+  fb.style.display='block';
+  if(v===answer){
+    fb.className='feedback correct';
+    fb.textContent='Bravo ! La reponse est '+answer+'.';
+    if(window._exoDone.indexOf(i)===-1){
+      window._exoDone.push(i);
+      var pct=Math.round(100*window._exoDone.length/window._exoTotal);
+      var bar=document.getElementById('exoProgress');
+      if(bar) bar.style.width=pct+'%';
+      var cnt=document.getElementById('exoCount');
+      if(cnt) cnt.textContent=window._exoDone.length+' / '+window._exoTotal+' reussis';
+    }
+  } else {
+    fb.className='feedback wrong';
+    fb.textContent='Ce n\'est pas la bonne reponse. Consulte la correction pour comprendre.';
+  }
+}
+
+/* ================================================================
+   TAB 6 : QCM
+   ================================================================ */
+function buildQCM(el){
+  var questions=[
+    {q:'Qu\'est-ce qu\'une equation ?',
+     opts:['Une operation','Une egalite avec une inconnue','Un calcul de pourcentage','Une inegalite'],
+     ans:1},
+    {q:'Quelle est la solution de 2x = 10 ?',
+     opts:['x = 20','x = 8','x = 5','x = 12'],
+     ans:2},
+    {q:'Dans 3x + 5 = 14, que vaut x ?',
+     opts:['x = 3','x = 19/3','x = 6','x = 9'],
+     ans:0},
+    {q:'Pour resoudre x/4 = 3, on multiplie les deux membres par :',
+     opts:['3','x','4','1/4'],
+     ans:2},
+    {q:'Developper 2(x - 5) donne :',
+     opts:['2x - 5','2x + 10','2x - 10','x - 10'],
+     ans:2},
+    {q:'La solution de 5x - 3 = 2x + 9 est :',
+     opts:['x = 2','x = 4','x = 6','x = 12'],
+     ans:1},
+    {q:'Quel est le membre de droite de 4x + 1 = 7 - x ?',
+     opts:['4x + 1','7 - x','7','-x'],
+     ans:1},
+    {q:'On resout -3x = 15. La solution est :',
+     opts:['x = 5','x = -5','x = 45','x = -45'],
+     ans:1},
+    {q:'Pour supprimer les fractions dans x/3 + x/2 = 5, on multiplie par :',
+     opts:['2','3','5','6'],
+     ans:3},
+    {q:'Developper -(2x + 3) donne :',
+     opts:['-2x + 3','-2x - 3','2x - 3','2x + 3'],
+     ans:1},
+    {q:'Trois nombres consecutifs ont pour somme 42. Le plus petit est :',
+     opts:['12','13','14','15'],
+     ans:1},
+    {q:'Quelle equation traduit : "Le double d\'un nombre diminue de 7 vaut 11" ?',
+     opts:['2x - 7 = 11','2(x - 7) = 11','2x + 7 = 11','x/2 - 7 = 11'],
+     ans:0},
+    {q:'La solution de 4(x + 1) = 3(x + 3) est :',
+     opts:['x = 5','x = 13','x = 7','x = -5'],
+     ans:0},
+    {q:'Si 3x + 2 = 3x + 5, l\'equation :',
+     opts:['a pour solution x = 1','a pour solution x = 0','n\'a pas de solution','a une infinite de solutions'],
+     ans:2},
+    {q:'x = 2 est-il solution de 3x + 1 = 2x + 4 ?',
+     opts:['Oui, car 7 = 8','Non, car 7 ne vaut pas 8','Oui, car les deux membres sont egaux','Non, car 5 ne vaut pas 8'],
+     ans:1},
+    {q:'Resoudre : (x - 1)/2 = (x + 3)/4',
+     opts:['x = 5','x = -5','x = 7','x = 1'],
+     ans:0},
+    {q:'On additionne un nombre et son triple. On obtient 48. Ce nombre est :',
+     opts:['16','12','24','48'],
+     ans:1},
+    {q:'Resoudre : 7 - 2x = 1',
+     opts:['x = 3','x = 4','x = -3','x = 6'],
+     ans:0}
+  ];
+
+  var html='<h2>QCM &mdash; Teste tes connaissances</h2>'+
+    '<p style="color:var(--muted)">'+questions.length+' questions couvrant tout le chapitre. '+
+    'Coche une reponse par question puis clique sur "Corriger".</p>';
+
+  questions.forEach(function(q, i){
+    html+='<div class="qcm-q" id="qcm'+i+'"><p class="q-text">'+(i+1)+'. '+q.q+'</p>';
+    q.opts.forEach(function(opt, j){
+      html+='<label><input type="radio" name="qcm'+i+'" value="'+j+'"> '+opt+'</label>';
+    });
+    html+='</div>';
+  });
+
+  html+='<div style="text-align:center;margin:24px 0">'+
+    '<button class="btn" style="padding:12px 36px;font-size:1rem" onclick="scoreQCM()">Corriger le QCM</button>'+
+    '</div>';
+  html+='<div id="qcmScore" class="score-box" style="display:none"></div>';
+  el.innerHTML=html;
+  window._qcmData=questions;
+}
+
+function scoreQCM(){
+  var qs=window._qcmData;
+  var score=0;
+  qs.forEach(function(q, i){
+    var div=document.getElementById('qcm'+i);
+    var sel=div.querySelector('input[name="qcm'+i+'"]:checked');
+    div.classList.remove('answered-right','answered-wrong');
+    if(sel && parseInt(sel.value)===q.ans){
+      score++;
+      div.classList.add('answered-right');
+    } else {
+      div.classList.add('answered-wrong');
+    }
+    /* Highlight correct answer */
+    var labels=div.querySelectorAll('label');
+    labels.forEach(function(lb, j){
+      lb.style.fontWeight=(j===q.ans) ? '700' : '400';
+      lb.style.color=(j===q.ans) ? 'var(--accent)' : '';
+    });
+  });
+  var box=document.getElementById('qcmScore');
+  box.style.display='block';
+  var pct=Math.round(100*score/qs.length);
+  var msg;
+  if(pct >= 90) msg='Excellent travail !';
+  else if(pct >= 75) msg='Tres bien, continue !';
+  else if(pct >= 50) msg='Pas mal, mais revise les points manques.';
+  else msg='Il faut revoir le cours attentivement.';
+  box.innerHTML=score+' / '+qs.length+' ('+pct+' %)<br><span style="font-size:.9rem">'+msg+'</span>';
+  box.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+/* ===== Boot ===== */
+showTab(0);
+</script>
+</body>
+</html>

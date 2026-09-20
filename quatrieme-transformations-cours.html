@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transformations : translation, rotation — 4ème</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f2ed; --surface:#ffffff; --surface2:#ebe6de; --text:#2c2418; --heading:#8b4513;
+  --muted:#6b5a48; --border:#d4c8b8; --accent:#a0522d; --accent-light:#faf5ef;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#161210; --surface:#221c18; --surface2:#302820; --text:#ddd0c0; --heading:#e0a868;
+    --muted:#9a8878; --border:#403428; --accent:#d08840; --accent-light:#1e1610;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161210; --surface:#221c18; --surface2:#302820; --text:#ddd0c0; --heading:#e0a868;
+  --muted:#9a8878; --border:#403428; --accent:#d08840; --accent-light:#1e1610;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:'Nunito Sans', sans-serif; line-height:1.6;
+  transition:background .2s, color .2s;
+}
+h1,h2,h3,h4{ font-family:'Cormorant Garamond', serif; color:var(--heading); font-weight:700; margin:0.6em 0 0.4em;}
+h1{font-size:2rem;} h2{font-size:1.6rem; border-bottom:2px solid var(--border); padding-bottom:.3rem;} h3{font-size:1.25rem;}
+p{margin:.6em 0;}
+header{
+  background:var(--surface); border-bottom:1px solid var(--border);
+  padding:14px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  position:sticky; top:0; z-index:20;
+}
+.header-left{display:flex; align-items:center; gap:12px; flex-wrap:wrap;}
+.badge{
+  background:var(--accent); color:#fff; font-family:'Cormorant Garamond',serif; font-weight:700;
+  padding:4px 14px; border-radius:20px; font-size:1.05rem; letter-spacing:.5px;
+}
+header h1{margin:0; font-size:1.5rem;}
+#themeBtn{
+  background:var(--surface2); border:1px solid var(--border); color:var(--text);
+  border-radius:8px; padding:8px 14px; cursor:pointer; font-family:'Nunito Sans',sans-serif; font-weight:600;
+}
+#themeBtn:hover{border-color:var(--accent);}
+nav#tabs{
+  display:flex; flex-wrap:wrap; gap:6px; padding:10px 16px; background:var(--surface2);
+  border-bottom:1px solid var(--border); position:sticky; top:64px; z-index:19;
+}
+.tab-btn{
+  background:transparent; border:1px solid var(--border); color:var(--muted); padding:8px 12px;
+  border-radius:8px; cursor:pointer; font-family:'Nunito Sans',sans-serif; font-weight:600; font-size:.85rem;
+  transition:all .15s;
+}
+.tab-btn:hover{color:var(--text); border-color:var(--accent);}
+.tab-btn.active{background:var(--accent); color:#fff; border-color:var(--accent);}
+main{max-width:920px; margin:0 auto; padding:20px 16px 60px;}
+.section{display:none;}
+.section.active{display:block; animation:fade .25s ease;}
+@keyframes fade{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+.card{
+  background:var(--surface); border:1px solid var(--border); border-radius:12px;
+  padding:18px 20px; margin:16px 0;
+}
+.card.definition{border-left:4px solid var(--accent); background:var(--accent-light);}
+.card.property{border-left:4px solid var(--heading);}
+.card.example{border-left:4px solid var(--muted);}
+.vec{display:inline-block;position:relative;padding-top:4px;margin:0 1px;font-weight:700;}
+.vec::after{content:'→';position:absolute;top:-6px;left:50%;transform:translateX(-50%);font-size:.7em;}
+canvas{
+  background:var(--surface); border:1px solid var(--border); border-radius:10px; display:block;
+  margin:12px auto; max-width:100%; touch-action:none;
+}
+.canvas-wrap{text-align:center;}
+.controls{display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:center; margin:10px 0;}
+.controls label{font-weight:600; font-size:.9rem; color:var(--muted);}
+.controls button{
+  background:var(--accent); color:#fff; border:none; border-radius:8px; padding:8px 14px;
+  cursor:pointer; font-weight:600; font-family:'Nunito Sans',sans-serif; font-size:.85rem;
+}
+.controls button:hover{opacity:.88;}
+.controls input[type=range]{width:180px; accent-color:var(--accent);}
+.hint{font-size:.85rem; color:var(--muted); text-align:center; margin-top:4px;}
+ul, ol{padding-left:1.4em;}
+li{margin:.35em 0;}
+table{border-collapse:collapse; width:100%; margin:12px 0;}
+th, td{border:1px solid var(--border); padding:8px 10px; text-align:left; font-size:.92rem;}
+th{background:var(--surface2); color:var(--heading);}
+details{
+  background:var(--surface2); border:1px solid var(--border); border-radius:8px;
+  margin:10px 0; padding:8px 14px;
+}
+summary{cursor:pointer; font-weight:700; color:var(--accent); padding:6px 0; list-style:revert;}
+details[open] summary{margin-bottom:6px;}
+.exo{
+  background:var(--surface); border:1px solid var(--border); border-radius:12px;
+  padding:16px 20px; margin:18px 0;
+}
+.exo h3{margin-top:0;}
+.diff{
+  display:inline-block; font-size:.7rem; font-weight:700; padding:2px 10px; border-radius:12px;
+  margin-left:8px; vertical-align:middle; text-transform:uppercase; letter-spacing:.5px;
+}
+.diff.app{background:#4a7c59; color:#fff;}
+.diff.comp{background:#c98a2c; color:#fff;}
+.diff.appr{background:#a0522d; color:#fff;}
+.qcm-q{
+  background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:14px 18px; margin:14px 0;
+}
+.qcm-q p.question{font-weight:700; color:var(--heading); margin-top:0;}
+.qcm-opts{display:flex; flex-direction:column; gap:6px;}
+.qcm-opt{
+  background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:8px 12px;
+  cursor:pointer; font-size:.92rem; transition:all .15s;
+}
+.qcm-opt:hover{border-color:var(--accent);}
+.qcm-opt.correct{background:#4a7c5944; border-color:#4a7c59;}
+.qcm-opt.wrong{background:#a0303044; border-color:#a03030;}
+.qcm-opt.disabled{pointer-events:none;}
+#qcmScore{
+  background:var(--accent-light); border:2px solid var(--accent); border-radius:12px; padding:18px;
+  text-align:center; margin-top:20px; display:none;
+}
+#qcmScore h3{margin-top:0;}
+.steps{counter-reset:step;}
+.steps li{list-style:none; position:relative; padding-left:2em; margin:.8em 0;}
+.steps li::before{
+  counter-increment:step; content:counter(step); position:absolute; left:0; top:0;
+  background:var(--accent); color:#fff; width:1.5em; height:1.5em; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.85rem;
+}
+.footer-note{text-align:center; color:var(--muted); font-size:.8rem; margin-top:40px;}
+@media (max-width:600px){
+  header{padding:10px 12px;}
+  header h1{font-size:1.15rem;}
+  nav#tabs{top:58px; padding:8px 10px;}
+  main{padding:14px 12px 40px;}
+  .tab-btn{font-size:.78rem; padding:7px 9px;}
+  .card, .exo{padding:14px 14px;}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-left">
+    <span class="badge">4ème</span>
+    <h1>Transformations : translation &amp; rotation</h1>
+  </div>
+  <button id="themeBtn" onclick="toggleTheme()">🌓 Thème</button>
+</header>
+
+<nav id="tabs">
+  <button class="tab-btn active" onclick="showTab(0)">1. Translation</button>
+  <button class="tab-btn" onclick="showTab(1)">2. Construire (translation)</button>
+  <button class="tab-btn" onclick="showTab(2)">3. Rotation</button>
+  <button class="tab-btn" onclick="showTab(3)">4. Construire (rotation)</button>
+  <button class="tab-btn" onclick="showTab(4)">5. Symétrie centrale</button>
+  <button class="tab-btn" onclick="showTab(5)">6. Exercices</button>
+  <button class="tab-btn" onclick="showTab(6)">7. QCM</button>
+</nav>
+
+<main>
+
+<!-- ================= SECTION 0 : TRANSLATION ================= -->
+<section class="section active" id="sec0">
+  <h2>1. La translation</h2>
+
+  <div class="card definition">
+    <h3>Définition</h3>
+    <p>Translater une figure selon un vecteur <span class="vec">u</span>, c'est la faire "glisser" tout entière, sans la faire tourner ni la déformer, dans la direction du vecteur, sur une distance égale à sa longueur.</p>
+    <p>Si M' est l'image de M par la translation de vecteur <span class="vec">u</span>, alors <span class="vec">MM'</span> = <span class="vec">u</span>.</p>
+    <p>Cela signifie que M' est obtenu à partir de M en suivant : même direction, même sens, même longueur que <span class="vec">u</span>.</p>
+  </div>
+
+  <div class="card">
+    <h3>Image d'un point, d'un segment, d'une figure</h3>
+    <ul>
+      <li><strong>Image d'un point M</strong> : le point M' tel que <span class="vec">MM'</span> = <span class="vec">u</span>.</li>
+      <li><strong>Image d'un segment [AB]</strong> : le segment [A'B'], où A' et B' sont les images de A et B. On a A'B' = AB (même longueur).</li>
+      <li><strong>Image d'une figure</strong> : on translate chacun de ses points ; en pratique, on translate les points remarquables (sommets, centre...) puis on relie.</li>
+    </ul>
+  </div>
+
+  <div class="card property">
+    <h3>Propriétés conservées par une translation</h3>
+    <table>
+      <tr><th>Propriété</th><th>Conservation</th></tr>
+      <tr><td>Distances / longueurs</td><td>✔ AB = A'B'</td></tr>
+      <tr><td>Angles</td><td>✔ même mesure</td></tr>
+      <tr><td>Alignement</td><td>✔ des points alignés restent alignés</td></tr>
+      <tr><td>Parallélisme</td><td>✔ deux droites parallèles ont des images parallèles</td></tr>
+      <tr><td>Aires / périmètres</td><td>✔ conservés</td></tr>
+      <tr><td>Orientation</td><td>✔ le sens (direct/indirect) ne change pas</td></tr>
+    </table>
+    <p>On dit que la translation est une <strong>isométrie</strong> : elle conserve les longueurs, donc les angles et les aires.</p>
+  </div>
+
+  <div class="card example">
+    <h3>Exemple</h3>
+    <p>ABC est un triangle. On applique la translation de vecteur <span class="vec">u</span>. On obtient le triangle A'B'C', image de ABC.</p>
+    <p>Alors A'B' = AB, B'C' = BC, A'C' = AC, et les angles de A'B'C' sont égaux à ceux de ABC : les deux triangles sont superposables (mêmes mesures partout).</p>
+  </div>
+
+  <div class="card">
+    <h3>Expérimente : translation interactive</h3>
+    <p>Fais glisser l'extrémité du vecteur (point rouge) pour changer la translation. Le triangle bleu (image) se met à jour automatiquement.</p>
+    <div class="canvas-wrap">
+      <canvas id="cvTranslation" width="480" height="360"></canvas>
+    </div>
+    <div class="controls">
+      <button onclick="resetTranslation()">Réinitialiser</button>
+    </div>
+    <p class="hint">Astuce : le point rouge = extrémité du vecteur <span class="vec">u</span>. Le point vert = origine du vecteur (fixe).</p>
+  </div>
+
+  <div class="card">
+    <h3>Méthode : construire l'image d'un point par translation</h3>
+    <ol class="steps">
+      <li>On connaît le vecteur <span class="vec">u</span> et le point M à transformer.</li>
+      <li>À partir de M, on trace une droite parallèle à la direction de <span class="vec">u</span> (avec une équerre ou un compas).</li>
+      <li>Sur cette droite, on reporte, dans le même sens que <span class="vec">u</span>, une longueur égale à celle de <span class="vec">u</span> (au compas).</li>
+      <li>Le point obtenu est M', l'image de M.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ================= SECTION 1 : CONSTRUIRE TRANSLATION ================= -->
+<section class="section" id="sec1">
+  <h2>2. Construire l'image d'une figure par translation</h2>
+
+  <div class="card">
+    <h3>Matériel nécessaire</h3>
+    <p>Règle, équerre (ou double décimètre + équerre), compas. La rigueur du tracé est essentielle : chaque sommet doit être translaté indépendamment puis relié.</p>
+  </div>
+
+  <div class="card">
+    <h3>Construction pas à pas (méthode au compas et à la règle)</h3>
+    <ol class="steps">
+      <li>Repérer le vecteur <span class="vec">u</span> : son origine I et son extrémité J.</li>
+      <li>Pour chaque sommet de la figure (par exemple A, B, C d'un triangle), tracer la parallèle à (IJ) passant par ce sommet.</li>
+      <li>Reporter au compas, sur chaque parallèle, la longueur IJ à partir du sommet, dans le sens de I vers J.</li>
+      <li>Nommer les points obtenus A', B', C'.</li>
+      <li>Relier A'B'C' dans le même ordre que ABC pour obtenir la figure image.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>Animation de la construction</h3>
+    <p>Clique sur "Lancer l'animation" pour observer, étape par étape, la construction de l'image d'un triangle par translation.</p>
+    <div class="canvas-wrap">
+      <canvas id="cvConstructTrans" width="480" height="360"></canvas>
+    </div>
+    <div class="controls">
+      <button onclick="playConstructTrans()">Lancer l'animation</button>
+      <button onclick="resetConstructTrans()">Revenir au début</button>
+    </div>
+    <p class="hint" id="hintConstructTrans">Étape 0 / 4</p>
+  </div>
+
+  <div class="exo">
+    <h3>Exercice guidé de construction <span class="diff app">Appliquer</span></h3>
+    <p>Sur ton cahier : trace un triangle ABC quelconque et un vecteur <span class="vec">u</span> à côté. Construis le triangle A'B'C', image de ABC par la translation de vecteur <span class="vec">u</span>, en suivant la méthode ci-dessus.</p>
+    <details>
+      <summary>Voir la correction</summary>
+      <p><strong>Étapes attendues :</strong></p>
+      <ol>
+        <li>Tracer la parallèle à <span class="vec">u</span> passant par A, reporter la longueur de <span class="vec">u</span> → obtenir A'.</li>
+        <li>Faire de même pour B → obtenir B'.</li>
+        <li>Faire de même pour C → obtenir C'.</li>
+        <li>Relier A', B', C' : on obtient un triangle superposable à ABC (mêmes longueurs de côtés, mêmes angles), simplement "décalé".</li>
+      </ol>
+      <p>Vérification : mesurer A'B' et comparer à AB (elles doivent être égales). C'est une bonne façon de vérifier sa construction.</p>
+    </details>
+  </div>
+
+  <div class="exo">
+    <h3>Exercice guidé 2 <span class="diff comp">Comprendre</span></h3>
+    <p>Un quadrilatère MNPQ est donné, ainsi qu'un vecteur <span class="vec">v</span> vertical (dirigé vers le haut). Que peut-on dire de la position de l'image M'N'P'Q' par rapport à MNPQ, sans faire la construction complète ?</p>
+    <details>
+      <summary>Voir la correction</summary>
+      <p>Comme <span class="vec">v</span> est vertical, l'image M'N'P'Q' se trouve exactement au-dessus (ou en dessous) de MNPQ, à une distance égale à la longueur de <span class="vec">v</span>, sans rotation ni déformation : chaque côté de l'image reste parallèle et de même longueur que le côté correspondant de départ.</p>
+    </details>
+  </div>
+</section>
+
+<!-- ================= SECTION 2 : ROTATION ================= -->
+<section class="section" id="sec2">
+  <h2>3. La rotation</h2>
+
+  <div class="card definition">
+    <h3>Définition</h3>
+    <p>Une rotation est définie par trois éléments :</p>
+    <ul>
+      <li>un point O appelé <strong>centre</strong> de la rotation ;</li>
+      <li>un <strong>angle</strong> de rotation (en degrés) ;</li>
+      <li>un <strong>sens</strong> : sens des aiguilles d'une montre (horaire) ou sens inverse (anti-horaire, ou "trigonométrique").</li>
+    </ul>
+    <p>L'image M' d'un point M par la rotation de centre O, d'angle α et de sens donné vérifie :</p>
+    <ul>
+      <li>OM' = OM (même distance au centre) ;</li>
+      <li>l'angle <strong>MOM'</strong> mesure α, orienté dans le sens choisi.</li>
+    </ul>
+    <p>Le centre O est le seul point invariant (image de lui-même) par la rotation, sauf si l'angle est 0° ou 360°.</p>
+  </div>
+
+  <div class="card property">
+    <h3>Propriétés conservées</h3>
+    <p>Comme la translation, la rotation est une <strong>isométrie</strong> : elle conserve les distances, les angles, le parallélisme, les aires et les périmètres. C'est un déplacement (elle conserve aussi l'orientation).</p>
+  </div>
+
+  <div class="card example">
+    <h3>Rotations remarquables</h3>
+    <table>
+      <tr><th>Angle</th><th>Effet</th></tr>
+      <tr><td>90°</td><td>quart de tour</td></tr>
+      <tr><td>180°</td><td>demi-tour (= symétrie centrale, voir onglet 5)</td></tr>
+      <tr><td>60°</td><td>utile pour les figures liées au triangle équilatéral / hexagone régulier</td></tr>
+      <tr><td>360°</td><td>tour complet : chaque point revient à sa position de départ</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Expérimente : rotation interactive</h3>
+    <p>Utilise le curseur pour choisir l'angle de rotation (sens anti-horaire) autour du centre O (point fixe). Observe l'image du triangle en bleu.</p>
+    <div class="canvas-wrap">
+      <canvas id="cvRotation" width="480" height="360"></canvas>
+    </div>
+    <div class="controls">
+      <label for="angleSlider">Angle : <span id="angleValue">0°</span></label>
+      <input type="range" id="angleSlider" min="0" max="360" value="0" step="1" oninput="updateRotation(this.value)">
+      <button onclick="setAngle(90)">90°</button>
+      <button onclick="setAngle(180)">180°</button>
+      <button onclick="setAngle(60)">60°</button>
+      <button onclick="setAngle(0)">Réinitialiser</button>
+    </div>
+    <p class="hint">Le point noir au centre est le centre de rotation O.</p>
+  </div>
+
+  <div class="card">
+    <h3>Méthode : trouver l'image d'un point par une rotation</h3>
+    <ol class="steps">
+      <li>Tracer le segment [OM] où O est le centre.</li>
+      <li>Mesurer l'angle α au rapporteur à partir de [OM), dans le sens indiqué (horaire ou anti-horaire).</li>
+      <li>Tracer la demi-droite formant cet angle avec [OM).</li>
+      <li>Reporter, au compas, la longueur OM sur cette demi-droite : on obtient M', l'image de M.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ================= SECTION 3 : CONSTRUIRE ROTATION ================= -->
+<section class="section" id="sec3">
+  <h2>4. Construire l'image d'une figure par rotation</h2>
+
+  <div class="card">
+    <h3>Matériel nécessaire</h3>
+    <p>Rapporteur (pour mesurer l'angle), compas (pour reporter les longueurs), règle.</p>
+  </div>
+
+  <div class="card">
+    <h3>Construction pas à pas</h3>
+    <ol class="steps">
+      <li>Repérer le centre O et l'angle de rotation donné (avec son sens).</li>
+      <li>Pour chaque sommet de la figure (A, B, C...), tracer le segment reliant O au sommet.</li>
+      <li>Avec le rapporteur, centré en O, mesurer l'angle demandé à partir de chaque segment, dans le sens indiqué.</li>
+      <li>Tracer la demi-droite correspondant à ce nouvel angle.</li>
+      <li>Reporter au compas la distance O-sommet sur cette demi-droite pour obtenir le point image (A', B', C'...).</li>
+      <li>Relier les points images dans le même ordre pour obtenir la figure transformée.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>Astuce pratique</h3>
+    <p>Pour une rotation de 90°, on peut utiliser l'équerre plutôt que le rapporteur : il suffit de tracer une perpendiculaire à [OM) passant par O, puis de choisir le bon côté selon le sens demandé.</p>
+    <p>Pour une rotation de 180°, pas besoin de rapporteur : M' est le symétrique de M par rapport à O, donc O est le milieu de [MM'] (voir onglet 5).</p>
+  </div>
+
+  <div class="card">
+    <h3>Animation de la construction</h3>
+    <div class="canvas-wrap">
+      <canvas id="cvConstructRot" width="480" height="360"></canvas>
+    </div>
+    <div class="controls">
+      <button onclick="playConstructRot()">Lancer l'animation (rotation de 90°)</button>
+      <button onclick="resetConstructRot()">Revenir au début</button>
+    </div>
+    <p class="hint" id="hintConstructRot">Étape 0 / 4</p>
+  </div>
+
+  <div class="exo">
+    <h3>Exercice guidé <span class="diff app">Appliquer</span></h3>
+    <p>Trace un point O et un triangle ABC assez éloigné de O. Construis A'B'C', image de ABC par la rotation de centre O, d'angle 90° dans le sens anti-horaire.</p>
+    <details>
+      <summary>Voir la correction</summary>
+      <p>Pour chaque sommet X ∈ {A, B, C} : tracer [OX], mesurer 90° au rapporteur dans le sens anti-horaire à partir de [OX), tracer la demi-droite obtenue, reporter OX au compas sur cette demi-droite pour obtenir X'.</p>
+      <p>On doit vérifier que OA = OA', OB = OB', OC = OC' et que le triangle A'B'C' est superposable à ABC (mêmes longueurs de côtés).</p>
+    </details>
+  </div>
+
+  <div class="exo">
+    <h3>Exercice guidé 2 <span class="diff comp">Comprendre</span></h3>
+    <p>Un carré ABCD est tourné de 90° autour de son propre centre O. Que remarque-t-on sur la figure obtenue ?</p>
+    <details>
+      <summary>Voir la correction</summary>
+      <p>Comme le carré possède une symétrie d'ordre 4 (il "ressemble à lui-même" après un quart de tour autour de son centre), l'image du carré coïncide exactement avec le carré de départ : seuls les sommets ont "tourné" d'une position (A' occupe la position de B, etc.), mais la figure globale (l'ensemble des points) est inchangée.</p>
+    </details>
+  </div>
+</section>
+
+<!-- ================= SECTION 4 : SYMETRIE CENTRALE ================= -->
+<section class="section" id="sec4">
+  <h2>5. Symétrie centrale : le cas particulier de la rotation de 180°</h2>
+
+  <div class="card definition">
+    <h3>Lien avec la rotation</h3>
+    <p>La rotation de centre O et d'angle 180° donne exactement le même résultat que la <strong>symétrie centrale de centre O</strong>, déjà étudiée en 5ème.</p>
+    <p>En effet, comme 180° ne dépend pas du sens (horaire ou anti-horaire donnent le même point), on retrouve : M' est le symétrique de M par rapport à O si et seulement si O est le milieu du segment [MM'].</p>
+  </div>
+
+  <div class="card property">
+    <h3>Propriétés</h3>
+    <ul>
+      <li>O est le milieu de [MM'] pour tout point M et son image M'.</li>
+      <li>La symétrie centrale conserve les longueurs, les angles, le parallélisme, les aires (c'est une isométrie, comme toute rotation).</li>
+      <li>L'image d'une droite est une droite parallèle.</li>
+      <li>L'image d'un segment [AB] est un segment [A'B'] parallèle et de même longueur, mais tourné de 180° (donc "à l'envers").</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Centre de symétrie d'une figure</h3>
+    <p>Un point O est un <strong>centre de symétrie</strong> d'une figure F si l'image de F par la symétrie centrale de centre O est F elle-même (F est globalement invariante).</p>
+    <table>
+      <tr><th>Figure</th><th>Centre de symétrie ?</th></tr>
+      <tr><td>Cercle</td><td>Oui : le centre du cercle</td></tr>
+      <tr><td>Parallélogramme (dont rectangle, losange, carré)</td><td>Oui : le point d'intersection des diagonales</td></tr>
+      <tr><td>Segment</td><td>Oui : son milieu</td></tr>
+      <tr><td>Triangle quelconque</td><td>Non (sauf cas particulier dégénéré)</td></tr>
+      <tr><td>Triangle équilatéral</td><td>Non</td></tr>
+    </table>
+  </div>
+
+  <div class="card example">
+    <h3>Exemple</h3>
+    <p>Soit un parallélogramme ABCD, de centre O (intersection des diagonales [AC] et [BD]). La symétrie centrale de centre O envoie A sur C, B sur D, C sur A, D sur B. Le parallélogramme est donc sa propre image : O est son centre de symétrie.</p>
+  </div>
+
+  <div class="exo">
+    <h3>Exercice <span class="diff app">Appliquer</span></h3>
+    <p>Construis le symétrique du point A(3 ; 2) par rapport au point O(0 ; 0) dans un repère.</p>
+    <details>
+      <summary>Voir la correction</summary>
+      <p>O étant le milieu de [AA'], les coordonnées de A' vérifient : x<sub>A'</sub> = 2×x<sub>O</sub> − x<sub>A</sub> = 0 − 3 = −3, et y<sub>A'</sub> = 2×y<sub>O</sub> − y<sub>A</sub> = 0 − 2 = −2. Donc A'(−3 ; −2).</p>
+    </details>
+  </div>
+
+  <div class="exo">
+    <h3>Exercice <span class="diff appr">Approfondir</span></h3>
+    <p>Un rectangle non carré possède-t-il un axe de symétrie ET un centre de symétrie ? Un losange non carré ? Justifie.</p>
+    <details>
+      <summary>Voir la correction</summary>
+      <p><strong>Rectangle non carré :</strong> il possède 2 axes de symétrie (les médiatrices des côtés) ET un centre de symétrie (l'intersection des diagonales), car c'est un parallélogramme.</p>
+      <p><strong>Losange non carré :</strong> il possède 2 axes de symétrie (ses diagonales) ET un centre de symétrie (intersection des diagonales), pour la même raison : tout parallélogramme a un centre de symétrie.</p>
+      <p>Conclusion : avoir un centre de symétrie et avoir un/des axe(s) de symétrie sont deux propriétés indépendantes ; une figure peut avoir les deux, une seule, ou aucune.</p>
+    </details>
+  </div>
+</section>
+
+<!-- ================= SECTION 5 : EXERCICES ================= -->
+<section class="section" id="sec5">
+  <h2>6. Exercices</h2>
+  <p>8 exercices progressifs. Cherche d'abord seul(e), puis déroule la correction.</p>
+
+  <div class="exo">
+    <h3>Exercice 1 <span class="diff app">Appliquer</span></h3>
+    <p>On considère un point A et un vecteur <span class="vec">u</span> de longueur 4 cm, horizontal, dirigé vers la droite. Construis le point A', image de A par la translation de vecteur <span class="vec">u</span>.</p>
+    <details><summary>Correction</summary>
+      <p>A' est le point situé à 4 cm à droite de A, sur la même horizontale (même hauteur), car <span class="vec">AA'</span> doit être égal à <span class="vec">u</span> : même direction (horizontale), même sens (vers la droite), même longueur (4 cm).</p>
+    </details>
+  </div>
+
+  <div class="exo">
+    <h3>Exercice 2 <span class="diff app">Appliquer</span></h3>
+    <p>Dans un repère, A(1 ; 2) et B(4 ; 2). On applique la translation de vecteur <span class="vec">u</span>(2 ; 3) (2 vers la droite, 3 vers le haut). Donne les coordonnées de A' et B'.</p>
+    <details><summary>Correction</summary>
+      <p>A'(1+2 ; 2+3) = A'(3 ; 5). B'(4+2 ; 2+3) = B'(6 ; 5). On vérifie que A'B' = AB = 3 (les deux segments sont horizontaux et de même longueur).</p>
+    </details>
+  </div>
+
+  <div class="exo">
+    <h3>Exercice 3 <span class="diff comp">Comprendre</span></h3>
+    <p>Une figure F1 a pour image F2 par une translation de vecteur <span class="vec">u</span>. Quel vecteur permet de passer de F2 à F1 ?</p>
+    <details><summary>Correction</summary>
+      <p>Le vecteur opposé à <span class="vec">u</span>, c'est-à-dire un vecteur de même longueur et même direction, mais de sens contraire. On le note souvent −<span class="vec">u</span>.</p>
+    </details>
+  </div>
+
+  <div class="exo">
+    <h3>Exercice 4 <span class="diff app">Appliquer</span></h3>
+    <p>O est un point, M est tel que OM = 5 cm. On effectue la rotation de centre O, d'angle 90°, sens anti-horaire. Que peut-on dire de OM' ? De l'angle MOM' ?</p>
+    <details><summary>Correction</summary>
+      <p>OM' = OM = 5 cm (conservation des distances au centre). L'angle MOM' mesure 90°, orienté dans le sens anti-horaire (c'est la définition même de la rotation).</p>
+    </details>
+  </div>
+
+  <div class="exo">
+    <h3>Exercice 5 <span class="diff comp">Comprendre</span></h3>
+    <p>Un triangle équilatéral ABC de centre O est tourné de 120° autour de O. Que peut-on observer ?</p>
+    <details><summary>Correction</summary>
+      <p>Comme le triangle équilatéral a une symétrie d'ordre 3 autour de son centre, la rotation de 120° envoie chaque sommet sur le sommet suivant (A sur B, B sur C, C sur A, par exemple). Le triangle "occupe la même place" dans le plan : il est globalement invariant, même si les sommets ont changé de position individuellement.</p>
+    </details>
+  </div>
+
+  <div class="exo">
+    <h3>Exercice 6 <span class="diff comp">Comprendre</span></h3>
+    <p>Peut-on obtenir la même image en appliquant une rotation de 270° dans le sens anti-horaire ou une rotation dans le sens horaire ? Si oui, laquelle ?</p>
+    <details><summary>Correction</summary>
+      <p>Oui : une rotation de 270° dans le sens anti-horaire équivaut à une rotation de 360° − 270° = 90° dans le sens horaire. Les deux rotations amènent le point exactement au même endroit.</p>
+    </details>
+  </div>
+
+  <div class="exo">
+    <h3>Exercice 7 <span class="diff appr">Approfondir</span></h3>
+    <p>ABCD est un parallélogramme de centre O. Démontre que l'image de la droite (AB) par la symétrie centrale de centre O est la droite (CD).</p>
+    <details><summary>Correction</summary>
+      <p>Dans un parallélogramme, les diagonales [AC] et [BD] se coupent en leur milieu O. Donc O est le milieu de [AC] : A et C sont symétriques par rapport à O. De même, O est le milieu de [BD] : B et D sont symétriques par rapport à O.</p>
+      <p>La symétrie centrale de centre O envoie donc A sur C et B sur D. L'image du segment [AB] est le segment [CD], donc l'image de la droite (AB) est la droite (CD). Comme la symétrie centrale conserve le parallélisme, on retrouve bien que (AB) et (CD) sont parallèles (propriété du parallélogramme).</p>
+    </details>
+  </div>
+
+  <div class="exo">
+    <h3>Exercice 8 <span class="diff appr">Approfondir</span></h3>
+    <p>On compose deux translations successives : d'abord la translation de vecteur <span class="vec">u</span>(2 ; 1), puis la translation de vecteur <span class="vec">v</span>(−1 ; 3). Quel est l'effet global sur un point A(0 ; 0) ? Peut-on remplacer ces deux translations par une seule ?</p>
+    <details><summary>Correction</summary>
+      <p>Après la première translation : A1(0+2 ; 0+1) = (2 ; 1). Après la seconde : A2(2−1 ; 1+3) = (1 ; 4).</p>
+      <p>On peut remplacer les deux translations successives par une seule translation, de vecteur <span class="vec">w</span> = <span class="vec">u</span> + <span class="vec">v</span> = (2−1 ; 1+3) = (1 ; 4). En effet, la composée de deux translations est toujours une translation, de vecteur la somme des deux vecteurs.</p>
+    </details>
+  </div>
+</section>
+
+<!-- ================= SECTION 6 : QCM ================= -->
+<section class="section" id="sec6">
+  <h2>7. QCM — Teste tes connaissances</h2>
+  <p>16 questions. Clique sur une réponse pour voir immédiatement si elle est correcte. À la fin, ton score s'affiche.</p>
+  <div id="qcmContainer"></div>
+  <div id="qcmScore">
+    <h3>Ton score</h3>
+    <p id="qcmScoreText"></p>
+    <button onclick="resetQCM()" style="background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 18px; cursor:pointer; font-weight:700;">Recommencer le QCM</button>
+  </div>
+</section>
+
+<p class="footer-note">Chapitre 4ème — Transformations : translation, rotation &amp; symétrie centrale.</p>
+</main>
+
+<script>
+/* ============ THEME ============ */
+function toggleTheme(){
+  var root = document.documentElement;
+  var current = root.getAttribute('data-theme');
+  if(current === 'dark'){ root.setAttribute('data-theme','light'); }
+  else if(current === 'light'){ root.setAttribute('data-theme','dark'); }
+  else {
+    var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    root.setAttribute('data-theme', prefersDark ? 'light' : 'dark');
+  }
+  redrawAll();
+}
+
+/* ============ TAB NAVIGATION ============ */
+var sectionsInit = [false,false,false,false,false,false,false];
+var currentTab = 0;
+
+function showTab(i){
+  var sections = document.querySelectorAll('.section');
+  var btns = document.querySelectorAll('.tab-btn');
+  sections.forEach(function(s, idx){ s.classList.toggle('active', idx === i); });
+  btns.forEach(function(b, idx){ b.classList.toggle('active', idx === i); });
+  currentTab = i;
+  initSection(i);
+}
+
+function initSection(i){
+  if(sectionsInit[i]) return;
+  sectionsInit[i] = true;
+  if(i === 0){ initTranslationCanvas(); }
+  if(i === 1){ initConstructTransCanvas(); }
+  if(i === 2){ initRotationCanvas(); }
+  if(i === 3){ initConstructRotCanvas(); }
+  if(i === 5){ /* exercices: static content, nothing to init */ }
+  if(i === 6){ initQCM(); }
+}
+
+function redrawAll(){
+  if(sectionsInit[0]) drawTranslation();
+  if(sectionsInit[1]) drawConstructTrans();
+  if(sectionsInit[2]) drawRotation();
+  if(sectionsInit[3]) drawConstructRot();
+}
+
+/* ============ helpers ============ */
+function css(varName){
+  return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+}
+function clearCanvas(ctx, w, h){
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle = css('--surface');
+  ctx.fillRect(0,0,w,h);
+}
+function drawGrid(ctx, w, h, step){
+  ctx.strokeStyle = css('--border');
+  ctx.lineWidth = 1;
+  for(var x=0; x<=w; x+=step){
+    ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke();
+  }
+  for(var y=0; y<=h; y+=step){
+    ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke();
+  }
+}
+function drawArrow(ctx, x1,y1,x2,y2,color){
+  ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+  var angle = Math.atan2(y2-y1, x2-x1);
+  var headlen = 10;
+  ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2 - headlen*Math.cos(angle - Math.PI/6), y2 - headlen*Math.sin(angle - Math.PI/6));
+  ctx.lineTo(x2 - headlen*Math.cos(angle + Math.PI/6), y2 - headlen*Math.sin(angle + Math.PI/6));
+  ctx.closePath();
+  ctx.fill();
+}
+function drawTriangle(ctx, pts, color, fill){
+  ctx.beginPath();
+  ctx.moveTo(pts[0].x, pts[0].y);
+  ctx.lineTo(pts[1].x, pts[1].y);
+  ctx.lineTo(pts[2].x, pts[2].y);
+  ctx.closePath();
+  ctx.strokeStyle = color; ctx.lineWidth = 2.5;
+  if(fill){ ctx.fillStyle = color + '33'; ctx.fill(); }
+  ctx.stroke();
+}
+function drawPoint(ctx, p, color, label){
+  ctx.beginPath(); ctx.arc(p.x, p.y, 5, 0, Math.PI*2);
+  ctx.fillStyle = color; ctx.fill();
+  if(label){
+    ctx.fillStyle = css('--text'); ctx.font = '13px Nunito Sans, sans-serif';
+    ctx.fillText(label, p.x+8, p.y-8);
+  }
+}
+
+/* ============ TAB 0 : TRANSLATION INTERACTIVE ============ */
+var transCanvas, transCtx;
+var transTriangle = [{x:120,y:250},{x:180,y:150},{x:220,y:260}];
+var vecOrigin = {x:100,y:80};
+var vecEnd = {x:200,y:80};
+var draggingVec = false;
+
+function initTranslationCanvas(){
+  transCanvas = document.getElementById('cvTranslation');
+  transCtx = transCanvas.getContext('2d');
+  transCanvas.addEventListener('mousedown', function(e){
+    var pos = getMousePos(transCanvas, e);
+    if(dist(pos, vecEnd) < 15){ draggingVec = true; }
+  });
+  transCanvas.addEventListener('mousemove', function(e){
+    if(draggingVec){
+      var pos = getMousePos(transCanvas, e);
+      vecEnd = pos;
+      drawTranslation();
+    }
+  });
+  window.addEventListener('mouseup', function(){ draggingVec = false; });
+  transCanvas.addEventListener('touchstart', function(e){
+    var pos = getTouchPos(transCanvas, e);
+    if(dist(pos, vecEnd) < 25){ draggingVec = true; e.preventDefault(); }
+  }, {passive:false});
+  transCanvas.addEventListener('touchmove', function(e){
+    if(draggingVec){
+      var pos = getTouchPos(transCanvas, e);
+      vecEnd = pos;
+      drawTranslation();
+      e.preventDefault();
+    }
+  }, {passive:false});
+  transCanvas.addEventListener('touchend', function(){ draggingVec = false; });
+  drawTranslation();
+}
+function getMousePos(canvas, evt){
+  var rect = canvas.getBoundingClientRect();
+  var scaleX = canvas.width / rect.width, scaleY = canvas.height / rect.height;
+  return {x:(evt.clientX-rect.left)*scaleX, y:(evt.clientY-rect.top)*scaleY};
+}
+function getTouchPos(canvas, evt){
+  var rect = canvas.getBoundingClientRect();
+  var scaleX = canvas.width / rect.width, scaleY = canvas.height / rect.height;
+  var t = evt.touches[0];
+  return {x:(t.clientX-rect.left)*scaleX, y:(t.clientY-rect.top)*scaleY};
+}
+function dist(a,b){ return Math.hypot(a.x-b.x, a.y-b.y); }
+
+function drawTranslation(){
+  if(!transCtx) return;
+  var w = transCanvas.width, h = transCanvas.height;
+  clearCanvas(transCtx, w, h);
+  drawGrid(transCtx, w, h, 24);
+
+  var ux = vecEnd.x - vecOrigin.x, uy = vecEnd.y - vecOrigin.y;
+  var imageTriangle = transTriangle.map(function(p){ return {x:p.x+ux, y:p.y+uy}; });
+
+  drawTriangle(transCtx, transTriangle, css('--muted'), false);
+  transCtx.fillStyle = css('--text'); transCtx.font = '13px Nunito Sans, sans-serif';
+  transCtx.fillText('A', transTriangle[0].x-14, transTriangle[0].y+14);
+  transCtx.fillText('B', transTriangle[1].x-4, transTriangle[1].y-8);
+  transCtx.fillText('C', transTriangle[2].x+8, transTriangle[2].y+14);
+
+  drawTriangle(transCtx, imageTriangle, css('--accent'), true);
+  transCtx.fillStyle = css('--accent');
+  transCtx.fillText("A'", imageTriangle[0].x-16, imageTriangle[0].y+16);
+  transCtx.fillText("B'", imageTriangle[1].x-4, imageTriangle[1].y-10);
+  transCtx.fillText("C'", imageTriangle[2].x+10, imageTriangle[2].y+16);
+
+  drawArrow(transCtx, vecOrigin.x, vecOrigin.y, vecEnd.x, vecEnd.y, css('--heading'));
+  drawPoint(transCtx, vecOrigin, '#4a7c59', 'origine');
+  drawPoint(transCtx, vecEnd, '#c93838', 'u (glisse-moi)');
+}
+function resetTranslation(){
+  vecOrigin = {x:100,y:80}; vecEnd = {x:200,y:80};
+  drawTranslation();
+}
+
+/* ============ TAB 1 : CONSTRUCTION TRANSLATION ANIMATION ============ */
+var ctCanvas, ctCtx, ctStep = 0;
+var ctTriangle = [{x:100,y:260},{x:150,y:180},{x:190,y:270}];
+var ctVecOrigin = {x:300,y:60}, ctVecEnd = {x:380,y:110};
+
+function initConstructTransCanvas(){
+  ctCanvas = document.getElementById('cvConstructTrans');
+  ctCtx = ctCanvas.getContext('2d');
+  drawConstructTrans();
+}
+function resetConstructTrans(){ ctStep = 0; drawConstructTrans(); }
+function playConstructTrans(){
+  ctStep = 0;
+  var iv = setInterval(function(){
+    ctStep++;
+    drawConstructTrans();
+    if(ctStep >= 4){ clearInterval(iv); }
+  }, 900);
+}
+function drawConstructTrans(){
+  if(!ctCtx) return;
+  var w = ctCanvas.width, h = ctCanvas.height;
+  clearCanvas(ctCtx, w, h);
+  drawGrid(ctCtx, w, h, 24);
+  document.getElementById('hintConstructTrans').textContent = 'Étape ' + ctStep + ' / 4';
+
+  var ux = ctVecEnd.x - ctVecOrigin.x, uy = ctVecEnd.y - ctVecOrigin.y;
+  drawArrow(ctCtx, ctVecOrigin.x, ctVecOrigin.y, ctVecEnd.x, ctVecEnd.y, css('--heading'));
+  ctCtx.fillStyle = css('--heading'); ctCtx.font = '13px Nunito Sans, sans-serif';
+  ctCtx.fillText('u', (ctVecOrigin.x+ctVecEnd.x)/2, ctVecOrigin.y-10);
+
+  drawTriangle(ctCtx, ctTriangle, css('--muted'), false);
+  var labels = ['A','B','C'];
+  ctCtx.fillStyle = css('--text');
+  ctTriangle.forEach(function(p,idx){ ctCtx.fillText(labels[idx], p.x-12, p.y+14); });
+
+  if(ctStep >= 1){
+    // draw parallels (dashed) from each vertex
+    ctCtx.setLineDash([4,4]);
+    ctCtx.strokeStyle = css('--muted');
+    ctTriangle.forEach(function(p){
+      ctCtx.beginPath();
+      ctCtx.moveTo(p.x, p.y);
+      ctCtx.lineTo(p.x+ux, p.y+uy);
+      ctCtx.stroke();
+    });
+    ctCtx.setLineDash([]);
+  }
+  if(ctStep >= 2){
+    ctTriangle.forEach(function(p){
+      drawPoint(ctCtx, {x:p.x+ux, y:p.y+uy}, css('--accent'), null);
+    });
+  }
+  if(ctStep >= 3){
+    var img = ctTriangle.map(function(p){ return {x:p.x+ux,y:p.y+uy}; });
+    var lab2 = ["A'","B'","C'"];
+    ctCtx.fillStyle = css('--accent');
+    img.forEach(function(p,idx){ ctCtx.fillText(lab2[idx], p.x+8, p.y-8); });
+  }
+  if(ctStep >= 4){
+    var img2 = ctTriangle.map(function(p){ return {x:p.x+ux,y:p.y+uy}; });
+    drawTriangle(ctCtx, img2, css('--accent'), true);
+  }
+}
+
+/* ============ TAB 2 : ROTATION INTERACTIVE ============ */
+var rotCanvas, rotCtx;
+var rotCenter = {x:240,y:190};
+var rotTriangle = [{x:340,y:250},{x:380,y:160},{x:410,y:260}];
+var rotAngleDeg = 0;
+
+function initRotationCanvas(){
+  rotCanvas = document.getElementById('cvRotation');
+  rotCtx = rotCanvas.getContext('2d');
+  drawRotation();
+}
+function updateRotation(val){
+  rotAngleDeg = parseFloat(val);
+  document.getElementById('angleValue').textContent = rotAngleDeg + '°';
+  drawRotation();
+}
+function setAngle(a){
+  rotAngleDeg = a;
+  document.getElementById('angleSlider').value = a;
+  document.getElementById('angleValue').textContent = a + '°';
+  drawRotation();
+}
+function rotatePoint(p, center, angleDeg){
+  var rad = -angleDeg * Math.PI / 180; // canvas y is flipped, so negate for anticlockwise visual
+  var dx = p.x - center.x, dy = p.y - center.y;
+  var cos = Math.cos(rad), sin = Math.sin(rad);
+  return {
+    x: center.x + dx*cos - dy*sin,
+    y: center.y + dx*sin + dy*cos
+  };
+}
+function drawRotation(){
+  if(!rotCtx) return;
+  var w = rotCanvas.width, h = rotCanvas.height;
+  clearCanvas(rotCtx, w, h);
+  drawGrid(rotCtx, w, h, 24);
+
+  drawTriangle(rotCtx, rotTriangle, css('--muted'), false);
+  var labels = ['A','B','C'];
+  rotCtx.fillStyle = css('--text'); rotCtx.font = '13px Nunito Sans, sans-serif';
+  rotTriangle.forEach(function(p,idx){ rotCtx.fillText(labels[idx], p.x-12, p.y+14); });
+
+  var imgTriangle = rotTriangle.map(function(p){ return rotatePoint(p, rotCenter, rotAngleDeg); });
+  drawTriangle(rotCtx, imgTriangle, css('--accent'), true);
+  var lab2 = ["A'","B'","C'"];
+  rotCtx.fillStyle = css('--accent');
+  imgTriangle.forEach(function(p,idx){ rotCtx.fillText(lab2[idx], p.x+8, p.y-8); });
+
+  // guide lines from center to A and A'
+  rotCtx.setLineDash([4,4]);
+  rotCtx.strokeStyle = css('--heading');
+  rotCtx.beginPath(); rotCtx.moveTo(rotCenter.x, rotCenter.y); rotCtx.lineTo(rotTriangle[0].x, rotTriangle[0].y); rotCtx.stroke();
+  rotCtx.beginPath(); rotCtx.moveTo(rotCenter.x, rotCenter.y); rotCtx.lineTo(imgTriangle[0].x, imgTriangle[0].y); rotCtx.stroke();
+  rotCtx.setLineDash([]);
+
+  drawPoint(rotCtx, rotCenter, '#222', 'O');
+}
+
+/* ============ TAB 3 : CONSTRUCTION ROTATION ANIMATION ============ */
+var crCanvas, crCtx, crStep = 0;
+var crCenter = {x:150,y:280};
+var crTriangle = [{x:280,y:280},{x:320,y:210},{x:350,y:290}];
+
+function initConstructRotCanvas(){
+  crCanvas = document.getElementById('cvConstructRot');
+  crCtx = crCanvas.getContext('2d');
+  drawConstructRot();
+}
+function resetConstructRot(){ crStep = 0; drawConstructRot(); }
+function playConstructRot(){
+  crStep = 0;
+  var iv = setInterval(function(){
+    crStep++;
+    drawConstructRot();
+    if(crStep >= 4){ clearInterval(iv); }
+  }, 900);
+}
+function drawConstructRot(){
+  if(!crCtx) return;
+  var w = crCanvas.width, h = crCanvas.height;
+  clearCanvas(crCtx, w, h);
+  drawGrid(crCtx, w, h, 24);
+  document.getElementById('hintConstructRot').textContent = 'Étape ' + crStep + ' / 4';
+
+  drawPoint(crCtx, crCenter, '#222', 'O');
+  drawTriangle(crCtx, crTriangle, css('--muted'), false);
+  var labels = ['A','B','C'];
+  crCtx.fillStyle = css('--text'); crCtx.font = '13px Nunito Sans, sans-serif';
+  crTriangle.forEach(function(p,idx){ crCtx.fillText(labels[idx], p.x-12, p.y+14); });
+
+  if(crStep >= 1){
+    crCtx.setLineDash([4,4]);
+    crCtx.strokeStyle = css('--muted');
+    crTriangle.forEach(function(p){
+      crCtx.beginPath(); crCtx.moveTo(crCenter.x, crCenter.y); crCtx.lineTo(p.x,p.y); crCtx.stroke();
+    });
+    crCtx.setLineDash([]);
+  }
+  var img = crTriangle.map(function(p){ return rotatePoint(p, crCenter, 90); });
+  if(crStep >= 2){
+    crCtx.setLineDash([4,4]);
+    crCtx.strokeStyle = css('--heading');
+    img.forEach(function(p){
+      crCtx.beginPath(); crCtx.moveTo(crCenter.x, crCenter.y); crCtx.lineTo(p.x,p.y); crCtx.stroke();
+    });
+    crCtx.setLineDash([]);
+  }
+  if(crStep >= 3){
+    img.forEach(function(p){ drawPoint(crCtx, p, css('--accent'), null); });
+    var lab2 = ["A'","B'","C'"];
+    crCtx.fillStyle = css('--accent');
+    img.forEach(function(p,idx){ crCtx.fillText(lab2[idx], p.x+8, p.y-8); });
+  }
+  if(crStep >= 4){
+    drawTriangle(crCtx, img, css('--accent'), true);
+  }
+}
+
+/* ============ TAB 6 : QCM ============ */
+var qcmData = [
+  {q:"Une translation est définie par :", opts:["Un centre et un angle","Un vecteur","Un axe","Un point seulement"], correct:1},
+  {q:"Si M' est l'image de M par translation de vecteur u, alors :", opts:["MM' = u","M'M = u","OM = OM'","MM' est perpendiculaire à u"], correct:0},
+  {q:"La translation conserve :", opts:["Uniquement les longueurs","Uniquement les angles","Longueurs, angles et parallélisme","Rien du tout"], correct:2},
+  {q:"Le vecteur opposé à u a :", opts:["La même longueur, le sens contraire","Une longueur différente","Le même sens, une autre direction","Aucun rapport avec u"], correct:0},
+  {q:"Une rotation est définie par :", opts:["Un vecteur","Un centre, un angle, un sens","Deux points seulement","Une droite"], correct:1},
+  {q:"Le centre d'une rotation est :", opts:["Toujours à l'infini","Un point invariant (sauf angle nul)","Toujours sur la figure","Le milieu du segment image"], correct:1},
+  {q:"Une rotation de 180° équivaut à :", opts:["Une translation","Une symétrie axiale","Une symétrie centrale","Aucune transformation connue"], correct:2},
+  {q:"Pour une rotation de centre O, on a toujours :", opts:["OM = OM'","OM = 2×OM'","OM' = 0","OM et OM' sont perpendiculaires"], correct:0},
+  {q:"Une rotation de 90° correspond à :", opts:["Un tour complet","Un demi-tour","Un quart de tour","Un tiers de tour"], correct:2},
+  {q:"O est un centre de symétrie d'une figure F si :", opts:["F est un cercle","L'image de F par la symétrie centrale de centre O est F elle-même","O appartient à F","F a un axe de symétrie"], correct:1},
+  {q:"Dans un parallélogramme, le centre de symétrie est :", opts:["Un sommet","Le milieu d'un côté","Le point d'intersection des diagonales","Il n'y en a pas"], correct:2},
+  {q:"Un triangle équilatéral (non dégénéré) possède :", opts:["Un centre de symétrie","Aucun centre de symétrie","Deux centres de symétrie","Un centre de symétrie seulement s'il est isocèle"], correct:1},
+  {q:"La translation et la rotation sont toutes deux des :", opts:["Agrandissements","Isométries","Projections","Réductions"], correct:1},
+  {q:"Si O est le milieu de [MM'], alors M' est :", opts:["L'image de M par translation","Le symétrique de M par rapport à O","Perpendiculaire à M","Sans rapport avec M"], correct:1},
+  {q:"Composer deux translations de vecteurs u et v donne :", opts:["Une rotation d'angle u+v","Une translation de vecteur u+v","Une symétrie centrale","Rien de précis"], correct:1},
+  {q:"Une rotation de 270° dans le sens anti-horaire équivaut à :", opts:["Une rotation de 90° dans le sens horaire","Une rotation de 90° anti-horaire","Une translation","Une rotation de 180°"], correct:0}
+];
+var qcmAnswered = [];
+function initQCM(){
+  var container = document.getElementById('qcmContainer');
+  container.innerHTML = '';
+  qcmAnswered = new Array(qcmData.length).fill(false);
+  qcmData.forEach(function(item, qi){
+    var div = document.createElement('div');
+    div.className = 'qcm-q';
+    var p = document.createElement('p');
+    p.className = 'question';
+    p.textContent = (qi+1) + '. ' + item.q;
+    div.appendChild(p);
+    var optsWrap = document.createElement('div');
+    optsWrap.className = 'qcm-opts';
+    item.opts.forEach(function(optText, oi){
+      var optDiv = document.createElement('div');
+      optDiv.className = 'qcm-opt';
+      optDiv.textContent = optText;
+      optDiv.onclick = function(){ answerQCM(qi, oi, optDiv, optsWrap); };
+      optsWrap.appendChild(optDiv);
+    });
+    div.appendChild(optsWrap);
+    container.appendChild(div);
+  });
+  document.getElementById('qcmScore').style.display = 'none';
+}
+var qcmCorrectCount = 0;
+function answerQCM(qi, oi, optDiv, optsWrap){
+  if(qcmAnswered[qi]) return;
+  qcmAnswered[qi] = true;
+  var correctIdx = qcmData[qi].correct;
+  var children = optsWrap.children;
+  for(var k=0;k<children.length;k++){ children[k].classList.add('disabled'); }
+  if(oi === correctIdx){
+    optDiv.classList.add('correct');
+    qcmCorrectCount++;
+  } else {
+    optDiv.classList.add('wrong');
+    children[correctIdx].classList.add('correct');
+  }
+  checkQCMComplete();
+}
+function checkQCMComplete(){
+  var allDone = qcmAnswered.every(function(a){ return a; });
+  if(allDone){
+    var total = qcmData.length;
+    var pct = Math.round(qcmCorrectCount/total*100);
+    var msg;
+    if(pct >= 85){ msg = "Excellent ! Tu maîtrises très bien les transformations."; }
+    else if(pct >= 60){ msg = "Bien joué ! Quelques révisions te feront encore progresser."; }
+    else { msg = "Continue à t'entraîner : relis les onglets Translation et Rotation."; }
+    document.getElementById('qcmScoreText').textContent = qcmCorrectCount + ' / ' + total + ' bonnes réponses (' + pct + '%). ' + msg;
+    document.getElementById('qcmScore').style.display = 'block';
+  }
+}
+function resetQCM(){
+  qcmCorrectCount = 0;
+  initQCM();
+}
+
+/* ============ INIT ============ */
+document.addEventListener('DOMContentLoaded', function(){
+  initSection(0);
+});
+if(document.readyState !== 'loading'){ initSection(0); }
+
+window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').addEventListener && window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(){
+  if(!document.documentElement.getAttribute('data-theme')){ redrawAll(); }
+});
+</script>
+</body>
+</html>

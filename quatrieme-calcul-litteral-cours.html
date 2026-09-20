@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calcul litteral - 4eme</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f5f2ed;--surface:#ffffff;--surface2:#ebe6de;--text:#2c2418;
+  --heading:#8b4513;--muted:#6b5a48;--border:#d4c8b8;--accent:#a0522d;
+  --accent-light:#faf5ef;--success:#2e7d32;--error:#c62828;
+  --radius:10px;--shadow:0 2px 12px rgba(0,0,0,.08);
+}
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#161210;--surface:#221c18;--surface2:#302820;--text:#ddd0c0;
+    --heading:#e0a868;--muted:#9a8878;--border:#403428;--accent:#d08840;
+    --accent-light:#1e1610;--success:#66bb6a;--error:#ef5350;
+    --shadow:0 2px 12px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161210;--surface:#221c18;--surface2:#302820;--text:#ddd0c0;
+  --heading:#e0a868;--muted:#9a8878;--border:#403428;--accent:#d08840;
+  --accent-light:#1e1610;--success:#66bb6a;--error:#ef5350;
+  --shadow:0 2px 12px rgba(0,0,0,.3);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:'Nunito Sans',sans-serif;font-size:16px;line-height:1.7;
+  color:var(--text);background:var(--bg);min-height:100vh;
+}
+.container{max-width:860px;margin:0 auto;padding:16px;}
+header{text-align:center;padding:32px 16px 20px;position:relative;}
+header h1{
+  font-family:'Cormorant Garamond',serif;font-weight:700;font-size:2rem;
+  color:var(--heading);margin-bottom:4px;
+}
+header p.subtitle{color:var(--muted);font-size:.95rem;}
+.badge{
+  display:inline-block;background:var(--accent);color:#fff;
+  font-size:.75rem;font-weight:700;padding:3px 12px;border-radius:20px;
+  position:absolute;top:16px;right:16px;letter-spacing:.5px;
+}
+.theme-toggle{
+  position:absolute;top:16px;left:16px;background:var(--surface2);
+  border:1px solid var(--border);border-radius:20px;cursor:pointer;
+  width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;color:var(--text);
+}
+nav.tabs{
+  display:flex;gap:4px;overflow-x:auto;padding:8px 0;margin-bottom:20px;
+  border-bottom:2px solid var(--border);-webkit-overflow-scrolling:touch;
+}
+nav.tabs button{
+  flex-shrink:0;background:none;border:none;padding:8px 14px;cursor:pointer;
+  font-family:'Nunito Sans',sans-serif;font-size:.85rem;font-weight:600;
+  color:var(--muted);border-radius:var(--radius) var(--radius) 0 0;
+  transition:all .2s;white-space:nowrap;
+}
+nav.tabs button:hover{background:var(--surface2);color:var(--text);}
+nav.tabs button.active{background:var(--accent);color:#fff;}
+.tab-content{display:none;animation:fadeIn .3s;}
+.tab-content.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+section.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:24px;margin-bottom:20px;
+  box-shadow:var(--shadow);
+}
+h2{
+  font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.5rem;
+  color:var(--heading);margin-bottom:16px;
+}
+h3{
+  font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.2rem;
+  color:var(--heading);margin:18px 0 10px;
+}
+.definition{
+  background:var(--accent-light);border-left:4px solid var(--accent);
+  padding:14px 18px;border-radius:0 var(--radius) var(--radius) 0;margin:14px 0;
+}
+.definition strong{color:var(--accent);}
+.example{
+  background:var(--surface2);padding:14px 18px;border-radius:var(--radius);
+  margin:12px 0;font-size:.95rem;
+}
+.example code,.formula{
+  font-family:'Cormorant Garamond',serif;font-weight:600;
+  color:var(--accent);font-size:1.05em;
+}
+.formula-box{
+  text-align:center;padding:16px;margin:14px 0;
+  background:var(--accent-light);border-radius:var(--radius);
+  font-family:'Cormorant Garamond',serif;font-size:1.3rem;
+  font-weight:700;color:var(--accent);
+}
+.warning{
+  background:#fff3e0;border-left:4px solid #f57c00;
+  padding:14px 18px;border-radius:0 var(--radius) var(--radius) 0;margin:14px 0;
+}
+:root[data-theme="dark"] .warning{background:#2a1e10;}
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .warning{background:#2a1e10;}
+}
+.interactive{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--radius);padding:20px;margin:16px 0;
+}
+.interactive h4{font-weight:700;margin-bottom:10px;color:var(--heading);}
+input[type="text"],input[type="number"]{
+  font-family:'Nunito Sans',sans-serif;font-size:.95rem;
+  padding:8px 12px;border:1px solid var(--border);border-radius:6px;
+  background:var(--surface);color:var(--text);width:120px;
+}
+input:focus{outline:2px solid var(--accent);outline-offset:1px;}
+button.btn{
+  font-family:'Nunito Sans',sans-serif;font-size:.85rem;font-weight:600;
+  padding:8px 18px;border:none;border-radius:6px;cursor:pointer;transition:all .2s;
+}
+button.primary{background:var(--accent);color:#fff;}
+button.primary:hover{filter:brightness(1.1);}
+button.secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border);}
+.feedback{
+  margin-top:10px;padding:10px 14px;border-radius:6px;font-weight:600;
+  font-size:.9rem;display:none;
+}
+.feedback.correct{display:block;background:#e8f5e9;color:var(--success);}
+.feedback.wrong{display:block;background:#ffebee;color:var(--error);}
+:root[data-theme="dark"] .feedback.correct,
+:root:not([data-theme="light"]) .feedback.correct{background:#1b3a1b;}
+:root[data-theme="dark"] .feedback.wrong,
+:root:not([data-theme="light"]) .feedback.wrong{background:#3a1b1b;}
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .feedback.correct{background:#1b3a1b;}
+  :root:not([data-theme="light"]) .feedback.wrong{background:#3a1b1b;}
+}
+details{margin:12px 0;}
+details summary{
+  cursor:pointer;font-weight:700;color:var(--accent);padding:8px 0;
+  list-style:none;display:flex;align-items:center;gap:8px;
+}
+details summary::before{content:"+ ";font-weight:700;}
+details[open] summary::before{content:"- ";}
+details .correction{
+  padding:14px 18px;background:var(--accent-light);
+  border-radius:var(--radius);margin-top:6px;
+}
+canvas{
+  display:block;margin:12px auto;border-radius:var(--radius);
+  max-width:100%;background:var(--surface);
+}
+.progress-bar{
+  width:100%;height:8px;background:var(--surface2);
+  border-radius:4px;overflow:hidden;margin:10px 0;
+}
+.progress-fill{
+  height:100%;background:var(--accent);transition:width .4s;border-radius:4px;
+}
+.qcm-option{
+  display:block;padding:10px 16px;margin:6px 0;border:2px solid var(--border);
+  border-radius:8px;cursor:pointer;transition:all .2s;background:var(--surface);
+}
+.qcm-option:hover{border-color:var(--accent);background:var(--accent-light);}
+.qcm-option.selected{border-color:var(--accent);background:var(--accent-light);}
+.qcm-option.correct-answer{border-color:var(--success);background:#e8f5e9;}
+.qcm-option.wrong-answer{border-color:var(--error);background:#ffebee;}
+:root[data-theme="dark"] .qcm-option.correct-answer{background:#1b3a1b;}
+:root[data-theme="dark"] .qcm-option.wrong-answer{background:#3a1b1b;}
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .qcm-option.correct-answer{background:#1b3a1b;}
+  :root:not([data-theme="light"]) .qcm-option.wrong-answer{background:#3a1b1b;}
+}
+.step{padding:10px 0;border-bottom:1px dashed var(--border);}
+.step:last-child{border-bottom:none;}
+ul,ol{padding-left:24px;margin:8px 0;}
+li{margin:4px 0;}
+table.rules{width:100%;border-collapse:collapse;margin:12px 0;}
+table.rules th,table.rules td{
+  padding:10px 14px;border:1px solid var(--border);text-align:left;font-size:.9rem;
+}
+table.rules th{background:var(--accent-light);font-weight:700;color:var(--accent);}
+.tip{
+  display:inline-block;background:var(--accent);color:#fff;font-size:.7rem;
+  font-weight:700;padding:2px 8px;border-radius:10px;margin-right:6px;
+  vertical-align:middle;letter-spacing:.3px;
+}
+@media(max-width:600px){
+  header h1{font-size:1.5rem;}
+  nav.tabs button{padding:6px 10px;font-size:.78rem;}
+  section.card{padding:16px;}
+  .formula-box{font-size:1.1rem;padding:12px;}
+  .container{padding:12px;}
+  canvas{max-width:100%!important;}
+}
+</style>
+</head>
+<body>
+<header>
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Changer le theme">&#9789;</button>
+  <span class="badge">4eme</span>
+  <h1>Calcul litteral</h1>
+  <p class="subtitle">Developper, factoriser et demontrer</p>
+</header>
+<div class="container">
+  <nav class="tabs" id="tabNav"></nav>
+  <div id="tabPanels"></div>
+</div>
+<script>
+var TAB_NAMES=["Expressions","Reduire","Developper","Factoriser","Prouver","Exercices","QCM"];
+var activeTab=0;
+var tabInited=[];
+var qcmState={answers:{},submitted:false};
+function buildTabs(){
+  var nav=document.getElementById("tabNav");
+  var panels=document.getElementById("tabPanels");
+  TAB_NAMES.forEach(function(name,i){
+    var btn=document.createElement("button");
+    btn.textContent=name;
+    btn.onclick=function(){showTab(i);};
+    if(i===0)btn.className="active";
+    nav.appendChild(btn);
+    var div=document.createElement("div");
+    div.className="tab-content"+(i===0?" active":"");
+    div.id="tab"+i;
+    panels.appendChild(div);
+  });
+  tabInited=TAB_NAMES.map(function(){return false;});
+  initSection(0);
+}
+function showTab(i){
+  activeTab=i;
+  var btns=document.querySelectorAll("nav.tabs button");
+  var pans=document.querySelectorAll(".tab-content");
+  btns.forEach(function(b,j){b.className=j===i?"active":"";});
+  pans.forEach(function(p,j){p.className=j===i?"tab-content active":"tab-content";});
+  if(!tabInited[i])initSection(i);
+}
+function initSection(i){
+  tabInited[i]=true;
+  var target=document.getElementById("tab"+i);
+  switch(i){
+    case 0:buildExpressions(target);break;
+    case 1:buildReduire(target);break;
+    case 2:buildDevelopper(target);break;
+    case 3:buildFactoriser(target);break;
+    case 4:buildProuver(target);break;
+    case 5:buildExercices(target);break;
+    case 6:buildQCM(target);break;
+  }
+}
+function cssVar(name){return getComputedStyle(document.documentElement).getPropertyValue(name).trim();}
+function showFeedback(id,ok,msg){
+  var fb=document.getElementById(id);
+  if(!fb)return;
+  fb.className="feedback "+(ok?"correct":"wrong");
+  fb.textContent=msg;
+  fb.style.display="block";
+}
+function normalizeExpr(s){
+  return s.replace(/\s+/g,"").replace(/²/g,"2").replace(/\^/g,"").toLowerCase();
+}
+/* ===================================================================
+   TAB 0 : EXPRESSIONS LITTERALES
+   =================================================================== */
+function buildExpressions(target){
+  target.innerHTML=
+  '<section class="card">'+
+    '<h2>Expressions litterales</h2>'+
+    '<div class="definition">'+
+      '<strong>Definition :</strong> Une <em>expression litterale</em> est une expression '+
+      'mathematique contenant une ou plusieurs lettres qui representent des nombres.'+
+    '</div>'+
+    '<div class="example">Exemples : <code>3x + 5</code> &mdash; <code>2a - 7b + 1</code> &mdash; <code>x&sup2; + 2x - 3</code></div>'+
+    '<h3>Conventions d\'ecriture</h3>'+
+    '<table class="rules">'+
+      '<thead><tr><th>On ecrit</th><th>Au lieu de</th><th>Regle</th></tr></thead>'+
+      '<tbody>'+
+      '<tr><td><code>2a</code></td><td><code>2 &times; a</code></td><td>On supprime le signe &times; devant une lettre</td></tr>'+
+      '<tr><td><code>ab</code></td><td><code>a &times; b</code></td><td>On supprime le signe &times; entre deux lettres</td></tr>'+
+      '<tr><td><code>a&sup2;</code></td><td><code>a &times; a</code></td><td>On utilise la notation puissance</td></tr>'+
+      '<tr><td><code>a</code></td><td><code>1 &times; a</code></td><td>Le coefficient 1 est sous-entendu</td></tr>'+
+      '<tr><td><code>-a</code></td><td><code>-1 &times; a</code></td><td>Le coefficient -1 s\'ecrit juste avec le signe -</td></tr>'+
+      '</tbody>'+
+    '</table>'+
+    '<div class="warning">'+
+      '<strong>Attention !</strong> <code>2a</code> signifie <code>2 &times; a</code> (multiplication), '+
+      'mais <code>23</code> signifie vingt-trois (pas <code>2 &times; 3</code>). '+
+      'On n\'utilise cette convention qu\'avec des lettres !'+
+    '</div>'+
+  '</section>'+
+  '<section class="card">'+
+    '<h2>Substitution : calculer une expression</h2>'+
+    '<div class="definition">'+
+      '<strong>Methode :</strong> Pour calculer la valeur d\'une expression pour une valeur '+
+      'donnee de la variable, on <em>remplace</em> chaque lettre par cette valeur, '+
+      'puis on effectue les calculs en respectant les priorites operatoires.'+
+    '</div>'+
+    '<div class="example">'+
+      '<span class="tip">Exemple</span> Si <code>x = 3</code>, calculer <code>2x&sup2; + x - 4</code>.<br>'+
+      '<code>2 &times; 3&sup2; + 3 - 4 = 2 &times; 9 + 3 - 4 = 18 + 3 - 4 = <strong>17</strong></code>'+
+    '</div>'+
+    '<div class="warning">'+
+      '<strong>Piege classique :</strong> Quand on remplace x par un nombre negatif, '+
+      'on met des parentheses ! Pour x = -2 : <code>x&sup2; = (-2)&sup2; = 4</code> '+
+      '(et non <code>-2&sup2; = -4</code>).'+
+    '</div>'+
+  '</section>'+
+  '<section class="card">'+
+    '<h2>Calculateur interactif</h2>'+
+    '<p>Entrez une valeur de x et visualisez le calcul de l\'expression <code>2x&sup2; - 3x + 1</code>.</p>'+
+    '<canvas id="exprCanvas" width="500" height="180"></canvas>'+
+    '<div style="text-align:center;margin:8px 0;">'+
+      '<label>x = <input type="number" id="exprX" value="3" style="width:70px"></label> '+
+      '<button class="btn primary" onclick="drawExprCanvas()">Calculer</button>'+
+    '</div>'+
+  '</section>'+
+  '<section class="card">'+
+    '<h2>Exercices interactifs</h2>'+
+    '<div class="interactive" id="exprExo"></div>'+
+  '</section>';
+  setTimeout(drawExprCanvas,50);
+  buildExprExo();
+}
+function drawExprCanvas(){
+  var canvas=document.getElementById("exprCanvas");
+  if(!canvas)return;
+  var ctx=canvas.getContext("2d");
+  var W=canvas.width,H=canvas.height;
+  var x=parseFloat(document.getElementById("exprX").value)||0;
+  var surface=cssVar("--surface")||"#fff";
+  var accent=cssVar("--accent")||"#a0522d";
+  var text=cssVar("--text")||"#2c2418";
+  var heading=cssVar("--heading")||"#8b4513";
+  var muted=cssVar("--muted")||"#6b5a48";
+  ctx.fillStyle=surface;ctx.fillRect(0,0,W,H);
+  var x2=x*x, term1=2*x2, term2=-3*x, term3=1, result=term1+term2+term3;
+  var steps=[
+    {label:"x = "+x, val:x},
+    {label:"x² = "+x2, val:x2},
+    {label:"2x² = "+term1, val:term1},
+    {label:"-3x = "+term2, val:term2},
+    {label:"Resultat = "+result, val:result}
+  ];
+  var gap=W/(steps.length+1);
+  ctx.textAlign="center";ctx.textBaseline="middle";
+  steps.forEach(function(s,i){
+    var cx=gap*(i+1), cy=H/2-10;
+    ctx.beginPath();ctx.arc(cx,cy,28,0,Math.PI*2);
+    ctx.fillStyle=i===steps.length-1?accent+"55":accent+"22";
+    ctx.fill();
+    ctx.strokeStyle=accent;ctx.lineWidth=2;ctx.stroke();
+    ctx.fillStyle=i===steps.length-1?heading:text;
+    ctx.font=(i===steps.length-1?"bold ":"")+"13px 'Nunito Sans',sans-serif";
+    ctx.fillText(String(s.val),cx,cy);
+    ctx.fillStyle=muted;ctx.font="11px 'Nunito Sans',sans-serif";
+    ctx.fillText(s.label,cx,cy+42);
+    if(i<steps.length-1){
+      ctx.beginPath();ctx.moveTo(cx+30,cy);ctx.lineTo(gap*(i+2)-30,cy);
+      ctx.strokeStyle=accent;ctx.lineWidth=1.5;ctx.stroke();
+      var ax=gap*(i+2)-34;
+      ctx.beginPath();ctx.moveTo(ax,cy-4);ctx.lineTo(ax+4,cy);ctx.lineTo(ax,cy+4);
+      ctx.fillStyle=accent;ctx.fill();
+    }
+  });
+  ctx.fillStyle=heading;ctx.font="bold 14px 'Cormorant Garamond',serif";
+  ctx.fillText("2x² - 3x + 1 = 2("+x+")² - 3("+x+") + 1 = "+result,W/2,H-15);
+}
+function buildExprExo(){
+  var problems=[
+    {expr:"3x + 7",variable:"x",val:4,answer:19},
+    {expr:"5a - 2",variable:"a",val:3,answer:13},
+    {expr:"x&sup2; + 2x",variable:"x",val:5,answer:35},
+    {expr:"2y&sup2; - y + 1",variable:"y",val:3,answer:16},
+    {expr:"3x&sup2; - 2x + 4",variable:"x",val:-1,answer:9},
+    {expr:"-a&sup2; + 5a",variable:"a",val:2,answer:6}
+  ];
+  var c=document.getElementById("exprExo");
+  c.innerHTML='<h4>Calculer les expressions suivantes</h4>';
+  problems.forEach(function(p,i){
+    c.innerHTML+=
+      '<div class="step">'+
+        '<p>Calculer <code>'+p.expr+'</code> pour <code>'+p.variable+' = '+p.val+'</code></p>'+
+        '<input type="number" id="expr_ans_'+i+'" placeholder="Reponse"> '+
+        '<button class="btn primary" onclick="checkExpr('+i+','+p.answer+')">Verifier</button>'+
+        '<div class="feedback" id="expr_fb_'+i+'"></div>'+
+      '</div>';
+  });
+}
+function checkExpr(i,expected){
+  var v=parseFloat(document.getElementById("expr_ans_"+i).value);
+  if(isNaN(v)){showFeedback("expr_fb_"+i,false,"Entrez un nombre.");return;}
+  showFeedback("expr_fb_"+i,v===expected,
+    v===expected?"Bravo ! C'est correct.":"Incorrect. La reponse est "+expected+".");
+}
+/* ===================================================================
+   TAB 1 : REDUIRE
+   =================================================================== */
+function buildReduire(target){
+  target.innerHTML=
+  '<section class="card">'+
+    '<h2>Reduire une expression</h2>'+
+    '<div class="definition">'+
+      '<strong>Termes semblables :</strong> Deux termes sont <em>semblables</em> '+
+      's\'ils contiennent la meme partie litterale (memes lettres, memes exposants).'+
+    '</div>'+
+    '<div class="example">'+
+      '<code>3x</code> et <code>5x</code> sont semblables (meme partie litterale : x)<br>'+
+      '<code>3x</code> et <code>3x&sup2;</code> ne le sont <strong>pas</strong> (x et x&sup2; sont differents)<br>'+
+      '<code>2ab</code> et <code>-7ab</code> sont semblables'+
+    '</div>'+
+    '<div class="definition">'+
+      '<strong>Reduire :</strong> Reduire une expression, c\'est regrouper les termes '+
+      'semblables en additionnant (ou soustrayant) leurs coefficients.'+
+    '</div>'+
+    '<h3>Exemples detailles</h3>'+
+    '<div class="example">'+
+      '<code>3x + 5x - 2x = (3 + 5 - 2)x = <strong>6x</strong></code>'+
+    '</div>'+
+    '<div class="example">'+
+      '<code>4a + 3b - a + 2b = (4 - 1)a + (3 + 2)b = <strong>3a + 5b</strong></code>'+
+    '</div>'+
+    '<div class="example">'+
+      '<code>x&sup2; + 3x - 2x&sup2; + x + 5 = (1 - 2)x&sup2; + (3 + 1)x + 5 = <strong>-x&sup2; + 4x + 5</strong></code>'+
+    '</div>'+
+    '<h3>Methode pas a pas</h3>'+
+    '<ol>'+
+      '<li>Souligner ou colorier les termes semblables</li>'+
+      '<li>Regrouper ces termes (attention aux signes !)</li>'+
+      '<li>Additionner les coefficients</li>'+
+      '<li>Ecrire le resultat en ordonnant les termes (puissance decroissante)</li>'+
+    '</ol>'+
+  '</section>'+
+  '<section class="card">'+
+    '<h2>Visualisation : identifier les termes</h2>'+
+    '<canvas id="reduireCanvas" width="500" height="200"></canvas>'+
+  '</section>'+
+  '<section class="card">'+
+    '<h2>Exercices : Reduire pas a pas</h2>'+
+    '<div class="interactive" id="reduireExo"></div>'+
+  '</section>'+
+  '<section class="card">'+
+    '<h2>Classement interactif</h2>'+
+    '<p>Pour chaque expression, indiquez les coefficients et le terme constant.</p>'+
+    '<div class="interactive" id="reduireClass"></div>'+
+  '</section>';
+  setTimeout(drawReduireCanvas,50);
+  buildReduireExo();
+  buildReduireClass();
+}
+function drawReduireCanvas(){
+  var canvas=document.getElementById("reduireCanvas");
+  if(!canvas)return;
+  var ctx=canvas.getContext("2d");
+  var W=canvas.width,H=canvas.height;
+  var surface=cssVar("--surface")||"#fff";
+  var accent=cssVar("--accent")||"#a0522d";
+  var heading=cssVar("--heading")||"#8b4513";
+  var text=cssVar("--text")||"#2c2418";
+  var success=cssVar("--success")||"#2e7d32";
+  ctx.fillStyle=surface;ctx.fillRect(0,0,W,H);
+  var terms=[
+    {txt:"3x",color:accent,group:"x"},
+    {txt:"+",color:text,group:""},
+    {txt:"2y",color:heading,group:"y"},
+    {txt:"-",color:text,group:""},
+    {txt:"x",color:accent,group:"x"},
+    {txt:"+",color:text,group:""},
+    {txt:"5",color:success,group:"c"},
+    {txt:"-",color:text,group:""},
+    {txt:"4y",color:heading,group:"y"},
+    {txt:"+",color:text,group:""},
+    {txt:"1",color:success,group:"c"}
+  ];
+  ctx.font="bold 22px 'Cormorant Garamond',serif";
+  ctx.textAlign="center";ctx.textBaseline="middle";
+  var totalW=0;
+  terms.forEach(function(t){totalW+=ctx.measureText(t.txt).width+16;});
+  var startX=(W-totalW)/2;
+  var y=50;
+  terms.forEach(function(t){
+    var tw=ctx.measureText(t.txt).width+16;
+    var cx=startX+tw/2;
+    if(t.group){
+      ctx.fillStyle=t.color+"22";
+      ctx.beginPath();
+      ctx.roundRect(cx-tw/2-2,y-20,tw+4,40,6);
+      ctx.fill();
+      ctx.strokeStyle=t.color;ctx.lineWidth=1.5;
+      ctx.beginPath();ctx.roundRect(cx-tw/2-2,y-20,tw+4,40,6);ctx.stroke();
+    }
+    ctx.fillStyle=t.color;
+    ctx.fillText(t.txt,cx,y);
+    startX+=tw;
+  });
+  y=120;
+  ctx.font="bold 18px 'Cormorant Garamond',serif";
+  var results=[
+    {txt:"= (3 - 1)x + (2 - 4)y + (5 + 1)",color:text},
+  ];
+  ctx.fillStyle=text;ctx.textAlign="center";
+  ctx.fillText("= (3 - 1)x + (2 - 4)y + (5 + 1)",W/2,y);
+  ctx.font="bold 22px 'Cormorant Garamond',serif";
+  ctx.fillStyle=heading;
+  ctx.fillText("= 2x - 2y + 6",W/2,y+40);
+}
+function buildReduireExo(){
+  var items=[
+    {q:"5x + 3x",a:"8x"},
+    {q:"7a - 2a + a",a:"6a"},
+    {q:"3x + 4y - x + 2y",a:"2x + 6y"},
+    {q:"5t - 3 + 2t + 7",a:"7t + 4"},
+    {q:"x&sup2; + 3x - 2x&sup2; + x",a:"-x2 + 4x"},
+    {q:"6a - 4b + 2a + b - 3",a:"8a - 3b - 3"}
+  ];
+  var c=document.getElementById("reduireExo");
+  c.innerHTML='<h4>Reduire les expressions</h4>';
+  items.forEach(function(item,i){
+    c.innerHTML+=
+      '<div class="step">'+
+        '<p>Reduire : <code>'+item.q+'</code></p>'+
+        '<input type="text" id="red_ans_'+i+'" placeholder="Expression reduite" style="width:200px"> '+
+        '<button class="btn primary" onclick="checkReduire('+i+',\''+item.a+'\')">Verifier</button>'+
+        '<div class="feedback" id="red_fb_'+i+'"></div>'+
+      '</div>';
+  });
+}
+function checkReduire(i,expected){
+  var v=document.getElementById("red_ans_"+i).value.trim();
+  if(!v){showFeedback("red_fb_"+i,false,"Entrez votre reponse.");return;}
+  var ok=normalizeExpr(v)===normalizeExpr(expected);
+  showFeedback("red_fb_"+i,ok,ok?"Parfait !":"La reponse attendue est : "+expected);
+}
+function buildReduireClass(){
+  var c=document.getElementById("reduireClass");
+  c.innerHTML=
+    '<h4>Expression : <code>4x + 3y - 2x + 5 - y + 1</code></h4>'+
+    '<p>Coefficient de <strong>x</strong> : <input type="number" id="rc_x" style="width:70px"></p>'+
+    '<p>Coefficient de <strong>y</strong> : <input type="number" id="rc_y" style="width:70px"></p>'+
+    '<p>Terme constant : <input type="number" id="rc_c" style="width:70px"></p>'+
+    '<button class="btn primary" onclick="checkRC()">Verifier</button>'+
+    '<div class="feedback" id="rc_fb"></div>'+
+    '<hr style="border:none;border-top:1px dashed var(--border);margin:16px 0;">'+
+    '<h4>Expression : <code>3a&sup2; - 5a + 2a&sup2; + a - 7</code></h4>'+
+    '<p>Coefficient de <strong>a&sup2;</strong> : <input type="number" id="rc2_a2" style="width:70px"></p>'+
+    '<p>Coefficient de <strong>a</strong> : <input type="number" id="rc2_a" style="width:70px"></p>'+
+    '<p>Terme constant : <input type="number" id="rc2_c" style="width:70px"></p>'+
+    '<button class="btn primary" onclick="checkRC2()">Verifier</button>'+
+    '<div class="feedback" id="rc2_fb"></div>';
+}
+function checkRC(){
+  var x=parseFloat(document.getElementById("rc_x").value);
+  var y=parseFloat(document.getElementById("rc_y").value);
+  var c=parseFloat(document.getElementById("rc_c").value);
+  showFeedback("rc_fb",x===2&&y===2&&c===6,
+    x===2&&y===2&&c===6?"Excellent ! 2x + 2y + 6":"Reponse : coeff x = 2, coeff y = 2, constante = 6.");
+}
+function checkRC2(){
+  var a2=parseFloat(document.getElementById("rc2_a2").value);
+  var a=parseFloat(document.getElementById("rc2_a").value);
+  var c=parseFloat(document.getElementById("rc2_c").value);
+  showFeedback("rc2_fb",a2===5&&a===-4&&c===-7,
+    a2===5&&a===-4&&c===-7?"Bravo ! 5a² - 4a - 7":"Reponse : coeff a² = 5, coeff a = -4, constante = -7.");
+}
+/* ===================================================================
+   TAB 2 : DEVELOPPER
+   =================================================================== */
+function buildDevelopper(target){
+  target.innerHTML=
+  '<section class="card">'+
+    '<h2>Developper une expression</h2>'+
+    '<div class="definition">'+
+      '<strong>Developper</strong> une expression, c\'est transformer un <em>produit</em> '+
+      'en <em>somme</em> (ou difference) en utilisant la distributivite.'+
+    '</div>'+
+    '<h3>Simple distributivite</h3>'+
+    '<div class="formula-box">k(a + b) = ka + kb &nbsp;&nbsp;&nbsp; k(a - b) = ka - kb</div>'+
+    '<div class="example">'+
+      '<span class="tip">Exemple 1</span> <code>3(x + 4) = 3 &times; x + 3 &times; 4 = <strong>3x + 12</strong></code>'+
+    '</div>'+
+    '<div class="example">'+
+      '<span class="tip">Exemple 2</span> <code>-2(5a - 3) = (-2) &times; 5a + (-2) &times; (-3) = <strong>-10a + 6</strong></code>'+
+    '</div>'+
+    '<div class="warning">'+
+      '<strong>Attention au signe !</strong> Quand le facteur devant la parenthese est negatif, '+
+      'les signes changent a l\'interieur : <code>-(x + 3) = -x - 3</code>.'+
+    '</div>'+
+    '<h3>Double distributivite</h3>'+
+    '<div class="formula-box">(a + b)(c + d) = ac + ad + bc + bd</div>'+
+    '<div class="example">'+
+      '<span class="tip">Exemple</span> <code>(x + 2)(x + 3)</code><br>'+
+      '<code>= x &times; x + x &times; 3 + 2 &times; x + 2 &times; 3</code><br>'+
+      '<code>= x&sup2; + 3x + 2x + 6</code><br>'+
+      '<code>= <strong>x&sup2; + 5x + 6</strong></code>'+
+    '</div>'+
+  '</section>'+
+  '<section class="card">'+
+    '<h2>Illustration geometrique : l\'aire d\'un rectangle</h2>'+
+    '<p>L\'aire du grand rectangle <code>k &times; (a + b)</code> est egale '+
+    'a la somme des deux petits rectangles <code>k &times; a + k &times; b</code>.</p>'+
+    '<canvas id="devCanvas" width="500" height="280"></canvas>'+
+    '<div style="text-align:center;margin-top:8px;">'+
+      '<button class="btn secondary" onclick="drawDevCanvas()" style="margin-right:8px;">Redessiner</button>'+
+      '<label>a = <input type="number" id="devA" value="3" min="1" max="8" style="width:50px"></label> '+
+      '<label>b = <input type="number" id="devB" value="2" min="1" max="8" style="width:50px"></label> '+
+      '<label>k = <input type="number" id="devK" value="4" min="1" max="8" style="width:50px"></label>'+
+    '</div>'+
+  '</section>'+
+  '<section class="card">'+
+    '<h2>Illustration : double distributivite</h2>'+
+    '<p>Le rectangle <code>(a + b) &times; (c + d)</code> se decompose en 4 petits rectangles.</p>'+
+    '<canvas id="dblCanvas" width="500" height="300"></canvas>'+
+    '<div style="text-align:center;margin-top:8px;">'+
+      '<label>a = <input type="number" id="dblA" value="3" min="1" max="6" style="width:50px"></label> '+
+      '<label>b = <input type="number" id="dblB" value="2" min="1" max="6" style="width:50px"></label> '+
+      '<label>c = <input type="number" id="dblC" value="4" min="1" max="6" style="width:50px"></label> '+
+      '<label>d = <input type="number" id="dblD" value="1" min="1" max="6" style="width:50px"></label> '+
+      '<button class="btn secondary" onclick="drawDblCanvas()">Redessiner</button>'+
+    '</div>'+
+  '</section>'+
+  '<section class="card">'+
+    '<h2>Exercices progressifs</h2>'+
+    '<div class="interactive" id="devExo"></div>'+
+  '</section>';
+  setTimeout(function(){drawDevCanvas();drawDblCanvas();},50);
+  buildDevExo();
+}
+function drawDevCanvas(){
+  var canvas=document.getElementById("devCanvas");
+  if(!canvas)return;
+  var ctx=canvas.getContext("2d");
+  var W=canvas.width,H=canvas.height;
+  var a=parseInt(document.getElementById("devA").value)||3;
+  var b=parseInt(document.getElementById("devB").value)||2;
+  var k=parseInt(document.getElementById("devK").value)||4;
+  var accent=cssVar("--accent")||"#a0522d";
+  var heading=cssVar("--heading")||"#8b4513";
+  var text=cssVar("--text")||"#2c2418";
+  var surface=cssVar("--surface")||"#fff";
+  var border=cssVar("--border")||"#d4c8b8";
+  ctx.fillStyle=surface;ctx.fillRect(0,0,W,H);
+  var ox=60,oy=40;
+  var unit=Math.min((W-120)/(a+b),(H-100)/k);
+  var wa=a*unit,wb=b*unit,hk=k*unit;
+  ctx.fillStyle=accent+"44";ctx.fillRect(ox,oy,wa,hk);
+  ctx.fillStyle=heading+"44";ctx.fillRect(ox+wa,oy,wb,hk);
+  ctx.strokeStyle=border;ctx.lineWidth=2;
+  ctx.strokeRect(ox,oy,wa+wb,hk);
+  ctx.setLineDash([6,4]);
+  ctx.beginPath();ctx.moveTo(ox+wa,oy);ctx.lineTo(ox+wa,oy+hk);ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle=text;ctx.font="bold 16px 'Nunito Sans',sans-serif";ctx.textAlign="center";
+  ctx.fillText("a = "+a,ox+wa/2,oy-12);
+  ctx.fillText("b = "+b,ox+wa+wb/2,oy-12);
+  ctx.save();ctx.translate(ox-18,oy+hk/2);ctx.rotate(-Math.PI/2);
+  ctx.fillText("k = "+k,0,0);ctx.restore();
+  ctx.font="bold 15px 'Nunito Sans',sans-serif";
+  ctx.fillStyle=accent;
+  ctx.fillText("Aire = "+k*a,ox+wa/2,oy+hk/2+5);
+  ctx.fillStyle=heading;
+  ctx.fillText("Aire = "+k*b,ox+wa+wb/2,oy+hk/2+5);
+  ctx.fillStyle=text;ctx.font="bold 15px 'Cormorant Garamond',serif";
+  ctx.fillText(k+"("+a+" + "+b+") = "+k*a+" + "+k*b+" = "+k*(a+b),W/2,oy+hk+35);
+}
+function drawDblCanvas(){
+  var canvas=document.getElementById("dblCanvas");
+  if(!canvas)return;
+  var ctx=canvas.getContext("2d");
+  var W=canvas.width,H=canvas.height;
+  var a=parseInt(document.getElementById("dblA").value)||3;
+  var b=parseInt(document.getElementById("dblB").value)||2;
+  var c=parseInt(document.getElementById("dblC").value)||4;
+  var d=parseInt(document.getElementById("dblD").value)||1;
+  var accent=cssVar("--accent")||"#a0522d";
+  var heading=cssVar("--heading")||"#8b4513";
+  var text=cssVar("--text")||"#2c2418";
+  var surface=cssVar("--surface")||"#fff";
+  var border=cssVar("--border")||"#d4c8b8";
+  var success=cssVar("--success")||"#2e7d32";
+  var muted=cssVar("--muted")||"#6b5a48";
+  ctx.fillStyle=surface;ctx.fillRect(0,0,W,H);
+  var ox=70,oy=45;
+  var ux=Math.min((W-140)/(a+b),(H-110)/(c+d));
+  var wa=a*ux,wb=b*ux,hc=c*ux,hd=d*ux;
+  var colors=[accent+"44",heading+"44",success+"33",muted+"33"];
+  ctx.fillStyle=colors[0];ctx.fillRect(ox,oy,wa,hc);
+  ctx.fillStyle=colors[1];ctx.fillRect(ox+wa,oy,wb,hc);
+  ctx.fillStyle=colors[2];ctx.fillRect(ox,oy+hc,wa,hd);
+  ctx.fillStyle=colors[3];ctx.fillRect(ox+wa,oy+hc,wb,hd);
+  ctx.strokeStyle=border;ctx.lineWidth=2;
+  ctx.strokeRect(ox,oy,wa+wb,hc+hd);
+  ctx.setLineDash([6,4]);
+  ctx.beginPath();ctx.moveTo(ox+wa,oy);ctx.lineTo(ox+wa,oy+hc+hd);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(ox,oy+hc);ctx.lineTo(ox+wa+wb,oy+hc);ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle=text;ctx.font="bold 14px 'Nunito Sans',sans-serif";ctx.textAlign="center";
+  ctx.fillText("a = "+a,ox+wa/2,oy-12);
+  ctx.fillText("b = "+b,ox+wa+wb/2,oy-12);
+  ctx.save();ctx.translate(ox-18,oy+hc/2);ctx.rotate(-Math.PI/2);
+  ctx.fillText("c = "+c,0,0);ctx.restore();
+  ctx.save();ctx.translate(ox-18,oy+hc+hd/2);ctx.rotate(-Math.PI/2);
+  ctx.fillText("d = "+d,0,0);ctx.restore();
+  ctx.font="bold 13px 'Nunito Sans',sans-serif";
+  ctx.fillStyle=accent;ctx.fillText("ac="+a*c,ox+wa/2,oy+hc/2);
+  ctx.fillStyle=heading;ctx.fillText("bc="+b*c,ox+wa+wb/2,oy+hc/2);
+  ctx.fillStyle=success;ctx.fillText("ad="+a*d,ox+wa/2,oy+hc+hd/2);
+  ctx.fillStyle=muted;ctx.fillText("bd="+b*d,ox+wa+wb/2,oy+hc+hd/2);
+  ctx.fillStyle=text;ctx.font="bold 14px 'Cormorant Garamond',serif";
+  var total=a*c+a*d+b*c+b*d;
+  ctx.fillText("("+a+"+"+b+")("+c+"+"+d+") = "+a*c+" + "+a*d+" + "+b*c+" + "+b*d+" = "+total,W/2,oy+hc+hd+35);
+}
+function buildDevExo(){
+  var items=[
+    {q:"2(x + 3)",a:"2x+6"},
+    {q:"5(a - 1)",a:"5a-5"},
+    {q:"-3(2x + 4)",a:"-6x-12"},
+    {q:"x(x - 7)",a:"x2-7x"},
+    {q:"(x + 1)(x + 2)",a:"x2+3x+2"},
+    {q:"(2x - 3)(x + 5)",a:"2x2+7x-15"},
+    {q:"(3a + 1)(2a - 4)",a:"6a2-10a-4"}
+  ];
+  var c=document.getElementById("devExo");
+  c.innerHTML='<h4>Developper et reduire</h4>';
+  items.forEach(function(item,i){
+    c.innerHTML+=
+      '<div class="step">'+
+        '<p>Developper : <code>'+item.q+'</code></p>'+
+        '<input type="text" id="dev_ans_'+i+'" placeholder="Reponse" style="width:220px"> '+
+        '<button class="btn primary" onclick="checkDev('+i+',\''+item.a+'\')">Verifier</button>'+
+        '<div class="feedback" id="dev_fb_'+i+'"></div>'+
+      '</div>';
+  });
+}
+function checkDev(i,expected){
+  var v=document.getElementById("dev_ans_"+i).value.trim();
+  if(!v){showFeedback("dev_fb_"+i,false,"Entrez votre reponse.");return;}
+  var ok=normalizeExpr(v)===normalizeExpr(expected);
+  showFeedback("dev_fb_"+i,ok,
+    ok?"Tres bien !":"Reponse attendue : "+expected.replace("x2","x²").replace("a2","a²"));
+}
+/* ===================================================================
+   TAB 3 : FACTORISER
+   =================================================================== */
+function buildFactoriser(target){
+  target.innerHTML=
+  '<section class="card">'+
+    '<h2>Factoriser une expression</h2>'+
+    '<div class="definition">'+
+      '<strong>Factoriser</strong> une expression, c\'est transformer une <em>somme</em> '+
+      '(ou difference) en <em>produit</em>. C\'est l\'operation <strong>inverse</strong> du developpement.'+
+    '</div>'+
+    '<div class="formula-box">ka + kb = k(a + b)</div>'+
+    '<h3>Methode pour trouver le facteur commun</h3>'+
+    '<ol>'+
+      '<li>Decomposer chaque terme en produit de facteurs</li>'+
+      '<li>Identifier le ou les facteurs communs a <strong>tous</strong> les termes</li>'+
+      '<li>Ecrire le facteur commun devant la parenthese</li>'+
+      '<li>Dans la parenthese, ecrire ce qui reste de chaque terme</li>'+
+    '</ol>'+
+    '<h3>Exemples detailles</h3>'+
+    '<div class="example">'+
+      '<span class="tip">Niveau 1</span> <code>6x + 9 = <strong>3</strong>(2x) + <strong>3</strong>(3) = <strong>3(2x + 3)</strong></code>'+
+    '</div>'+
+    '<div class="example">'+
+      '<span class="tip">Niveau 2</span> <code>x&sup2; + 5x = <strong>x</strong>(x) + <strong>x</strong>(5) = <strong>x(x + 5)</strong></code>'+
+    '</div>'+
+    '<div class="example">'+
+      '<span class="tip">Niveau 3</span> <code>4x&sup2; - 6x = <strong>2x</strong>(2x) - <strong>2x</strong>(3) = <strong>2x(2x - 3)</strong></code>'+
+    '</div>'+
+    '<div class="example">'+
+      '<span class="tip">Facteur compose</span> <code>x(x+1) + 3(x+1) = <strong>(x+1)</strong>(x) + <strong>(x+1)</strong>(3) = <strong>(x+1)(x+3)</strong></code>'+
+    '</div>'+
+    '<h3>Lien avec le developpement</h3>'+
+    '<div class="definition">'+
+      'On peut toujours <strong>verifier</strong> une factorisation en developpant le resultat. '+
+      'Si on retrouve l\'expression de depart, c\'est correct !'+
+    '</div>'+
+  '</section>'+
+  '<section class="card">'+
+    '<h2>Visualisation : facteur commun</h2>'+
+    '<canvas id="factCanvas" width="500" height="200"></canvas>'+
+  '</section>'+
+  '<section class="card">'+
+    '<h2>Exercices interactifs</h2>'+
+    '<div class="interactive" id="factVerify">'+
+      '<h4>Factoriser les expressions</h4>'+
+    '</div>'+
+  '</section>'+
+  '<section class="card">'+
+    '<h2>Exercices avec correction</h2>'+
+    '<div class="interactive" id="factExo"></div>'+
+  '</section>';
+  setTimeout(drawFactCanvas,50);
+  buildFactVerify();
+  buildFactExo();
+}
+function drawFactCanvas(){
+  var canvas=document.getElementById("factCanvas");
+  if(!canvas)return;
+  var ctx=canvas.getContext("2d");
+  var W=canvas.width,H=canvas.height;
+  var surface=cssVar("--surface")||"#fff";
+  var accent=cssVar("--accent")||"#a0522d";
+  var heading=cssVar("--heading")||"#8b4513";
+  var text=cssVar("--text")||"#2c2418";
+  var success=cssVar("--success")||"#2e7d32";
+  ctx.fillStyle=surface;ctx.fillRect(0,0,W,H);
+  ctx.textAlign="center";ctx.textBaseline="middle";
+  /* Left side: 6x + 9 */
+  ctx.font="bold 20px 'Cormorant Garamond',serif";
+  ctx.fillStyle=text;
+  ctx.fillText("6x + 9",W*0.2,40);
+  /* Arrow */
+  ctx.fillStyle=accent;
+  ctx.font="bold 28px sans-serif";
+  ctx.fillText("→",W*0.5,40);
+  /* Right side: 3(2x + 3) */
+  ctx.font="bold 20px 'Cormorant Garamond',serif";
+  ctx.fillStyle=heading;
+  ctx.fillText("3(2x + 3)",W*0.8,40);
+  /* Visual decomposition */
+  var ox=40,oy=80,bw=60,bh=40,gap=10;
+  /* 6x = 3 * 2x : draw 6 small boxes for x */
+  ctx.font="bold 12px 'Nunito Sans',sans-serif";
+  for(var r=0;r<3;r++){
+    for(var c2=0;c2<2;c2++){
+      ctx.fillStyle=accent+"33";
+      ctx.fillRect(ox+c2*(bw+gap),oy+r*(bh+gap),bw,bh);
+      ctx.strokeStyle=accent;ctx.lineWidth=1;
+      ctx.strokeRect(ox+c2*(bw+gap),oy+r*(bh+gap),bw,bh);
+      ctx.fillStyle=accent;
+      ctx.fillText("x",ox+c2*(bw+gap)+bw/2,oy+r*(bh+gap)+bh/2);
+    }
+  }
+  ctx.fillStyle=text;ctx.font="bold 14px 'Nunito Sans',sans-serif";
+  ctx.fillText("6x",ox+bw+gap/2,oy-12);
+  /* 9 = 3 * 3 : draw 9 unit boxes */
+  var ox2=ox+2*(bw+gap)+40;
+  for(var r2=0;r2<3;r2++){
+    for(var c3=0;c3<3;c3++){
+      ctx.fillStyle=heading+"33";
+      ctx.fillRect(ox2+c3*(bh+gap-10),oy+r2*(bh+gap),bh,bh);
+      ctx.strokeStyle=heading;ctx.lineWidth=1;
+      ctx.strokeRect(ox2+c3*(bh+gap-10),oy+r2*(bh+gap),bh,bh);
+      ctx.fillStyle=heading;ctx.font="bold 12px 'Nunito Sans',sans-serif";
+      ctx.fillText("1",ox2+c3*(bh+gap-10)+bh/2,oy+r2*(bh+gap)+bh/2);
+    }
+  }
+  ctx.fillStyle=text;ctx.font="bold 14px 'Nunito Sans',sans-serif";
+  ctx.fillText("9",ox2+(3*(bh+gap-10)-gap+10)/2,oy-12);
+  /* Bracket for factor 3 */
+  ctx.strokeStyle=success;ctx.lineWidth=2;ctx.setLineDash([4,3]);
+  ctx.strokeRect(ox-5,oy-5,ox2+3*(bh+gap-10)-ox+5,bh+gap+bh/2-5);
+  ctx.setLineDash([]);
+  ctx.fillStyle=success;ctx.font="bold 14px 'Nunito Sans',sans-serif";
+  ctx.textAlign="left";
+  ctx.fillText("3 lignes = facteur commun 3",ox2+3*(bh+gap-10)+15,oy+20);
+}
+function buildFactVerify(){
+  var items=[
+    {q:"4x + 8",a:"4(x+2)"},
+    {q:"3x - 12",a:"3(x-4)"},
+    {q:"x&sup2; + 3x",a:"x(x+3)"},
+    {q:"6a - 9ab",a:"3a(2-3b)"},
+    {q:"10x&sup2; + 15x",a:"5x(2x+3)"},
+    {q:"2x(x+4) - 3(x+4)",a:"(x+4)(2x-3)"}
+  ];
+  var c=document.getElementById("factVerify");
+  items.forEach(function(item,i){
+    c.innerHTML+=
+      '<div class="step">'+
+        '<p>Factoriser : <code>'+item.q+'</code></p>'+
+        '<input type="text" id="fv_ans_'+i+'" placeholder="Forme factorisee" style="width:220px"> '+
+        '<button class="btn primary" onclick="checkFact('+i+',\''+item.a+'\')">Verifier</button>'+
+        '<div class="feedback" id="fv_fb_'+i+'"></div>'+
+      '</div>';
+  });
+}
+function checkFact(i,expected){
+  var v=document.getElementById("fv_ans_"+i).value.trim();
+  if(!v){showFeedback("fv_fb_"+i,false,"Entrez votre reponse.");return;}
+  var ok=normalizeExpr(v)===normalizeExpr(expected);
+  showFeedback("fv_fb_"+i,ok,ok?"Correct !":"Reponse attendue : "+expected);
+}
+function buildFactExo(){
+  var c=document.getElementById("factExo");
+  c.innerHTML='<h4>Factoriser les expressions suivantes</h4>'+
+  '<div class="step"><p>1. <code>5x + 10</code></p>'+
+  '<details><summary>Voir la correction</summary><div class="correction">'+
+  'On cherche le PGCD de 5 et 10 : c\'est 5.<br>'+
+  '<code>5x + 10 = 5 &times; x + 5 &times; 2 = <strong>5(x + 2)</strong></code></div></details></div>'+
+  '<div class="step"><p>2. <code>7a - 21b</code></p>'+
+  '<details><summary>Voir la correction</summary><div class="correction">'+
+  'PGCD(7, 21) = 7.<br>'+
+  '<code>7a - 21b = 7 &times; a - 7 &times; 3b = <strong>7(a - 3b)</strong></code></div></details></div>'+
+  '<div class="step"><p>3. <code>3x&sup2; + 12x</code></p>'+
+  '<details><summary>Voir la correction</summary><div class="correction">'+
+  'Facteur commun : 3x (PGCD des coefficients &times; plus petite puissance de x).<br>'+
+  '<code>3x&sup2; + 12x = 3x &times; x + 3x &times; 4 = <strong>3x(x + 4)</strong></code></div></details></div>'+
+  '<div class="step"><p>4. <code>2x(x + 1) + 3(x + 1)</code></p>'+
+  '<details><summary>Voir la correction</summary><div class="correction">'+
+  'Le facteur commun est l\'expression <code>(x + 1)</code>.<br>'+
+  '<code>2x<strong>(x + 1)</strong> + 3<strong>(x + 1)</strong> = <strong>(x + 1)(2x + 3)</strong></code><br>'+
+  'Verification : (x + 1)(2x + 3) = 2x&sup2; + 3x + 2x + 3 = 2x&sup2; + 5x + 3</div></details></div>'+
+  '<div class="step"><p>5. <code>x(2x - 5) - (2x - 5)</code></p>'+
+  '<details><summary>Voir la correction</summary><div class="correction">'+
+  'Le facteur commun est <code>(2x - 5)</code>. Le deuxieme terme est <code>1 &times; (2x - 5)</code>.<br>'+
+  '<code>x(2x - 5) - 1(2x - 5) = <strong>(2x - 5)(x - 1)</strong></code></div></details></div>';
+}
+/* ===================================================================
+   TAB 4 : PROUVER
+   =================================================================== */
+function buildProuver(target){
+  target.innerHTML=
+  '<section class="card">'+
+    '<h2>Tester n\'est pas demontrer</h2>'+
+    '<div class="definition">'+
+      '<strong>Principe fondamental :</strong> Verifier une propriete sur quelques exemples '+
+      'ne suffit <em>jamais</em> a la prouver. Un seul contre-exemple suffit a la refuter, '+
+      'mais meme des milliers d\'exemples ne constituent pas une preuve.'+
+    '</div>'+
+    '<div class="example">'+
+      '<strong>Conjecture :</strong> La somme de deux nombres consecutifs est toujours impaire.<br>'+
+      'Test : 3 + 4 = 7 (impair) ; 10 + 11 = 21 (impair) ; 100 + 101 = 201 (impair).<br>'+
+      'Les tests confirment, mais ce n\'est pas une preuve !'+
+    '</div>'+
+    '<h3>Preuve avec le calcul litteral</h3>'+
+    '<div class="example">'+
+      'Soit n un entier quelconque. Le nombre consecutif est n + 1.<br>'+
+      'Somme : <code>n + (n + 1) = 2n + 1</code><br>'+
+      '<code>2n + 1</code> est de la forme <code>2k + 1</code>, c\'est donc un nombre <strong>impair</strong>.<br>'+
+      'Comme n est quelconque, la propriete est vraie pour <em>tous</em> les entiers.'+
+    '</div>'+
+    '<h3>Rappels utiles pour les preuves</h3>'+
+    '<table class="rules">'+
+      '<thead><tr><th>Type de nombre</th><th>Ecriture</th></tr></thead>'+
+      '<tbody>'+
+        '<tr><td>Nombre pair</td><td><code>2n</code> (n entier)</td></tr>'+
+        '<tr><td>Nombre impair</td><td><code>2n + 1</code> (n entier)</td></tr>'+
+        '<tr><td>Deux consecutifs</td><td><code>n</code> et <code>n + 1</code></td></tr>'+
+        '<tr><td>Multiple de 3</td><td><code>3n</code> (n entier)</td></tr>'+
+      '</tbody>'+
+    '</table>'+
+  '</section>'+
+  '<section class="card">'+
+    '<h2>Programme de calcul</h2>'+
+    '<div class="interactive" id="progCalc">'+
+      '<h4>Testez le programme de calcul</h4>'+
+      '<div class="definition" style="margin-bottom:12px;">'+
+        '<strong>Programme :</strong><br>'+
+        '1. Choisir un nombre<br>'+
+        '2. Le multiplier par 2<br>'+
+        '3. Ajouter 5<br>'+
+        '4. Multiplier le resultat par 3<br>'+
+        '5. Soustraire le triple du nombre de depart'+
+      '</div>'+
+      '<label>Nombre de depart : <input type="number" id="progN" value="4" style="width:70px"></label> '+
+      '<button class="btn primary" onclick="runProg()">Calculer</button>'+
+      '<div id="progResult" style="margin-top:12px;"></div>'+
+    '</div>'+
+  '</section>'+
+  '<section class="card">'+
+    '<h2>Preuve du programme</h2>'+
+    '<canvas id="progCanvas" width="480" height="160"></canvas>'+
+    '<div class="definition" style="margin-top:12px;">'+
+      'Soit <code>n</code> le nombre de depart.<br>'+
+      '1. On part de <code>n</code><br>'+
+      '2. &times; 2 : <code>2n</code><br>'+
+      '3. + 5 : <code>2n + 5</code><br>'+
+      '4. &times; 3 : <code>3(2n + 5) = 6n + 15</code><br>'+
+      '5. - 3n : <code>6n + 15 - 3n = 3n + 15 = 3(n + 5)</code><br><br>'+
+      '<strong>Conclusion :</strong> Le resultat est toujours <strong>3 fois (le nombre de depart + 5)</strong>, '+
+      'quel que soit le nombre choisi.'+
+    '</div>'+
+  '</section>'+
+  '<section class="card">'+
+    '<h2>Exercices type Brevet</h2>'+
+    '<div class="interactive">'+
+      '<h4>Exercice 1 : Le carre d\'un nombre pair</h4>'+
+      '<p>Tom affirme : "Le carre d\'un nombre pair est toujours pair."</p>'+
+      '<p>1. Testez avec les nombres 2, 6 et 10.</p>'+
+      '<p>2. Demontrez cette propriete.</p>'+
+      '<details><summary>Voir la correction</summary><div class="correction">'+
+        '<p><strong>1. Test :</strong> 2&sup2; = 4 (pair) ; 6&sup2; = 36 (pair) ; 10&sup2; = 100 (pair).</p>'+
+        '<p><strong>2. Preuve :</strong> Soit n un entier. Un nombre pair s\'ecrit <code>2n</code>.</p>'+
+        '<p>Son carre : <code>(2n)&sup2; = 4n&sup2; = 2 &times; (2n&sup2;)</code></p>'+
+        '<p><code>4n&sup2;</code> est de la forme <code>2k</code> (avec k = 2n&sup2;), donc c\'est un nombre <strong>pair</strong>.</p>'+
+      '</div></details>'+
+    '</div>'+
+    '<div class="interactive" style="margin-top:16px;">'+
+      '<h4>Exercice 2 : Difference de carres</h4>'+
+      '<p>Lea observe : 5&sup2; - 3&sup2; = 25 - 9 = 16, et 8&sup2; - 6&sup2; = 64 - 36 = 28.</p>'+
+      '<p>Elle conjecture : "La difference des carres de deux nombres qui se suivent de 2 est toujours un multiple de 4."</p>'+
+      '<p>Demontrez cette propriete.</p>'+
+      '<details><summary>Voir la correction</summary><div class="correction">'+
+        '<p>Soient n et n + 2 deux nombres qui "se suivent de 2".</p>'+
+        '<p><code>(n + 2)&sup2; - n&sup2;</code></p>'+
+        '<p><code>= n&sup2; + 4n + 4 - n&sup2;</code></p>'+
+        '<p><code>= 4n + 4 = <strong>4(n + 1)</strong></code></p>'+
+        '<p>C\'est bien un <strong>multiple de 4</strong> pour tout entier n.</p>'+
+      '</div></details>'+
+    '</div>'+
+  '</section>';
+  setTimeout(function(){drawProgCanvas(4);},50);
+}
+function runProg(){
+  var n=parseFloat(document.getElementById("progN").value)||0;
+  var steps=[n, 2*n, 2*n+5, 3*(2*n+5), 3*(2*n+5)-3*n];
+  var labels=["Depart","&times; 2","+5","&times; 3","-3n"];
+  var html='<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">';
+  steps.forEach(function(s,i){
+    html+='<span style="background:var(--accent-light);padding:6px 12px;border-radius:6px;font-weight:700;">'+
+      labels[i]+' : '+s+'</span>';
+    if(i<steps.length-1)html+='<span style="color:var(--accent);">&rarr;</span>';
+  });
+  html+='</div>';
+  html+='<p style="margin-top:10px;font-weight:600;">Resultat : <strong>'+steps[4]+
+    '</strong> = 3 &times; ('+n+' + 5) = 3 &times; '+(n+5)+'</p>';
+  document.getElementById("progResult").innerHTML=html;
+  drawProgCanvas(n);
+}
+function drawProgCanvas(n){
+  var canvas=document.getElementById("progCanvas");
+  if(!canvas)return;
+  var ctx=canvas.getContext("2d");
+  var W=canvas.width,H=canvas.height;
+  var surface=cssVar("--surface")||"#fff";
+  var accent=cssVar("--accent")||"#a0522d";
+  var text=cssVar("--text")||"#2c2418";
+  var heading=cssVar("--heading")||"#8b4513";
+  var muted=cssVar("--muted")||"#6b5a48";
+  ctx.fillStyle=surface;ctx.fillRect(0,0,W,H);
+  var steps=[n,2*n,2*n+5,3*(2*n+5),3*(2*n+5)-3*n];
+  var labels=["n","2n","2n+5","6n+15","3n+15"];
+  var ops=["×2","+5","×3","-3n"];
+  var gap=W/(steps.length+1);
+  ctx.textAlign="center";ctx.textBaseline="middle";
+  steps.forEach(function(s,i){
+    var x=gap*(i+1),y=H/2;
+    ctx.beginPath();ctx.arc(x,y,26,0,Math.PI*2);
+    ctx.fillStyle=i===steps.length-1?accent+"55":accent+"22";
+    ctx.fill();
+    ctx.strokeStyle=accent;ctx.lineWidth=2;ctx.stroke();
+    ctx.fillStyle=heading;ctx.font="bold 15px 'Nunito Sans'";
+    ctx.fillText(String(s),x,y);
+    ctx.fillStyle=muted;ctx.font="11px 'Nunito Sans'";
+    ctx.fillText(labels[i],x,y+40);
+    if(i<steps.length-1){
+      ctx.beginPath();ctx.moveTo(x+28,y);ctx.lineTo(gap*(i+2)-28,y);
+      ctx.strokeStyle=accent;ctx.lineWidth=1.5;ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(gap*(i+2)-32,y-4);ctx.lineTo(gap*(i+2)-28,y);ctx.lineTo(gap*(i+2)-32,y+4);
+      ctx.fillStyle=accent;ctx.fill();
+      ctx.fillStyle=accent;ctx.font="bold 11px 'Nunito Sans'";
+      ctx.fillText(ops[i],(x+gap*(i+2))/2,y-16);
+    }
+  });
+}
+/* ===================================================================
+   TAB 5 : EXERCICES PROGRESSIFS
+   =================================================================== */
+function buildExercices(target){
+  target.innerHTML=
+  '<section class="card">'+
+    '<h2>Exercices progressifs</h2>'+
+    '<div class="progress-bar"><div class="progress-fill" id="exoProgress" style="width:0%"></div></div>'+
+    '<p style="color:var(--muted);font-size:.85rem;" id="exoCount">0 / 8 exercices consultes</p>'+
+  '</section>'+
+  '<section class="card">'+
+    '<h3>Niveau : Appliquer</h3>'+
+    '<div class="step">'+
+      '<p><strong>Exercice 1.</strong> Reduire : <code>4x + 7 - 2x + 3</code></p>'+
+      '<details onclick="markExo(1)"><summary>Voir la correction</summary><div class="correction">'+
+        '<p>On identifie les termes en x : <code>4x</code> et <code>-2x</code></p>'+
+        '<p>Les constantes : <code>7</code> et <code>3</code></p>'+
+        '<p><code>4x + 7 - 2x + 3 = (4 - 2)x + (7 + 3) = <strong>2x + 10</strong></code></p>'+
+      '</div></details>'+
+    '</div>'+
+    '<div class="step">'+
+      '<p><strong>Exercice 2.</strong> Developper : <code>4(2a - 3)</code></p>'+
+      '<details onclick="markExo(2)"><summary>Voir la correction</summary><div class="correction">'+
+        '<p>On distribue le 4 :</p>'+
+        '<p><code>4 &times; 2a + 4 &times; (-3) = <strong>8a - 12</strong></code></p>'+
+      '</div></details>'+
+    '</div>'+
+    '<div class="step">'+
+      '<p><strong>Exercice 3.</strong> Factoriser : <code>12x + 18</code></p>'+
+      '<details onclick="markExo(3)"><summary>Voir la correction</summary><div class="correction">'+
+        '<p>PGCD(12, 18) = 6</p>'+
+        '<p><code>12x + 18 = 6 &times; 2x + 6 &times; 3 = <strong>6(2x + 3)</strong></code></p>'+
+      '</div></details>'+
+    '</div>'+
+  '</section>'+
+  '<section class="card">'+
+    '<h3>Niveau : Comprendre</h3>'+
+    '<div class="step">'+
+      '<p><strong>Exercice 4.</strong> Developper et reduire : <code>(x + 3)(x - 2)</code></p>'+
+      '<details onclick="markExo(4)"><summary>Voir la correction</summary><div class="correction">'+
+        '<p><code>(x + 3)(x - 2)</code></p>'+
+        '<p><code>= x &times; x + x &times; (-2) + 3 &times; x + 3 &times; (-2)</code></p>'+
+        '<p><code>= x&sup2; - 2x + 3x - 6</code></p>'+
+        '<p><code>= <strong>x&sup2; + x - 6</strong></code></p>'+
+      '</div></details>'+
+    '</div>'+
+    '<div class="step">'+
+      '<p><strong>Exercice 5.</strong> Factoriser : <code>x(x + 4) - 3(x + 4)</code></p>'+
+      '<details onclick="markExo(5)"><summary>Voir la correction</summary><div class="correction">'+
+        '<p>Le facteur commun est <code>(x + 4)</code>.</p>'+
+        '<p><code>x(x + 4) - 3(x + 4) = <strong>(x + 4)(x - 3)</strong></code></p>'+
+        '<p>Verification : (x+4)(x-3) = x&sup2; - 3x + 4x - 12 = x&sup2; + x - 12</p>'+
+        '<p>Developpons aussi le depart : x(x+4) - 3(x+4) = x&sup2; + 4x - 3x - 12 = x&sup2; + x - 12. OK !</p>'+
+      '</div></details>'+
+    '</div>'+
+    '<div class="step">'+
+      '<p><strong>Exercice 6.</strong> Calculer <code>A = 2x&sup2; - 5x + 3</code> pour <code>x = -1</code>.</p>'+
+      '<details onclick="markExo(6)"><summary>Voir la correction</summary><div class="correction">'+
+        '<p><code>A = 2 &times; (-1)&sup2; - 5 &times; (-1) + 3</code></p>'+
+        '<p><code>= 2 &times; 1 + 5 + 3</code></p>'+
+        '<p><code>= <strong>10</strong></code></p>'+
+        '<p>Attention : (-1)&sup2; = 1, et -5 &times; (-1) = +5.</p>'+
+      '</div></details>'+
+    '</div>'+
+  '</section>'+
+  '<section class="card">'+
+    '<h3>Niveau : Approfondir</h3>'+
+    '<div class="step">'+
+      '<p><strong>Exercice 7.</strong> Montrer que pour tout entier n, le produit de deux nombres '+
+      'consecutifs est toujours pair.</p>'+
+      '<details onclick="markExo(7)"><summary>Voir la correction</summary><div class="correction">'+
+        '<p>Soit n un entier. Les deux consecutifs sont n et n + 1.</p>'+
+        '<p>Parmi deux nombres consecutifs, l\'un est pair et l\'autre impair.</p>'+
+        '<p>Si n = 2k (pair) : n(n+1) = 2k(2k+1) = <strong>2</strong>[k(2k+1)] &rarr; pair.</p>'+
+        '<p>Si n = 2k+1 (impair) : n+1 = 2(k+1) (pair), '+
+        'donc n(n+1) = (2k+1) &times; 2(k+1) = <strong>2</strong>[(2k+1)(k+1)] &rarr; pair.</p>'+
+        '<p>Dans les deux cas, le produit est pair.</p>'+
+      '</div></details>'+
+    '</div>'+
+    '<div class="step">'+
+      '<p><strong>Exercice 8.</strong> On considere E = <code>(2x - 1)&sup2; - (x + 3)&sup2;</code>.</p>'+
+      '<p>a) Developper et reduire E.</p>'+
+      '<p>b) Factoriser E en utilisant l\'identite a&sup2; - b&sup2; = (a - b)(a + b).</p>'+
+      '<details onclick="markExo(8)"><summary>Voir la correction</summary><div class="correction">'+
+        '<p><strong>a) Developpement :</strong></p>'+
+        '<p><code>(2x - 1)&sup2; = 4x&sup2; - 4x + 1</code></p>'+
+        '<p><code>(x + 3)&sup2; = x&sup2; + 6x + 9</code></p>'+
+        '<p><code>E = 4x&sup2; - 4x + 1 - (x&sup2; + 6x + 9) = 4x&sup2; - 4x + 1 - x&sup2; - 6x - 9</code></p>'+
+        '<p><code>E = <strong>3x&sup2; - 10x - 8</strong></code></p>'+
+        '<p><strong>b) Factorisation :</strong></p>'+
+        '<p>Avec a = (2x - 1) et b = (x + 3) :</p>'+
+        '<p><code>a - b = 2x - 1 - x - 3 = x - 4</code></p>'+
+        '<p><code>a + b = 2x - 1 + x + 3 = 3x + 2</code></p>'+
+        '<p><code>E = <strong>(x - 4)(3x + 2)</strong></code></p>'+
+      '</div></details>'+
+    '</div>'+
+  '</section>';
+}
+var exoSeen={};
+function markExo(n){
+  if(!exoSeen[n]){
+    exoSeen[n]=true;
+    var count=Object.keys(exoSeen).length;
+    var pct=Math.round(count/8*100);
+    var bar=document.getElementById("exoProgress");
+    var txt=document.getElementById("exoCount");
+    if(bar)bar.style.width=pct+"%";
+    if(txt)txt.textContent=count+" / 8 exercices consultes";
+  }
+}
+/* ===================================================================
+   TAB 6 : QCM
+   =================================================================== */
+function buildQCM(target){
+  var questions=[
+    {q:"Quelle est la forme simplifiee de 2 &times; a &times; b ?",
+     opts:["2ab","2a + b","2(a + b)","a2b"],correct:0},
+    {q:"Calculer 3x + 1 pour x = 2.",
+     opts:["5","7","8","6"],correct:1},
+    {q:"Reduire : 5x - 2x + 3x",
+     opts:["10x","6x","8x","0"],correct:1},
+    {q:"Developper : 3(x + 4)",
+     opts:["3x + 4","3x + 12","3x + 7","x + 12"],correct:1},
+    {q:"Developper : -2(a - 5)",
+     opts:["-2a - 5","-2a + 10","-2a - 10","2a - 10"],correct:1},
+    {q:"Factoriser : 6x + 15",
+     opts:["3(2x + 5)","6(x + 15)","3(2x + 15)","5(x + 3)"],correct:0},
+    {q:"Reduire : 4a + 3b - a - 5b",
+     opts:["3a - 2b","3a + 2b","5a - 2b","3a + 8b"],correct:0},
+    {q:"Developper : (x + 1)(x + 3)",
+     opts:["x&sup2; + 4x + 3","x&sup2; + 3x + 3","x&sup2; + 4x + 4","x&sup2; + 3"],correct:0},
+    {q:"Quel est le facteur commun de 4x&sup2; + 8x ?",
+     opts:["4x","4","x","8x"],correct:0},
+    {q:"Factoriser : x&sup2; - 5x",
+     opts:["x(x - 5)","x(x + 5)","5x(x - 1)","x&sup2; - 5"],correct:0},
+    {q:"Quelle expression est equivalente a 2(x + 3) + x ?",
+     opts:["2x + 3 + x","3x + 6","2x + 6 + x","2x + 3"],correct:1},
+    {q:"Developper : (2x - 1)(x + 4)",
+     opts:["2x&sup2; + 7x - 4","2x&sup2; + 7x + 4","2x&sup2; - 7x - 4","2x&sup2; + 9x - 4"],correct:0},
+    {q:"Un nombre pair s'ecrit sous la forme...",
+     opts:["2n","2n + 1","n + 2","n&sup2;"],correct:0},
+    {q:"Tester une egalite pour quelques valeurs permet de...",
+     opts:["La demontrer","La refuter si un contre-exemple est trouve","La prouver definitivement","La simplifier"],correct:1},
+    {q:"Factoriser : 3x(x + 2) - 5(x + 2)",
+     opts:["(x + 2)(3x - 5)","(3x - 5)(x - 2)","3x&sup2; + 6x - 5x - 10","(x + 2)(3x + 5)"],correct:0},
+    {q:"Simplifier : 7y - 3 + 2y - 4y + 8",
+     opts:["5y + 5","5y - 5","3y + 5","9y + 5"],correct:0},
+    {q:"Developper : -(x - 7)",
+     opts:["-x + 7","-x - 7","x - 7","x + 7"],correct:0},
+    {q:"Quel est le resultat de (n + 1)&sup2; - n&sup2; developpe et reduit ?",
+     opts:["2n + 1","1","2n","n + 1"],correct:0}
+  ];
+  var html=
+  '<section class="card">'+
+    '<h2>QCM : Testez vos connaissances</h2>'+
+    '<p style="color:var(--muted);">'+questions.length+' questions couvrant tout le chapitre. '+
+    'Selectionnez une reponse pour chaque question, puis validez en bas de page.</p>'+
+    '<div class="progress-bar"><div class="progress-fill" id="qcmProgress" style="width:0%"></div></div>'+
+    '<p id="qcmProgressTxt" style="color:var(--muted);font-size:.85rem;">0 / '+questions.length+' repondu(es)</p>'+
+  '</section>';
+  questions.forEach(function(q,i){
+    html+=
+    '<section class="card" id="qcm_q_'+i+'">'+
+      '<p><strong>Question '+(i+1)+'.</strong> '+q.q+'</p>';
+    q.opts.forEach(function(opt,j){
+      html+=
+      '<div class="qcm-option" id="qcm_opt_'+i+'_'+j+'" onclick="selectQCM('+i+','+j+')">'+
+        '<span style="font-weight:700;margin-right:8px;">'+String.fromCharCode(65+j)+'.</span>'+opt+
+      '</div>';
+    });
+    html+='<div class="feedback" id="qcm_fb_'+i+'"></div></section>';
+  });
+  html+=
+  '<section class="card" style="text-align:center;">'+
+    '<button class="btn primary" style="font-size:1.1rem;padding:12px 32px;" onclick="submitQCM()">'+
+      'Valider le QCM'+
+    '</button>'+
+    '<div id="qcmResult" style="margin-top:16px;"></div>'+
+  '</section>';
+  target.innerHTML=html;
+  qcmState={answers:{},submitted:false,questions:questions};
+}
+function selectQCM(qi,oi){
+  if(qcmState.submitted)return;
+  var prev=qcmState.answers[qi];
+  if(prev!==undefined){
+    document.getElementById("qcm_opt_"+qi+"_"+prev).classList.remove("selected");
+  }
+  qcmState.answers[qi]=oi;
+  document.getElementById("qcm_opt_"+qi+"_"+oi).classList.add("selected");
+  var answered=Object.keys(qcmState.answers).length;
+  var total=qcmState.questions.length;
+  var bar=document.getElementById("qcmProgress");
+  var txt=document.getElementById("qcmProgressTxt");
+  if(bar)bar.style.width=Math.round(answered/total*100)+"%";
+  if(txt)txt.textContent=answered+" / "+total+" repondu(es)";
+}
+function submitQCM(){
+  if(qcmState.submitted)return;
+  qcmState.submitted=true;
+  var score=0;
+  var qs=qcmState.questions;
+  qs.forEach(function(q,i){
+    var chosen=qcmState.answers[i];
+    var correctIdx=q.correct;
+    if(chosen===correctIdx){
+      score++;
+      document.getElementById("qcm_opt_"+i+"_"+chosen).classList.add("correct-answer");
+      showFeedback("qcm_fb_"+i,true,"Bonne reponse !");
+    }else{
+      document.getElementById("qcm_opt_"+i+"_"+correctIdx).classList.add("correct-answer");
+      if(chosen!==undefined){
+        document.getElementById("qcm_opt_"+i+"_"+chosen).classList.add("wrong-answer");
+      }
+      showFeedback("qcm_fb_"+i,false,"La bonne reponse etait : "+String.fromCharCode(65+correctIdx)+".");
+    }
+  });
+  var pct=Math.round(score/qs.length*100);
+  var msg;
+  if(pct>=90)msg="Excellent ! Vous maitrisez le calcul litteral.";
+  else if(pct>=70)msg="Bon travail ! Quelques points a revoir.";
+  else if(pct>=50)msg="Des bases solides, mais revisez les points faibles.";
+  else msg="Revisez le cours attentivement et reessayez.";
+  var stars="";
+  for(var s=0;s<5;s++) stars+=s<Math.round(pct/20)?"★":"☆";
+  document.getElementById("qcmResult").innerHTML=
+    '<div style="font-size:2rem;color:var(--accent);margin-bottom:8px;">'+stars+'</div>'+
+    '<div style="font-size:1.3rem;font-weight:700;color:var(--heading);margin-bottom:8px;">'+
+      'Score : '+score+' / '+qs.length+' ('+pct+'%)'+
+    '</div>'+
+    '<p>'+msg+'</p>'+
+    '<button class="btn secondary" onclick="resetQCM()" style="margin-top:12px;">Recommencer le QCM</button>';
+}
+function resetQCM(){
+  qcmState={answers:{},submitted:false};
+  tabInited[6]=false;
+  initSection(6);
+}
+/* ===================================================================
+   THEME TOGGLE
+   =================================================================== */
+function toggleTheme(){
+  var root=document.documentElement;
+  var current=root.getAttribute("data-theme");
+  root.setAttribute("data-theme",current==="dark"?"light":"dark");
+  try{localStorage.setItem("theme",root.getAttribute("data-theme"));}catch(e){}
+  setTimeout(function(){
+    if(document.getElementById("devCanvas"))drawDevCanvas();
+    if(document.getElementById("dblCanvas"))drawDblCanvas();
+    if(document.getElementById("progCanvas"))drawProgCanvas(parseFloat(document.getElementById("progN").value)||4);
+    if(document.getElementById("exprCanvas"))drawExprCanvas();
+    if(document.getElementById("reduireCanvas"))drawReduireCanvas();
+    if(document.getElementById("factCanvas"))drawFactCanvas();
+  },50);
+}
+/* ===================================================================
+   INIT
+   =================================================================== */
+(function(){
+  try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}
+  buildTabs();
+})();
+</script>
+</body>
+</html>

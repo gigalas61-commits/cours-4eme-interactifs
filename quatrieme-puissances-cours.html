@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Puissances — Cours 4ème</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f5f2ed;--surface:#ffffff;--surface2:#ebe6de;--text:#2c2418;
+  --heading:#8b4513;--muted:#6b5a48;--border:#d4c8b8;--accent:#a0522d;
+  --accent-light:#faf5ef;--correct:#2e7d32;--wrong:#c62828;
+  --radius:10px;--shadow:0 2px 8px rgba(0,0,0,.08);
+}
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#161210;--surface:#221c18;--surface2:#302820;--text:#ddd0c0;
+    --heading:#e0a868;--muted:#9a8878;--border:#403428;--accent:#d08840;
+    --accent-light:#1e1610;--correct:#66bb6a;--wrong:#ef5350;
+    --shadow:0 2px 8px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161210;--surface:#221c18;--surface2:#302820;--text:#ddd0c0;
+  --heading:#e0a868;--muted:#9a8878;--border:#403428;--accent:#d08840;
+  --accent-light:#1e1610;--correct:#66bb6a;--wrong:#ef5350;
+  --shadow:0 2px 8px rgba(0,0,0,.3);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:'Nunito Sans',sans-serif;font-size:16px;line-height:1.7;
+  color:var(--text);background:var(--bg);min-height:100vh;
+}
+h1,h2,h3{font-family:'Cormorant Garamond',serif;color:var(--heading);line-height:1.3;}
+.container{max-width:860px;margin:0 auto;padding:16px;}
+header{text-align:center;padding:32px 16px 20px;position:relative;}
+header h1{font-size:2.2rem;font-weight:700;margin-bottom:4px;}
+header p{color:var(--muted);font-size:.95rem;}
+.badge{
+  display:inline-block;background:var(--accent);color:#fff;
+  font-size:.75rem;font-weight:700;padding:3px 12px;border-radius:20px;
+  margin-bottom:10px;letter-spacing:.5px;text-transform:uppercase;
+}
+.theme-toggle{
+  position:absolute;top:16px;right:16px;background:var(--surface2);
+  border:1px solid var(--border);border-radius:20px;padding:6px 12px;
+  cursor:pointer;font-size:.85rem;color:var(--text);
+}
+/* Tabs */
+.tabs{
+  display:flex;flex-wrap:wrap;gap:4px;background:var(--surface2);
+  border-radius:var(--radius);padding:4px;margin-bottom:24px;
+}
+.tab-btn{
+  flex:1;min-width:100px;padding:10px 8px;border:none;background:transparent;
+  color:var(--muted);font-family:'Nunito Sans',sans-serif;font-size:.82rem;
+  font-weight:600;cursor:pointer;border-radius:8px;transition:all .2s;
+  text-align:center;
+}
+.tab-btn.active{background:var(--surface);color:var(--accent);box-shadow:var(--shadow);}
+.tab-btn:hover:not(.active){color:var(--text);}
+.tab-content{display:none;animation:fadeIn .3s ease;}
+.tab-content.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+/* Cards */
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:24px;margin-bottom:20px;box-shadow:var(--shadow);
+}
+.card h2{font-size:1.5rem;margin-bottom:12px;}
+.card h3{font-size:1.2rem;margin:16px 0 8px;font-weight:600;}
+.formula-box{
+  background:var(--accent-light);border-left:4px solid var(--accent);
+  padding:14px 18px;border-radius:0 var(--radius) var(--radius) 0;
+  margin:12px 0;font-size:1.05rem;
+}
+.formula-box code{font-weight:700;color:var(--accent);}
+.example{
+  background:var(--surface2);padding:12px 16px;border-radius:var(--radius);
+  margin:10px 0;font-size:.95rem;
+}
+.example strong{color:var(--heading);}
+.warning-box{
+  background:var(--accent-light);border:2px dashed var(--accent);
+  padding:14px 18px;border-radius:var(--radius);margin:12px 0;
+}
+.warning-box::before{content:'Attention : ';font-weight:700;color:var(--accent);}
+canvas{
+  display:block;width:100%;max-width:600px;margin:16px auto;
+  border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);
+}
+/* Interactive exercises */
+.exercise{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:20px;margin:14px 0;
+}
+.exercise h4{font-family:'Cormorant Garamond',serif;color:var(--heading);font-size:1.1rem;margin-bottom:10px;}
+.exercise input[type="text"]{
+  border:2px solid var(--border);border-radius:6px;padding:8px 12px;
+  font-size:1rem;width:120px;background:var(--surface);color:var(--text);
+  font-family:'Nunito Sans',sans-serif;
+}
+.exercise input:focus{outline:none;border-color:var(--accent);}
+.btn{
+  display:inline-block;background:var(--accent);color:#fff;border:none;
+  padding:8px 18px;border-radius:6px;font-size:.9rem;font-weight:600;
+  cursor:pointer;font-family:'Nunito Sans',sans-serif;transition:opacity .2s;
+}
+.btn:hover{opacity:.85;}
+.btn-sm{padding:6px 14px;font-size:.82rem;}
+.feedback{margin-top:8px;font-weight:600;font-size:.95rem;min-height:1.4em;}
+.feedback.correct{color:var(--correct);}
+.feedback.wrong{color:var(--wrong);}
+/* Details/summary for corrections */
+details{
+  background:var(--surface2);border-radius:var(--radius);
+  margin:10px 0;overflow:hidden;
+}
+details summary{
+  padding:12px 16px;cursor:pointer;font-weight:600;color:var(--accent);
+  list-style:none;display:flex;align-items:center;gap:8px;
+}
+details summary::before{content:'+ ';font-weight:700;}
+details[open] summary::before{content:'- ';}
+details .correction-body{padding:4px 16px 16px;}
+/* QCM */
+.qcm-question{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:18px;margin:12px 0;
+}
+.qcm-question p.qcm-q{font-weight:600;margin-bottom:10px;}
+.qcm-option{
+  display:block;padding:8px 14px;margin:4px 0;border-radius:6px;
+  cursor:pointer;border:2px solid var(--border);transition:all .2s;
+  background:var(--surface);
+}
+.qcm-option:hover{border-color:var(--accent);}
+.qcm-option.selected{border-color:var(--accent);background:var(--accent-light);}
+.qcm-option.right{border-color:var(--correct);background:rgba(46,125,50,.1);}
+.qcm-option.wro{border-color:var(--wrong);background:rgba(198,40,40,.1);}
+.score-box{
+  text-align:center;padding:24px;background:var(--accent-light);
+  border-radius:var(--radius);margin-top:20px;
+}
+.score-box .score-num{
+  font-size:2.5rem;font-weight:700;color:var(--accent);
+  font-family:'Cormorant Garamond',serif;
+}
+/* Table */
+.data-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.9rem;}
+.data-table th,.data-table td{
+  padding:8px 12px;border:1px solid var(--border);text-align:center;
+}
+.data-table th{background:var(--accent-light);color:var(--heading);font-weight:600;}
+.level-tag{
+  display:inline-block;font-size:.7rem;font-weight:700;padding:2px 8px;
+  border-radius:10px;margin-right:6px;text-transform:uppercase;
+}
+.level-tag.apply{background:#e8f5e9;color:#2e7d32;}
+.level-tag.understand{background:#fff3e0;color:#e65100;}
+.level-tag.deepen{background:#fce4ec;color:#c62828;}
+/* Progress indicator for exercises */
+.progress-bar{
+  width:100%;height:6px;background:var(--surface2);border-radius:3px;
+  margin:8px 0;overflow:hidden;
+}
+.progress-fill{
+  height:100%;background:var(--accent);border-radius:3px;
+  transition:width .4s ease;
+}
+/* Method steps */
+.method-steps{counter-reset:step;list-style:none;padding:0;margin:12px 0;}
+.method-steps li{
+  counter-increment:step;padding:8px 8px 8px 42px;position:relative;
+  margin:6px 0;border-radius:var(--radius);background:var(--surface2);
+}
+.method-steps li::before{
+  content:counter(step);position:absolute;left:10px;top:8px;
+  width:24px;height:24px;border-radius:50%;background:var(--accent);
+  color:#fff;font-size:.8rem;font-weight:700;display:flex;
+  align-items:center;justify-content:center;
+}
+/* Footer */
+footer{text-align:center;padding:24px 16px;color:var(--muted);font-size:.8rem;}
+@media(max-width:600px){
+  header h1{font-size:1.6rem;}
+  .tabs{gap:2px;padding:3px;}
+  .tab-btn{min-width:70px;padding:8px 4px;font-size:.72rem;}
+  .card{padding:16px;}
+  .formula-box{padding:10px 14px;font-size:.95rem;}
+  canvas{max-width:100%;}
+  .data-table{font-size:.78rem;}
+  .data-table th,.data-table td{padding:5px 6px;}
+}
+</style>
+</head>
+<body>
+<header>
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Changer le thème">Thème</button>
+  <span class="badge">4ème</span>
+  <h1>Les Puissances</h1>
+  <p>Cours interactif de mathématiques — Classe de quatrième</p>
+</header>
+<div class="container">
+  <nav class="tabs" role="tablist">
+    <button class="tab-btn active" onclick="showTab(0)">Définition</button>
+    <button class="tab-btn" onclick="showTab(1)">Règles</button>
+    <button class="tab-btn" onclick="showTab(2)">Puiss. de 10</button>
+    <button class="tab-btn" onclick="showTab(3)">Exp. négatifs</button>
+    <button class="tab-btn" onclick="showTab(4)">Not. scient.</button>
+    <button class="tab-btn" onclick="showTab(5)">Exercices</button>
+    <button class="tab-btn" onclick="showTab(6)">QCM</button>
+  </nav>
+
+  <!-- ========== TAB 0 : Définition ========== -->
+  <div class="tab-content active" id="tab0">
+    <div class="card">
+      <h2>Puissance d'un nombre</h2>
+      <p>Soit <strong>a</strong> un nombre et <strong>n</strong> un entier naturel non nul.
+         On appelle <em>« a puissance n »</em> le produit de <strong>n</strong> facteurs
+         tous égaux à <strong>a</strong>.</p>
+      <div class="formula-box">
+        <code>a<sup>n</sup> = a &times; a &times; &hellip; &times; a</code> &nbsp;(n facteurs)
+      </div>
+      <div class="example">
+        <strong>Exemples :</strong><br>
+        2<sup>3</sup> = 2 &times; 2 &times; 2 = 8<br>
+        5<sup>4</sup> = 5 &times; 5 &times; 5 &times; 5 = 625<br>
+        10<sup>2</sup> = 10 &times; 10 = 100<br>
+        (&minus;3)<sup>2</sup> = (&minus;3) &times; (&minus;3) = 9
+      </div>
+      <h3>Vocabulaire</h3>
+      <p>Dans l'écriture <strong>a<sup>n</sup></strong> :</p>
+      <ul style="margin:8px 0 8px 20px;">
+        <li><strong>a</strong> est la <em>base</em> (le nombre que l'on multiplie)</li>
+        <li><strong>n</strong> est l'<em>exposant</em> (le nombre de fois qu'on multiplie)</li>
+      </ul>
+      <p>On lit « a exposant n » ou « a puissance n ». Pour n = 2, on dit aussi « a au carré »,
+         et pour n = 3, « a au cube ».</p>
+    </div>
+
+    <div class="card">
+      <h2>Cas particuliers importants</h2>
+      <div class="formula-box">
+        <code>a<sup>1</sup> = a</code> &nbsp; Tout nombre à la puissance 1 est égal à lui-même.
+      </div>
+      <div class="formula-box">
+        <code>a<sup>0</sup> = 1</code> &nbsp; Tout nombre non nul à la puissance 0 vaut 1.
+      </div>
+      <div class="example">
+        <strong>Exemples :</strong><br>
+        7<sup>1</sup> = 7 &emsp;|&emsp; 42<sup>0</sup> = 1 &emsp;|&emsp;
+        (&minus;3)<sup>0</sup> = 1 &emsp;|&emsp; 1 000 000<sup>0</sup> = 1
+      </div>
+      <div class="warning-box">
+        0<sup>0</sup> n'est pas défini en cours de 4ème. On ne calcule a<sup>0</sup> que si a &ne; 0.
+      </div>
+
+      <h3>Signe d'une puissance</h3>
+      <p>Quand la base est <strong>négative</strong> :</p>
+      <ul style="margin:8px 0 8px 20px;">
+        <li>Si l'exposant est <strong>pair</strong>, le résultat est <strong>positif</strong>.
+            Ex : (&minus;2)<sup>4</sup> = 16</li>
+        <li>Si l'exposant est <strong>impair</strong>, le résultat est <strong>négatif</strong>.
+            Ex : (&minus;2)<sup>3</sup> = &minus;8</li>
+      </ul>
+
+      <h3>Puissances de 10</h3>
+      <table class="data-table">
+        <tr><th>Écriture</th><th>10<sup>1</sup></th><th>10<sup>2</sup></th><th>10<sup>3</sup></th><th>10<sup>4</sup></th><th>10<sup>5</sup></th><th>10<sup>6</sup></th></tr>
+        <tr><td>Valeur</td><td>10</td><td>100</td><td>1 000</td><td>10 000</td><td>100 000</td><td>1 000 000</td></tr>
+        <tr><td>Nb de zéros</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td></tr>
+      </table>
+      <p style="margin-top:8px;color:var(--muted);">
+        <strong>Règle :</strong> 10<sup>n</sup> s'écrit avec un 1 suivi de <strong>n</strong> zéros.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>Visualisation interactive</h2>
+      <p>Choisis une base et un exposant pour voir l'arbre des multiplications successives :</p>
+      <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin:12px 0;">
+        <label>Base : <input type="range" id="treeBase" min="2" max="5" value="2" oninput="drawTree()">
+          <span id="treeBaseVal" style="font-weight:700;color:var(--accent);">2</span></label>
+        <label>Exposant : <input type="range" id="treeExp" min="1" max="5" value="3" oninput="drawTree()">
+          <span id="treeExpVal" style="font-weight:700;color:var(--accent);">3</span></label>
+      </div>
+      <canvas id="canvasTree" width="600" height="320"></canvas>
+      <p id="treeResult" style="text-align:center;font-weight:600;margin-top:6px;font-size:1.1rem;"></p>
+    </div>
+
+    <div class="card">
+      <h2>Teste-toi rapidement</h2>
+      <div class="exercise">
+        <h4>Calcule 3<sup>3</sup> :</h4>
+        <input type="text" id="defA1" size="6" placeholder="?">
+        <button class="btn btn-sm" onclick="checkDef(1)">Vérifier</button>
+        <div class="feedback" id="defFb1"></div>
+      </div>
+      <div class="exercise">
+        <h4>Que vaut (&minus;5)<sup>2</sup> ?</h4>
+        <input type="text" id="defA2" size="6" placeholder="?">
+        <button class="btn btn-sm" onclick="checkDef(2)">Vérifier</button>
+        <div class="feedback" id="defFb2"></div>
+      </div>
+      <div class="exercise">
+        <h4>Que vaut 100<sup>0</sup> ?</h4>
+        <input type="text" id="defA3" size="6" placeholder="?">
+        <button class="btn btn-sm" onclick="checkDef(3)">Vérifier</button>
+        <div class="feedback" id="defFb3"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== TAB 1 : Règles de calcul ========== -->
+  <div class="tab-content" id="tab1">
+    <div class="card">
+      <h2>Règles de calcul avec les puissances</h2>
+      <p>Ces quatre règles fondamentales permettent de simplifier des expressions contenant des puissances.</p>
+
+      <h3>1. Produit de puissances de même base</h3>
+      <div class="formula-box">
+        <code>a<sup>n</sup> &times; a<sup>m</sup> = a<sup>n+m</sup></code>
+      </div>
+      <p>On garde la base et on <strong>additionne</strong> les exposants.</p>
+      <div class="example">
+        <strong>Exemples :</strong><br>
+        3<sup>4</sup> &times; 3<sup>2</sup> = 3<sup>4+2</sup> = 3<sup>6</sup> = 729<br>
+        10<sup>3</sup> &times; 10<sup>5</sup> = 10<sup>8</sup> = 100 000 000
+      </div>
+
+      <h3>2. Quotient de puissances de même base</h3>
+      <div class="formula-box">
+        <code>a<sup>n</sup> &divide; a<sup>m</sup> = a<sup>n&minus;m</sup></code> &nbsp;(a &ne; 0)
+      </div>
+      <p>On garde la base et on <strong>soustrait</strong> les exposants.</p>
+      <div class="example">
+        <strong>Exemples :</strong><br>
+        5<sup>7</sup> &divide; 5<sup>3</sup> = 5<sup>7&minus;3</sup> = 5<sup>4</sup> = 625<br>
+        2<sup>10</sup> &divide; 2<sup>4</sup> = 2<sup>6</sup> = 64
+      </div>
+
+      <h3>3. Puissance d'une puissance</h3>
+      <div class="formula-box">
+        <code>(a<sup>n</sup>)<sup>m</sup> = a<sup>n&times;m</sup></code>
+      </div>
+      <p>On garde la base et on <strong>multiplie</strong> les exposants.</p>
+      <div class="example">
+        <strong>Exemples :</strong><br>
+        (2<sup>3</sup>)<sup>4</sup> = 2<sup>3&times;4</sup> = 2<sup>12</sup> = 4 096<br>
+        (10<sup>2</sup>)<sup>3</sup> = 10<sup>6</sup> = 1 000 000
+      </div>
+
+      <h3>4. Puissance d'un produit</h3>
+      <div class="formula-box">
+        <code>(a &times; b)<sup>n</sup> = a<sup>n</sup> &times; b<sup>n</sup></code>
+      </div>
+      <p>On distribue l'exposant sur chaque facteur.</p>
+      <div class="example">
+        <strong>Exemples :</strong><br>
+        (2 &times; 5)<sup>3</sup> = 2<sup>3</sup> &times; 5<sup>3</sup> = 8 &times; 125 = 1 000<br>
+        (3 &times; 4)<sup>2</sup> = 3<sup>2</sup> &times; 4<sup>2</sup> = 9 &times; 16 = 144
+      </div>
+
+      <div class="warning-box">
+        (a + b)<sup>n</sup> &ne; a<sup>n</sup> + b<sup>n</sup> ! On ne distribue l'exposant que sur un <em>produit</em>, jamais sur une somme.
+        Par exemple : (2 + 3)<sup>2</sup> = 25, mais 2<sup>2</sup> + 3<sup>2</sup> = 4 + 9 = 13 &ne; 25.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Récapitulatif visuel</h2>
+      <table class="data-table">
+        <tr><th>Opération</th><th>Formule</th><th>Astuce</th></tr>
+        <tr><td>Produit</td><td>a<sup>n</sup> &times; a<sup>m</sup> = a<sup>n+m</sup></td><td>On additionne</td></tr>
+        <tr><td>Quotient</td><td>a<sup>n</sup> &divide; a<sup>m</sup> = a<sup>n&minus;m</sup></td><td>On soustrait</td></tr>
+        <tr><td>Puissance de puissance</td><td>(a<sup>n</sup>)<sup>m</sup> = a<sup>n&times;m</sup></td><td>On multiplie</td></tr>
+        <tr><td>Puissance d'un produit</td><td>(ab)<sup>n</sup> = a<sup>n</sup>b<sup>n</sup></td><td>On distribue</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>Exercices de simplification</h2>
+      <div class="exercise">
+        <h4>Simplifie : 7<sup>3</sup> &times; 7<sup>5</sup></h4>
+        <p>Réponse : 7<sup><input type="text" id="ruleA1" size="3" placeholder="?"></sup></p>
+        <button class="btn btn-sm" onclick="checkRule(1,'8')">Vérifier</button>
+        <div class="feedback" id="ruleFb1"></div>
+      </div>
+      <div class="exercise">
+        <h4>Simplifie : 4<sup>9</sup> &divide; 4<sup>6</sup></h4>
+        <p>Réponse : 4<sup><input type="text" id="ruleA2" size="3" placeholder="?"></sup></p>
+        <button class="btn btn-sm" onclick="checkRule(2,'3')">Vérifier</button>
+        <div class="feedback" id="ruleFb2"></div>
+      </div>
+      <div class="exercise">
+        <h4>Simplifie : (5<sup>2</sup>)<sup>3</sup></h4>
+        <p>Réponse : 5<sup><input type="text" id="ruleA3" size="3" placeholder="?"></sup></p>
+        <button class="btn btn-sm" onclick="checkRule(3,'6')">Vérifier</button>
+        <div class="feedback" id="ruleFb3"></div>
+      </div>
+      <div class="exercise">
+        <h4>Simplifie : (3 &times; 2)<sup>4</sup></h4>
+        <p>Réponse : 3<sup><input type="text" id="ruleA4a" size="3" placeholder="?"></sup> &times; 2<sup><input type="text" id="ruleA4b" size="3" placeholder="?"></sup></p>
+        <button class="btn btn-sm" onclick="checkRule(4,'4')">Vérifier</button>
+        <div class="feedback" id="ruleFb4"></div>
+      </div>
+      <div class="exercise">
+        <h4>Simplifie : 2<sup>5</sup> &times; 2<sup>3</sup> &divide; 2<sup>4</sup></h4>
+        <p>Réponse : 2<sup><input type="text" id="ruleA5" size="3" placeholder="?"></sup></p>
+        <button class="btn btn-sm" onclick="checkRule(5,'4')">Vérifier</button>
+        <div class="feedback" id="ruleFb5"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== TAB 2 : Puissances de 10 ========== -->
+  <div class="tab-content" id="tab2">
+    <div class="card">
+      <h2>Les puissances de 10</h2>
+      <p>Les puissances de 10 sont omniprésentes en sciences et dans la vie courante.
+         Elles permettent d'écrire de très grands ou très petits nombres de manière compacte.</p>
+      <div class="formula-box">
+        <code>10<sup>n</sup></code> = 1 suivi de <strong>n</strong> zéros (pour n entier positif)
+      </div>
+
+      <h3>Les préfixes du système international</h3>
+      <table class="data-table">
+        <tr><th>Puissance</th><th>Valeur</th><th>Préfixe</th><th>Symbole</th><th>Exemple</th></tr>
+        <tr><td>10<sup>12</sup></td><td>1 000 000 000 000</td><td>téra</td><td>T</td><td>1 To (téraoctet)</td></tr>
+        <tr><td>10<sup>9</sup></td><td>1 000 000 000</td><td>giga</td><td>G</td><td>1 GHz</td></tr>
+        <tr><td>10<sup>6</sup></td><td>1 000 000</td><td>méga</td><td>M</td><td>1 Mo (mégaoctet)</td></tr>
+        <tr><td>10<sup>3</sup></td><td>1 000</td><td>kilo</td><td>k</td><td>1 km</td></tr>
+        <tr><td>10<sup>0</sup></td><td>1</td><td>—</td><td>—</td><td>—</td></tr>
+        <tr><td>10<sup>&minus;2</sup></td><td>0,01</td><td>centi</td><td>c</td><td>1 cm</td></tr>
+        <tr><td>10<sup>&minus;3</sup></td><td>0,001</td><td>milli</td><td>m</td><td>1 mm</td></tr>
+        <tr><td>10<sup>&minus;6</sup></td><td>0,000 001</td><td>micro</td><td>&mu;</td><td>1 &mu;m</td></tr>
+        <tr><td>10<sup>&minus;9</sup></td><td>0,000 000 001</td><td>nano</td><td>n</td><td>1 nm</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>Échelle des puissances de 10</h2>
+      <p>De l'infiniment petit à l'infiniment grand : déplace le curseur pour explorer les ordres de grandeur.</p>
+      <div style="text-align:center;margin:12px 0;">
+        <label style="font-weight:600;">Exposant :
+          <input type="range" id="scaleSlider" min="-15" max="26" value="0" oninput="drawScale()">
+        </label>
+        <span id="scaleExpLabel" style="font-weight:700;color:var(--accent);margin-left:8px;font-size:1.2rem;">10<sup>0</sup></span>
+      </div>
+      <canvas id="canvasScale" width="600" height="280"></canvas>
+      <p id="scaleInfo" style="text-align:center;color:var(--muted);font-size:.95rem;margin-top:8px;font-weight:600;"></p>
+    </div>
+
+    <div class="card">
+      <h2>Exercices rapides</h2>
+      <div class="exercise">
+        <h4>Combien de zéros dans 10<sup>8</sup> ?</h4>
+        <input type="text" id="p10a1" size="4" placeholder="?">
+        <button class="btn btn-sm" onclick="checkP10(1)">Vérifier</button>
+        <div class="feedback" id="p10fb1"></div>
+      </div>
+      <div class="exercise">
+        <h4>Écris 10 000 000 comme puissance de 10 : 10<sup><input type="text" id="p10a2" size="3" placeholder="?"></sup></h4>
+        <button class="btn btn-sm" onclick="checkP10(2)">Vérifier</button>
+        <div class="feedback" id="p10fb2"></div>
+      </div>
+      <div class="exercise">
+        <h4>Calcule 10<sup>3</sup> &times; 10<sup>4</sup> : 10<sup><input type="text" id="p10a3" size="3" placeholder="?"></sup></h4>
+        <button class="btn btn-sm" onclick="checkP10(3)">Vérifier</button>
+        <div class="feedback" id="p10fb3"></div>
+      </div>
+      <div class="exercise">
+        <h4>Le préfixe « kilo » correspond à 10<sup><input type="text" id="p10a4" size="3" placeholder="?"></sup></h4>
+        <button class="btn btn-sm" onclick="checkP10(4)">Vérifier</button>
+        <div class="feedback" id="p10fb4"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== TAB 3 : Exposants négatifs ========== -->
+  <div class="tab-content" id="tab3">
+    <div class="card">
+      <h2>Exposants négatifs</h2>
+      <p>Un exposant négatif indique l'<em>inverse</em> d'une puissance positive.
+         C'est un outil essentiel pour écrire des nombres très petits.</p>
+      <div class="formula-box">
+        <code>a<sup>&minus;n</sup> = 1 / a<sup>n</sup></code> &nbsp;(a &ne; 0)
+      </div>
+      <div class="example">
+        <strong>Exemples :</strong><br>
+        2<sup>&minus;3</sup> = 1 / 2<sup>3</sup> = 1/8 = 0,125<br>
+        10<sup>&minus;2</sup> = 1 / 10<sup>2</sup> = 1/100 = 0,01<br>
+        5<sup>&minus;1</sup> = 1 / 5 = 0,2<br>
+        4<sup>&minus;2</sup> = 1 / 4<sup>2</sup> = 1/16 = 0,0625
+      </div>
+
+      <h3>Puissances de 10 négatives</h3>
+      <div class="formula-box">
+        <code>10<sup>&minus;n</sup></code> = 0, suivi de (n &minus; 1) zéros, puis d'un 1
+      </div>
+      <table class="data-table">
+        <tr><th>Écriture</th><th>10<sup>&minus;1</sup></th><th>10<sup>&minus;2</sup></th><th>10<sup>&minus;3</sup></th><th>10<sup>&minus;4</sup></th><th>10<sup>&minus;5</sup></th></tr>
+        <tr><td>Valeur</td><td>0,1</td><td>0,01</td><td>0,001</td><td>0,0001</td><td>0,00001</td></tr>
+      </table>
+
+      <h3>Méthode : convertir une puissance négative</h3>
+      <ol class="method-steps">
+        <li>Repérer la base <strong>a</strong> et l'exposant négatif <strong>&minus;n</strong>.</li>
+        <li>Écrire la fraction <strong>1 / a<sup>n</sup></strong>.</li>
+        <li>Calculer a<sup>n</sup> au dénominateur.</li>
+        <li>Effectuer la division si on veut l'écriture décimale.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h2>Les règles s'appliquent aussi !</h2>
+      <p>Toutes les règles vues précédemment fonctionnent avec des exposants négatifs :</p>
+      <div class="example">
+        <strong>Exemples :</strong><br>
+        3<sup>2</sup> &times; 3<sup>&minus;5</sup> = 3<sup>2+(&minus;5)</sup> = 3<sup>&minus;3</sup> = 1/27<br>
+        10<sup>4</sup> &times; 10<sup>&minus;7</sup> = 10<sup>4&minus;7</sup> = 10<sup>&minus;3</sup> = 0,001<br>
+        (2<sup>&minus;3</sup>)<sup>2</sup> = 2<sup>&minus;6</sup> = 1/64
+      </div>
+      <div class="warning-box">
+        Ne pas confondre le signe négatif de l'exposant avec un nombre négatif.
+        2<sup>&minus;3</sup> = 1/8 (positif !), tandis que (&minus;2)<sup>3</sup> = &minus;8 (négatif).
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Exercices de conversion</h2>
+      <div class="exercise">
+        <h4>Écris 4<sup>&minus;2</sup> sous forme de fraction : 1 / <input type="text" id="negA1" size="4" placeholder="?"></h4>
+        <button class="btn btn-sm" onclick="checkNeg(1)">Vérifier</button>
+        <div class="feedback" id="negFb1"></div>
+      </div>
+      <div class="exercise">
+        <h4>Écris 10<sup>&minus;4</sup> en écriture décimale :</h4>
+        <input type="text" id="negA2" size="10" placeholder="0,???">
+        <button class="btn btn-sm" onclick="checkNeg(2)">Vérifier</button>
+        <div class="feedback" id="negFb2"></div>
+      </div>
+      <div class="exercise">
+        <h4>Simplifie 6<sup>3</sup> &times; 6<sup>&minus;5</sup> : 6<sup><input type="text" id="negA3" size="3" placeholder="?"></sup></h4>
+        <button class="btn btn-sm" onclick="checkNeg(3)">Vérifier</button>
+        <div class="feedback" id="negFb3"></div>
+      </div>
+      <div class="exercise">
+        <h4>Écris 1/10<sup>6</sup> comme puissance de 10 : 10<sup><input type="text" id="negA4" size="3" placeholder="?"></sup></h4>
+        <button class="btn btn-sm" onclick="checkNeg(4)">Vérifier</button>
+        <div class="feedback" id="negFb4"></div>
+      </div>
+      <div class="exercise">
+        <h4>Calcule (5<sup>&minus;1</sup>)<sup>2</sup> sous forme de fraction : 1 / <input type="text" id="negA5" size="4" placeholder="?"></h4>
+        <button class="btn btn-sm" onclick="checkNeg(5)">Vérifier</button>
+        <div class="feedback" id="negFb5"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== TAB 4 : Notation scientifique ========== -->
+  <div class="tab-content" id="tab4">
+    <div class="card">
+      <h2>La notation scientifique</h2>
+      <p>Un nombre est en <strong>notation scientifique</strong> quand il s'écrit sous la forme :</p>
+      <div class="formula-box">
+        <code>a &times; 10<sup>n</sup></code> &nbsp;avec <strong>1 &le; a &lt; 10</strong> et n entier relatif
+      </div>
+      <p>Le nombre <strong>a</strong> est appelé la <em>mantisse</em>. Il a un seul chiffre
+         (non nul) avant la virgule.</p>
+      <div class="example">
+        <strong>Exemples :</strong><br>
+        345 000 = 3,45 &times; 10<sup>5</sup><br>
+        0,0072 = 7,2 &times; 10<sup>&minus;3</sup><br>
+        6 800 000 = 6,8 &times; 10<sup>6</sup><br>
+        0,000 000 91 = 9,1 &times; 10<sup>&minus;7</sup>
+      </div>
+
+      <h3>Méthode pour écrire en notation scientifique</h3>
+      <ol class="method-steps">
+        <li>Place la virgule juste après le premier chiffre non nul : tu obtiens <strong>a</strong>.</li>
+        <li>Compte le nombre de positions dont tu as décalé la virgule : c'est <strong>|n|</strong>.</li>
+        <li>Si le nombre original est &ge; 10, l'exposant n est <strong>positif</strong>.</li>
+        <li>Si le nombre original est &lt; 1, l'exposant n est <strong>négatif</strong>.</li>
+      </ol>
+      <div class="example">
+        <strong>Exemple détaillé :</strong> Écrire 52 600 en notation scientifique.<br>
+        1) Premier chiffre non nul : 5 &rarr; a = 5,26<br>
+        2) La virgule s'est décalée de 4 positions vers la gauche.<br>
+        3) 52 600 &ge; 10, donc n = +4.<br>
+        <strong>Résultat :</strong> 52 600 = 5,26 &times; 10<sup>4</sup>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Comparer des grandeurs</h2>
+      <p>La notation scientifique facilite la comparaison de nombres très différents :</p>
+      <ol class="method-steps">
+        <li>Compare d'abord les <strong>exposants</strong> de 10 : le plus grand exposant donne le plus grand nombre.</li>
+        <li>Si les exposants sont égaux, compare les <strong>mantisses</strong> (les « a »).</li>
+      </ol>
+      <div class="example">
+        <strong>Exemple :</strong> Comparer A = 3,2 &times; 10<sup>8</sup> et B = 9,1 &times; 10<sup>7</sup><br>
+        Exposant de A : 8 &gt; Exposant de B : 7, donc <strong>A &gt; B</strong>.<br><br>
+        <strong>Exemple :</strong> Comparer C = 4,7 &times; 10<sup>5</sup> et D = 2,3 &times; 10<sup>5</sup><br>
+        Même exposant (5). On compare les mantisses : 4,7 &gt; 2,3, donc <strong>C &gt; D</strong>.
+      </div>
+
+      <h3>Opérations en notation scientifique</h3>
+      <div class="formula-box">
+        <strong>Multiplication :</strong>
+        <code>(a &times; 10<sup>n</sup>) &times; (b &times; 10<sup>m</sup>) = (a &times; b) &times; 10<sup>n+m</sup></code>
+      </div>
+      <div class="formula-box">
+        <strong>Division :</strong>
+        <code>(a &times; 10<sup>n</sup>) &divide; (b &times; 10<sup>m</sup>) = (a &divide; b) &times; 10<sup>n&minus;m</sup></code>
+      </div>
+      <div class="example">
+        (2 &times; 10<sup>3</sup>) &times; (4 &times; 10<sup>5</sup>) = 8 &times; 10<sup>8</sup><br>
+        (6 &times; 10<sup>9</sup>) &divide; (3 &times; 10<sup>4</sup>) = 2 &times; 10<sup>5</sup><br>
+        (5 &times; 10<sup>2</sup>) &times; (8 &times; 10<sup>3</sup>) = 40 &times; 10<sup>5</sup> = 4 &times; 10<sup>6</sup>
+      </div>
+      <div class="warning-box">
+        Si a &times; b &ge; 10 ou a &times; b &lt; 1, il faut réajuster pour que la mantisse
+        reste entre 1 et 10. Ex : 40 &times; 10<sup>5</sup> = 4 &times; 10<sup>6</sup>.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Exercices interactifs</h2>
+      <div class="exercise">
+        <h4>Écris 47 000 en notation scientifique</h4>
+        <p><input type="text" id="nsA1a" size="5" placeholder="a"> &times; 10<sup><input type="text" id="nsA1b" size="3" placeholder="n"></sup></p>
+        <button class="btn btn-sm" onclick="checkNS(1)">Vérifier</button>
+        <div class="feedback" id="nsFb1"></div>
+      </div>
+      <div class="exercise">
+        <h4>Écris 0,00056 en notation scientifique</h4>
+        <p><input type="text" id="nsA2a" size="5" placeholder="a"> &times; 10<sup><input type="text" id="nsA2b" size="3" placeholder="n"></sup></p>
+        <button class="btn btn-sm" onclick="checkNS(2)">Vérifier</button>
+        <div class="feedback" id="nsFb2"></div>
+      </div>
+      <div class="exercise">
+        <h4>Calcule : (3 &times; 10<sup>4</sup>) &times; (2 &times; 10<sup>3</sup>)</h4>
+        <p><input type="text" id="nsA3a" size="5" placeholder="a"> &times; 10<sup><input type="text" id="nsA3b" size="3" placeholder="n"></sup></p>
+        <button class="btn btn-sm" onclick="checkNS(3)">Vérifier</button>
+        <div class="feedback" id="nsFb3"></div>
+      </div>
+      <div class="exercise">
+        <h4>Calcule : (8 &times; 10<sup>6</sup>) &divide; (4 &times; 10<sup>2</sup>)</h4>
+        <p><input type="text" id="nsA4a" size="5" placeholder="a"> &times; 10<sup><input type="text" id="nsA4b" size="3" placeholder="n"></sup></p>
+        <button class="btn btn-sm" onclick="checkNS(4)">Vérifier</button>
+        <div class="feedback" id="nsFb4"></div>
+      </div>
+      <div class="exercise">
+        <h4>Écris 9 030 000 en notation scientifique</h4>
+        <p><input type="text" id="nsA5a" size="5" placeholder="a"> &times; 10<sup><input type="text" id="nsA5b" size="3" placeholder="n"></sup></p>
+        <button class="btn btn-sm" onclick="checkNS(5)">Vérifier</button>
+        <div class="feedback" id="nsFb5"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== TAB 5 : Exercices ========== -->
+  <div class="tab-content" id="tab5">
+    <div class="card">
+      <h2>Exercices progressifs</h2>
+      <p>Travaille ces exercices dans l'ordre croissant de difficulté.
+         La correction détaillée est disponible sous chaque énoncé.</p>
+      <div class="progress-bar"><div class="progress-fill" id="exProgress" style="width:0%"></div></div>
+      <p style="color:var(--muted);font-size:.85rem;" id="exProgressText">Ouvre les corrections au fur et à mesure.</p>
+    </div>
+
+    <div class="card">
+      <h4><span class="level-tag apply">Appliquer</span>Exercice 1 — Calculs directs</h4>
+      <p>Calcule les expressions suivantes :</p>
+      <p>a) 3<sup>4</sup> &emsp; b) 2<sup>5</sup> &emsp; c) 10<sup>3</sup> &emsp; d) 7<sup>0</sup> &emsp; e) 1<sup>100</sup></p>
+      <details class="ex-detail"><summary>Voir la correction</summary>
+        <div class="correction-body">
+          a) 3<sup>4</sup> = 3 &times; 3 &times; 3 &times; 3 = <strong>81</strong><br>
+          b) 2<sup>5</sup> = 2 &times; 2 &times; 2 &times; 2 &times; 2 = <strong>32</strong><br>
+          c) 10<sup>3</sup> = <strong>1 000</strong><br>
+          d) 7<sup>0</sup> = <strong>1</strong> (tout nombre non nul puissance 0 vaut 1)<br>
+          e) 1<sup>100</sup> = <strong>1</strong> (1 puissance n'importe quel exposant vaut 1)
+        </div>
+      </details>
+    </div>
+
+    <div class="card">
+      <h4><span class="level-tag apply">Appliquer</span>Exercice 2 — Simplification</h4>
+      <p>Écris sous la forme a<sup>n</sup> (une seule puissance) :</p>
+      <p>a) 5<sup>3</sup> &times; 5<sup>4</sup> &emsp; b) 8<sup>6</sup> &divide; 8<sup>2</sup> &emsp; c) (2<sup>3</sup>)<sup>2</sup> &emsp; d) 4<sup>5</sup> &times; 4<sup>&minus;2</sup></p>
+      <details class="ex-detail"><summary>Voir la correction</summary>
+        <div class="correction-body">
+          a) 5<sup>3</sup> &times; 5<sup>4</sup> = 5<sup>3+4</sup> = <strong>5<sup>7</sup></strong><br>
+          b) 8<sup>6</sup> &divide; 8<sup>2</sup> = 8<sup>6&minus;2</sup> = <strong>8<sup>4</sup></strong><br>
+          c) (2<sup>3</sup>)<sup>2</sup> = 2<sup>3&times;2</sup> = <strong>2<sup>6</sup></strong><br>
+          d) 4<sup>5</sup> &times; 4<sup>&minus;2</sup> = 4<sup>5+(&minus;2)</sup> = <strong>4<sup>3</sup></strong> = 64
+        </div>
+      </details>
+    </div>
+
+    <div class="card">
+      <h4><span class="level-tag apply">Appliquer</span>Exercice 3 — Notation scientifique</h4>
+      <p>Écris en notation scientifique :</p>
+      <p>a) 560 000 &emsp; b) 0,0034 &emsp; c) 72 300 &emsp; d) 0,000 008 1</p>
+      <details class="ex-detail"><summary>Voir la correction</summary>
+        <div class="correction-body">
+          a) 560 000 = <strong>5,6 &times; 10<sup>5</sup></strong><br>
+          b) 0,0034 = <strong>3,4 &times; 10<sup>&minus;3</sup></strong><br>
+          c) 72 300 = <strong>7,23 &times; 10<sup>4</sup></strong><br>
+          d) 0,000 008 1 = <strong>8,1 &times; 10<sup>&minus;6</sup></strong>
+        </div>
+      </details>
+    </div>
+
+    <div class="card">
+      <h4><span class="level-tag understand">Comprendre</span>Exercice 4 — Exposants négatifs</h4>
+      <p>Écris sous forme de fraction ou décimale :</p>
+      <p>a) 3<sup>&minus;2</sup> &emsp; b) 10<sup>&minus;5</sup> &emsp; c) 2<sup>&minus;4</sup> &emsp; d) 5<sup>&minus;3</sup></p>
+      <details class="ex-detail"><summary>Voir la correction</summary>
+        <div class="correction-body">
+          a) 3<sup>&minus;2</sup> = 1/3<sup>2</sup> = <strong>1/9</strong> &asymp; 0,111<br>
+          b) 10<sup>&minus;5</sup> = 1/10<sup>5</sup> = <strong>0,000 01</strong><br>
+          c) 2<sup>&minus;4</sup> = 1/2<sup>4</sup> = <strong>1/16</strong> = 0,0625<br>
+          d) 5<sup>&minus;3</sup> = 1/5<sup>3</sup> = <strong>1/125</strong> = 0,008
+        </div>
+      </details>
+    </div>
+
+    <div class="card">
+      <h4><span class="level-tag understand">Comprendre</span>Exercice 5 — Opérations en notation scientifique</h4>
+      <p>Calcule et donne le résultat en notation scientifique :</p>
+      <p>a) (4 &times; 10<sup>3</sup>) &times; (5 &times; 10<sup>4</sup>)<br>
+         b) (9 &times; 10<sup>8</sup>) &divide; (3 &times; 10<sup>5</sup>)<br>
+         c) (6 &times; 10<sup>2</sup>) &times; (7 &times; 10<sup>&minus;5</sup>)</p>
+      <details class="ex-detail"><summary>Voir la correction</summary>
+        <div class="correction-body">
+          a) (4 &times; 5) &times; 10<sup>3+4</sup> = 20 &times; 10<sup>7</sup> = <strong>2 &times; 10<sup>8</sup></strong><br>
+          b) (9 &divide; 3) &times; 10<sup>8&minus;5</sup> = <strong>3 &times; 10<sup>3</sup></strong><br>
+          c) (6 &times; 7) &times; 10<sup>2+(&minus;5)</sup> = 42 &times; 10<sup>&minus;3</sup> = <strong>4,2 &times; 10<sup>&minus;2</sup></strong>
+        </div>
+      </details>
+    </div>
+
+    <div class="card">
+      <h4><span class="level-tag understand">Comprendre</span>Exercice 6 — Comparaison</h4>
+      <p>Classe ces nombres du plus petit au plus grand :</p>
+      <p>A = 5,3 &times; 10<sup>4</sup> &emsp; B = 8,1 &times; 10<sup>3</sup> &emsp;
+         C = 2,7 &times; 10<sup>5</sup> &emsp; D = 9,9 &times; 10<sup>4</sup></p>
+      <details class="ex-detail"><summary>Voir la correction</summary>
+        <div class="correction-body">
+          B = 8 100 &emsp; A = 53 000 &emsp; D = 99 000 &emsp; C = 270 000<br>
+          <strong>Ordre : B &lt; A &lt; D &lt; C</strong><br><br>
+          <em>Méthode :</em> On compare d'abord les exposants. B a l'exposant 3 (plus petit),
+          puis A et D ont l'exposant 4 (on compare les mantisses : 5,3 &lt; 9,9),
+          et C a l'exposant 5 (le plus grand).
+        </div>
+      </details>
+    </div>
+
+    <div class="card">
+      <h4><span class="level-tag deepen">Approfondir</span>Exercice 7 — Problème contextualisé</h4>
+      <p>La distance Terre-Soleil est d'environ 1,5 &times; 10<sup>8</sup> km.
+         La lumière parcourt 3 &times; 10<sup>5</sup> km par seconde.
+         Combien de temps met la lumière pour aller du Soleil à la Terre ?</p>
+      <details class="ex-detail"><summary>Voir la correction</summary>
+        <div class="correction-body">
+          <strong>Données :</strong> d = 1,5 &times; 10<sup>8</sup> km ; v = 3 &times; 10<sup>5</sup> km/s<br>
+          <strong>Formule :</strong> t = d &divide; v<br><br>
+          t = (1,5 &times; 10<sup>8</sup>) &divide; (3 &times; 10<sup>5</sup>)<br>
+          t = (1,5 &divide; 3) &times; 10<sup>8&minus;5</sup><br>
+          t = 0,5 &times; 10<sup>3</sup> = 5 &times; 10<sup>2</sup> = <strong>500 secondes</strong><br><br>
+          Conversion : 500 &divide; 60 &asymp; 8,33 minutes<br>
+          Soit environ <strong>8 minutes et 20 secondes</strong>.
+        </div>
+      </details>
+    </div>
+
+    <div class="card">
+      <h4><span class="level-tag deepen">Approfondir</span>Exercice 8 — Expression complexe</h4>
+      <p>Simplifie et donne le résultat sous forme d'une puissance de 2 :</p>
+      <p style="text-align:center;font-size:1.15rem;">
+        E = (2<sup>3</sup> &times; 2<sup>5</sup>) &divide; (2<sup>2</sup>)<sup>2</sup>
+      </p>
+      <details class="ex-detail"><summary>Voir la correction</summary>
+        <div class="correction-body">
+          <strong>Numérateur :</strong> 2<sup>3</sup> &times; 2<sup>5</sup> = 2<sup>3+5</sup> = 2<sup>8</sup><br>
+          <strong>Dénominateur :</strong> (2<sup>2</sup>)<sup>2</sup> = 2<sup>2&times;2</sup> = 2<sup>4</sup><br><br>
+          E = 2<sup>8</sup> &divide; 2<sup>4</sup> = 2<sup>8&minus;4</sup> = <strong>2<sup>4</sup> = 16</strong>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <!-- ========== TAB 6 : QCM ========== -->
+  <div class="tab-content" id="tab6">
+    <div class="card">
+      <h2>QCM — Teste tes connaissances</h2>
+      <p>Réponds aux 16 questions puis clique sur « Voir mon score » en bas de page.
+         Chaque question n'a qu'une seule bonne réponse.</p>
+    </div>
+    <div id="qcmContainer"></div>
+    <div style="text-align:center;margin:24px 0;">
+      <button class="btn" onclick="gradeQCM()" style="font-size:1.1rem;padding:12px 32px;">
+        Voir mon score
+      </button>
+      <button class="btn" onclick="resetQCM()"
+        style="background:var(--surface2);color:var(--text);border:1px solid var(--border);margin-left:12px;">
+        Recommencer
+      </button>
+    </div>
+    <div id="qcmScore"></div>
+  </div>
+</div>
+
+<footer>
+  Cours interactif — Les Puissances — Niveau 4ème
+</footer>
+
+<script>
+/* ================================================================
+   THEME TOGGLE
+   ================================================================ */
+function toggleTheme(){
+  var r = document.documentElement;
+  var t = r.getAttribute('data-theme');
+  r.setAttribute('data-theme', t === 'dark' ? 'light' : 'dark');
+}
+
+/* ================================================================
+   TAB SYSTEM with lazy init
+   ================================================================ */
+var inited = [true, false, false, false, false, false, false];
+
+function showTab(i) {
+  document.querySelectorAll('.tab-content').forEach(function(el, j) {
+    el.classList.toggle('active', j === i);
+  });
+  document.querySelectorAll('.tab-btn').forEach(function(el, j) {
+    el.classList.toggle('active', j === i);
+  });
+  if (!inited[i]) {
+    inited[i] = true;
+    initSection(i);
+  }
+}
+
+function initSection(i) {
+  if (i === 0) drawTree();
+  if (i === 2) drawScale();
+  if (i === 5) initExProgress();
+  if (i === 6) buildQCM();
+}
+
+/* Init tab 0 on load */
+window.addEventListener('DOMContentLoaded', function() {
+  drawTree();
+});
+
+/* ================================================================
+   CANVAS HELPERS
+   ================================================================ */
+function getCSS(prop) {
+  return getComputedStyle(document.documentElement).getPropertyValue(prop).trim();
+}
+
+function setupCanvas(canvas) {
+  var dpr = window.devicePixelRatio || 1;
+  var rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  var ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, rect.width, rect.height);
+  return { ctx: ctx, w: rect.width, h: rect.height };
+}
+
+/* ================================================================
+   TAB 0 : TREE VISUALIZATION
+   ================================================================ */
+function drawTree() {
+  var base = parseInt(document.getElementById('treeBase').value);
+  var exp = parseInt(document.getElementById('treeExp').value);
+  document.getElementById('treeBaseVal').textContent = base;
+  document.getElementById('treeExpVal').textContent = exp;
+
+  var canvas = document.getElementById('canvasTree');
+  var s = setupCanvas(canvas);
+  var ctx = s.ctx, w = s.w, h = s.h;
+
+  var accent = getCSS('--accent');
+  var heading = getCSS('--heading');
+  var text = getCSS('--text');
+  var muted = getCSS('--muted');
+  var surface = getCSS('--surface');
+  var result = Math.pow(base, exp);
+
+  document.getElementById('treeResult').innerHTML =
+    base + '<sup>' + exp + '</sup> = ' +
+    Array(exp).fill(base).join(' &times; ') + ' = <strong>' + result + '</strong>';
+
+  /* Draw nodes level by level */
+  var levels = exp + 1;
+  var rowH = h / (levels + 0.5);
+
+  for (var lv = 0; lv < levels; lv++) {
+    var count = Math.min(Math.pow(base, lv), 64);
+    var val = Math.pow(base, exp - lv);
+    var y = rowH * (lv + 0.5);
+
+    for (var n = 0; n < count; n++) {
+      var x = w * (n + 0.5) / count;
+
+      /* draw lines to children */
+      if (lv < levels - 1) {
+        var childCount = Math.min(count * base, 64);
+        ctx.strokeStyle = muted;
+        ctx.lineWidth = 1;
+        for (var c = 0; c < base; c++) {
+          var ci = n * base + c;
+          if (ci >= childCount) break;
+          var cx = w * (ci + 0.5) / childCount;
+          var cy = rowH * (lv + 1.5);
+          ctx.beginPath();
+          ctx.moveTo(x, y + 14);
+          ctx.lineTo(cx, cy - 14);
+          ctx.stroke();
+        }
+      }
+
+      /* draw node circle */
+      var r = lv === 0 ? 20 : lv === levels - 1 ? 14 : 16;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fillStyle = lv === 0 ? accent : lv === levels - 1 ? heading : surface;
+      ctx.fill();
+      ctx.strokeStyle = accent;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      /* label */
+      ctx.fillStyle = lv === 0 ? '#fff' : text;
+      ctx.font = (lv === 0 ? 'bold ' : '') + (lv === 0 ? '14' : '12') + 'px Nunito Sans, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(lv === levels - 1 ? base.toString() : val.toString(), x, y);
+    }
+  }
+}
+
+/* ================================================================
+   TAB 2 : SCALE OF POWERS OF 10
+   ================================================================ */
+var scaleObjects = [
+  [-15, 'Quark', '~10⁻\xB9⁵ m'],
+  [-12, 'Proton', '~10⁻\xB9² m'],
+  [-10, 'Atome', '~10⁻\xB9⁰ m'],
+  [-9, 'Molécule ADN', '~1 nm'],
+  [-7, 'Virus', '~100 nm'],
+  [-6, 'Bactérie', '~1 µm'],
+  [-5, 'Globule rouge', '~10 µm'],
+  [-4, 'Cheveu (ø)', '~0,1 mm'],
+  [-3, 'Grain de sable', '~1 mm'],
+  [-2, 'Fourmi', '~1 cm'],
+  [0, 'Humain', '~1 m'],
+  [1, 'Baleine bleue', '~30 m'],
+  [3, 'Mont Blanc', '~4 810 m'],
+  [5, 'Paris (diam.)', '~10 km'],
+  [7, 'Terre (diam.)', '~12 700 km'],
+  [8, 'Terre-Lune', '~380 000 km'],
+  [11, 'Terre-Soleil', '~150 M km'],
+  [13, 'Syst. solaire', '~10\xB3\xB3 m'],
+  [16, 'Année-lumière', '~10\xB9⁶ m'],
+  [21, 'Voie lactée', '~10²\xB9 m'],
+  [26, 'Univers obs.', '~10²⁶ m']
+];
+
+function drawScale() {
+  var exp = parseInt(document.getElementById('scaleSlider').value);
+  document.getElementById('scaleExpLabel').innerHTML = '10<sup>' + exp + '</sup>';
+
+  var canvas = document.getElementById('canvasScale');
+  var s = setupCanvas(canvas);
+  var ctx = s.ctx, w = s.w, h = s.h;
+
+  var accent = getCSS('--accent');
+  var heading = getCSS('--heading');
+  var text = getCSS('--text');
+  var muted = getCSS('--muted');
+  var surface2 = getCSS('--surface2');
+
+  /* Axis */
+  var axisY = h * 0.65, padL = 40, padR = 20;
+  ctx.strokeStyle = muted;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(padL, axisY);
+  ctx.lineTo(w - padR, axisY);
+  ctx.stroke();
+
+  /* Ticks every 5 */
+  var minE = -15, maxE = 26, range = maxE - minE;
+  ctx.font = '10px Nunito Sans, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+
+  for (var e = minE; e <= maxE; e += 5) {
+    var x = padL + (w - padL - padR) * (e - minE) / range;
+    ctx.strokeStyle = muted;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x, axisY - 6);
+    ctx.lineTo(x, axisY + 6);
+    ctx.stroke();
+    ctx.fillStyle = muted;
+    ctx.fillText('10^' + e, x, axisY + 10);
+  }
+
+  /* Highlight current position */
+  var cx = padL + (w - padL - padR) * (exp - minE) / range;
+  ctx.fillStyle = accent;
+  ctx.beginPath();
+  ctx.arc(cx, axisY, 9, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 8px Nunito Sans, sans-serif';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(exp, cx, axisY);
+
+  /* Find closest object */
+  var best = null, bestDist = 999;
+  for (var i = 0; i < scaleObjects.length; i++) {
+    var d = Math.abs(scaleObjects[i][0] - exp);
+    if (d < bestDist) { bestDist = d; best = scaleObjects[i]; }
+  }
+
+  /* Draw nearby objects */
+  ctx.textBaseline = 'bottom';
+  for (var i = 0; i < scaleObjects.length; i++) {
+    var obj = scaleObjects[i];
+    var ox = padL + (w - padL - padR) * (obj[0] - minE) / range;
+    var dist = Math.abs(obj[0] - exp);
+    if (dist > 10) continue;
+
+    var isCurrent = (obj === best);
+    ctx.fillStyle = isCurrent ? accent : muted;
+    ctx.beginPath();
+    ctx.arc(ox, axisY, isCurrent ? 5 : 3, 0, Math.PI * 2);
+    ctx.fill();
+
+    if (isCurrent || dist <= 5) {
+      ctx.save();
+      ctx.translate(ox, axisY - 16);
+      ctx.rotate(-0.45);
+      ctx.font = (isCurrent ? 'bold ' : '') + '11px Nunito Sans, sans-serif';
+      ctx.fillStyle = isCurrent ? heading : text;
+      ctx.textAlign = 'center';
+      ctx.fillText(obj[1], 0, 0);
+      ctx.restore();
+    }
+  }
+
+  document.getElementById('scaleInfo').textContent =
+    best ? best[1] + ' : ' + best[2] : '';
+}
+
+/* ================================================================
+   TAB 0 : DEFINITION CHECKS
+   ================================================================ */
+function checkDef(n) {
+  var fb = document.getElementById('defFb' + n);
+  var v = document.getElementById('defA' + n).value.trim();
+  var answers = { 1: '27', 2: '25', 3: '1' };
+  if (v === answers[n]) {
+    fb.textContent = 'Correct !';
+    fb.className = 'feedback correct';
+  } else {
+    var expl = { 1: '3x3x3 = 27', 2: '(-5)x(-5) = 25', 3: 'Tout nombre non nul puissance 0 = 1' };
+    fb.textContent = 'Incorrect. ' + expl[n] + '.';
+    fb.className = 'feedback wrong';
+  }
+}
+
+/* ================================================================
+   TAB 1 : RULE CHECKS
+   ================================================================ */
+function checkRule(n, ans) {
+  var fb = document.getElementById('ruleFb' + n);
+  if (n === 4) {
+    var a = document.getElementById('ruleA4a').value.trim();
+    var b = document.getElementById('ruleA4b').value.trim();
+    if (a === ans && b === ans) {
+      fb.textContent = 'Correct ! (3×2)⁴ = 3⁴ × 2⁴';
+      fb.className = 'feedback correct';
+    } else {
+      fb.textContent = 'Incorrect. Les deux exposants valent 4.';
+      fb.className = 'feedback wrong';
+    }
+    return;
+  }
+  var v = document.getElementById('ruleA' + n).value.trim();
+  if (v === ans) {
+    fb.textContent = 'Correct !';
+    fb.className = 'feedback correct';
+  } else {
+    fb.textContent = 'Incorrect. La réponse est ' + ans + '.';
+    fb.className = 'feedback wrong';
+  }
+}
+
+/* ================================================================
+   TAB 2 : POWERS OF 10 CHECKS
+   ================================================================ */
+function checkP10(n) {
+  var fb = document.getElementById('p10fb' + n);
+  var answers = { 1: '8', 2: '7', 3: '7', 4: '3' };
+  var explanations = {
+    1: '10^8 comporte 8 zéros.',
+    2: '10 000 000 = 10^7 (7 zéros).',
+    3: '10^3 × 10^4 = 10^(3+4) = 10^7.',
+    4: 'kilo = 10^3 = 1 000.'
+  };
+  var v = document.getElementById('p10a' + n).value.trim();
+  if (v === answers[n]) {
+    fb.textContent = 'Correct !';
+    fb.className = 'feedback correct';
+  } else {
+    fb.textContent = 'Incorrect. ' + explanations[n];
+    fb.className = 'feedback wrong';
+  }
+}
+
+/* ================================================================
+   TAB 3 : NEGATIVE EXPONENT CHECKS
+   ================================================================ */
+function checkNeg(n) {
+  var fb = document.getElementById('negFb' + n);
+  var answers = { 1: '16', 2: '0,0001', 3: '-2', 4: '-6', 5: '25' };
+  var explanations = {
+    1: '4^2 = 16, donc 4^(-2) = 1/16.',
+    2: '10^(-4) = 0,0001.',
+    3: '3 + (-5) = -2.',
+    4: '1/10^6 = 10^(-6).',
+    5: '(5^(-1))^2 = 5^(-2) = 1/25.'
+  };
+  var v = document.getElementById('negA' + n).value.trim().replace(/\s/g, '');
+  if (v === answers[n]) {
+    fb.textContent = 'Correct !';
+    fb.className = 'feedback correct';
+  } else {
+    fb.textContent = 'Incorrect. ' + explanations[n];
+    fb.className = 'feedback wrong';
+  }
+}
+
+/* ================================================================
+   TAB 4 : SCIENTIFIC NOTATION CHECKS
+   ================================================================ */
+function checkNS(n) {
+  var fb = document.getElementById('nsFb' + n);
+  var correct = {
+    1: ['4.7', '4'],
+    2: ['5.6', '-4'],
+    3: ['6', '7'],
+    4: ['2', '4'],
+    5: ['9.03', '6']
+  };
+  var ca = correct[n][0], cb = correct[n][1];
+  var va = document.getElementById('nsA' + n + 'a').value.trim().replace(',', '.');
+  var vb = document.getElementById('nsA' + n + 'b').value.trim();
+  if (va === ca && vb === cb) {
+    fb.textContent = 'Correct !';
+    fb.className = 'feedback correct';
+  } else {
+    fb.textContent = 'Incorrect. Réponse : ' + ca.replace('.', ',') + ' × 10^' + cb + '.';
+    fb.className = 'feedback wrong';
+  }
+}
+
+/* ================================================================
+   TAB 5 : EXERCISE PROGRESS TRACKER
+   ================================================================ */
+function initExProgress() {
+  document.querySelectorAll('.ex-detail').forEach(function(d) {
+    d.addEventListener('toggle', updateExProgress);
+  });
+}
+
+function updateExProgress() {
+  var all = document.querySelectorAll('.ex-detail');
+  var opened = 0;
+  all.forEach(function(d) { if (d.open) opened++; });
+  var pct = Math.round(opened / all.length * 100);
+  var bar = document.getElementById('exProgress');
+  var txt = document.getElementById('exProgressText');
+  if (bar) bar.style.width = pct + '%';
+  if (txt) txt.textContent = opened + ' / ' + all.length + ' corrections ouvertes (' + pct + ' %)';
+}
+
+/* ================================================================
+   TAB 6 : QCM
+   ================================================================ */
+var qcmData = [
+  { q: 'Que vaut 2<sup>4</sup> ?',
+    o: ['8', '16', '32', '12'], a: 1 },
+  { q: 'Que vaut 10<sup>0</sup> ?',
+    o: ['0', '10', '1', '100'], a: 2 },
+  { q: '5<sup>3</sup> &times; 5<sup>2</sup> = ?',
+    o: ['5<sup>6</sup>', '5<sup>5</sup>', '25<sup>5</sup>', '5<sup>1</sup>'], a: 1 },
+  { q: 'Quelle est la notation scientifique de 3 200 ?',
+    o: ['32 &times; 10<sup>2</sup>', '3,2 &times; 10<sup>3</sup>',
+        '0,32 &times; 10<sup>4</sup>', '3,2 &times; 10<sup>2</sup>'], a: 1 },
+  { q: 'Que vaut 10<sup>&minus;3</sup> ?',
+    o: ['1 000', '0,001', '&minus;1 000', '0,01'], a: 1 },
+  { q: '(3<sup>2</sup>)<sup>3</sup> = ?',
+    o: ['3<sup>5</sup>', '3<sup>6</sup>', '9<sup>3</sup>', '3<sup>8</sup>'], a: 1 },
+  { q: 'a<sup>&minus;1</sup> est égal à :',
+    o: ['&minus;a', '1/a', 'a', '0'], a: 1 },
+  { q: '10<sup>5</sup> &divide; 10<sup>2</sup> = ?',
+    o: ['10<sup>3</sup>', '10<sup>7</sup>', '10<sup>2,5</sup>', '10<sup>10</sup>'], a: 0 },
+  { q: 'Notation scientifique de 0,00045 ?',
+    o: ['45 &times; 10<sup>&minus;5</sup>', '4,5 &times; 10<sup>&minus;4</sup>',
+        '4,5 &times; 10<sup>4</sup>', '0,45 &times; 10<sup>&minus;3</sup>'], a: 1 },
+  { q: '2<sup>3</sup> &times; 3<sup>3</sup> = ?',
+    o: ['6<sup>3</sup>', '6<sup>6</sup>', '6<sup>9</sup>', '5<sup>3</sup>'], a: 0 },
+  { q: 'Que vaut 4<sup>&minus;2</sup> ?',
+    o: ['&minus;16', '1/16', '1/8', '16'], a: 1 },
+  { q: 'Combien de zéros dans 10<sup>9</sup> ?',
+    o: ['8', '10', '9', '90'], a: 2 },
+  { q: '(2 &times; 10<sup>3</sup>) &times; (3 &times; 10<sup>4</sup>) = ?',
+    o: ['6 &times; 10<sup>7</sup>', '5 &times; 10<sup>7</sup>',
+        '6 &times; 10<sup>12</sup>', '23 &times; 10<sup>7</sup>'], a: 0 },
+  { q: 'Le préfixe « méga » correspond à :',
+    o: ['10<sup>3</sup>', '10<sup>6</sup>', '10<sup>9</sup>', '10<sup>12</sup>'], a: 1 },
+  { q: '7<sup>1</sup> = ?',
+    o: ['0', '1', '7', '17'], a: 2 },
+  { q: 'Quel nombre est le plus grand ?',
+    o: ['3,1 &times; 10<sup>5</sup>', '9,8 &times; 10<sup>4</sup>',
+        '1,2 &times; 10<sup>6</sup>', '7,7 &times; 10<sup>5</sup>'], a: 2 }
+];
+
+var qcmAnswers = [];
+
+function buildQCM() {
+  var c = document.getElementById('qcmContainer');
+  if (c.children.length > 0) return;
+  qcmAnswers = new Array(qcmData.length).fill(-1);
+
+  var html = '';
+  for (var i = 0; i < qcmData.length; i++) {
+    var q = qcmData[i];
+    html += '<div class="qcm-question" id="qcmQ' + i + '">';
+    html += '<p class="qcm-q">' + (i + 1) + '. ' + q.q + '</p>';
+    for (var j = 0; j < q.o.length; j++) {
+      html += '<label class="qcm-option" id="qcmO' + i + '_' + j + '"';
+      html += ' onclick="selectQCM(' + i + ',' + j + ')">';
+      html += '<input type="radio" name="qcm' + i + '"';
+      html += ' style="margin-right:8px;accent-color:var(--accent)">';
+      html += q.o[j] + '</label>';
+    }
+    html += '<div class="feedback" id="qcmFb' + i + '"></div>';
+    html += '</div>';
+  }
+  c.innerHTML = html;
+}
+
+function selectQCM(qi, oi) {
+  qcmAnswers[qi] = oi;
+  for (var j = 0; j < qcmData[qi].o.length; j++) {
+    var el = document.getElementById('qcmO' + qi + '_' + j);
+    el.className = 'qcm-option' + (j === oi ? ' selected' : '');
+  }
+}
+
+function gradeQCM() {
+  var score = 0;
+  for (var i = 0; i < qcmData.length; i++) {
+    var fb = document.getElementById('qcmFb' + i);
+    var correct = qcmData[i].a;
+    for (var j = 0; j < qcmData[i].o.length; j++) {
+      var el = document.getElementById('qcmO' + i + '_' + j);
+      el.className = 'qcm-option';
+      if (j === correct) el.className += ' right';
+      else if (j === qcmAnswers[i] && j !== correct) el.className += ' wro';
+    }
+    if (qcmAnswers[i] === correct) {
+      score++;
+      fb.textContent = 'Correct !';
+      fb.className = 'feedback correct';
+    } else if (qcmAnswers[i] === -1) {
+      fb.textContent = 'Pas de réponse.';
+      fb.className = 'feedback wrong';
+    } else {
+      fb.textContent = 'Incorrect.';
+      fb.className = 'feedback wrong';
+    }
+  }
+
+  var pct = Math.round(score / qcmData.length * 100);
+  var msg;
+  if (pct >= 90) msg = 'Excellent travail ! Tu maîtrise les puissances.';
+  else if (pct >= 70) msg = 'Bon travail ! Revois les points encore fragiles.';
+  else if (pct >= 50) msg = 'Des bases solides, mais continue à t’entraîner.';
+  else msg = 'Reprends le cours et réessaie, tu vas progresser !';
+
+  document.getElementById('qcmScore').innerHTML =
+    '<div class="score-box">' +
+    '<div class="score-num">' + score + ' / ' + qcmData.length + '</div>' +
+    '<p>' + pct + ' % de réussite</p>' +
+    '<p style="color:var(--muted);margin-top:8px;">' + msg + '</p></div>';
+}
+
+function resetQCM() {
+  qcmAnswers = new Array(qcmData.length).fill(-1);
+  document.getElementById('qcmScore').innerHTML = '';
+  for (var i = 0; i < qcmData.length; i++) {
+    var fb = document.getElementById('qcmFb' + i);
+    fb.textContent = '';
+    fb.className = 'feedback';
+    for (var j = 0; j < qcmData[i].o.length; j++) {
+      var el = document.getElementById('qcmO' + i + '_' + j);
+      el.className = 'qcm-option';
+      el.querySelector('input').checked = false;
+    }
+  }
+}
+</script>
+</body>
+</html>

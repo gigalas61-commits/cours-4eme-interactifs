@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Théorème de Pythagore — 4ème</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f2ed; --surface:#ffffff; --surface2:#ebe6de; --text:#2c2418; --heading:#8b4513;
+  --muted:#6b5a48; --border:#d4c8b8; --accent:#a0522d; --accent-light:#faf5ef;
+  --good:#2e7d32; --bad:#c62828; --good-bg:#e8f5e9; --bad-bg:#fdecea;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#161210; --surface:#221c18; --surface2:#302820; --text:#ddd0c0; --heading:#e0a868;
+    --muted:#9a8878; --border:#403428; --accent:#d08840; --accent-light:#1e1610;
+    --good:#66bb6a; --bad:#ef5350; --good-bg:#1b2e1c; --bad-bg:#2e1c1c;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161210; --surface:#221c18; --surface2:#302820; --text:#ddd0c0; --heading:#e0a868;
+  --muted:#9a8878; --border:#403428; --accent:#d08840; --accent-light:#1e1610;
+  --good:#66bb6a; --bad:#ef5350; --good-bg:#1b2e1c; --bad-bg:#2e1c1c;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:'Nunito Sans', sans-serif; line-height:1.6;
+  transition:background .25s, color .25s;
+}
+h1,h2,h3,h4{ font-family:'Cormorant Garamond', serif; color:var(--heading); font-weight:700; margin:0.3em 0 0.5em;}
+h1{font-size:2rem;} h2{font-size:1.6rem; border-bottom:2px solid var(--border); padding-bottom:6px;} h3{font-size:1.3rem;} h4{font-size:1.1rem; color:var(--accent);}
+p{margin:0.6em 0;}
+header{
+  background:linear-gradient(135deg, var(--accent-light), var(--surface));
+  border-bottom:3px solid var(--accent);
+  padding:20px 16px;
+  display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+}
+.header-left{display:flex; align-items:center; gap:14px; flex-wrap:wrap;}
+.badge{
+  background:var(--accent); color:#fff; font-weight:700; font-family:'Cormorant Garamond',serif;
+  font-size:1.1rem; padding:6px 16px; border-radius:20px; letter-spacing:0.5px;
+}
+header h1{margin:0;}
+.theme-toggle{
+  background:var(--surface2); border:1px solid var(--border); color:var(--text);
+  border-radius:20px; padding:8px 16px; cursor:pointer; font-family:'Nunito Sans',sans-serif;
+  font-weight:600; font-size:0.9rem; transition:all .2s;
+}
+.theme-toggle:hover{ background:var(--accent); color:#fff; border-color:var(--accent); }
+nav.tabs{
+  display:flex; overflow-x:auto; gap:4px; background:var(--surface2);
+  padding:8px 12px; border-bottom:2px solid var(--border); position:sticky; top:0; z-index:10;
+  -webkit-overflow-scrolling: touch;
+}
+nav.tabs button{
+  background:transparent; border:none; color:var(--muted); font-family:'Nunito Sans',sans-serif;
+  font-weight:600; font-size:0.85rem; padding:10px 14px; border-radius:8px 8px 0 0; cursor:pointer;
+  white-space:nowrap; transition:all .2s; border-bottom:3px solid transparent;
+}
+nav.tabs button:hover{ background:var(--surface); color:var(--accent); }
+nav.tabs button.active{ background:var(--surface); color:var(--accent); border-bottom:3px solid var(--accent); }
+main{ max-width:920px; margin:0 auto; padding:24px 16px 60px; }
+.tab-panel{ display:none; animation:fadein .3s ease; }
+.tab-panel.active{ display:block; }
+@keyframes fadein{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+.card{
+  background:var(--surface); border:1px solid var(--border); border-radius:12px;
+  padding:18px 20px; margin:16px 0; box-shadow:0 1px 3px rgba(0,0,0,0.06);
+}
+.method-box{
+  background:var(--accent-light); border-left:4px solid var(--accent); border-radius:8px;
+  padding:14px 18px; margin:16px 0;
+}
+.method-box h4{margin-top:0;}
+.example-box{
+  background:var(--surface2); border-radius:8px; padding:14px 18px; margin:14px 0;
+  border:1px dashed var(--border);
+}
+.example-box h4{margin-top:0; color:var(--heading);}
+.vocab{
+  display:inline-block; background:var(--surface2); border:1px solid var(--border);
+  border-radius:6px; padding:2px 8px; margin:2px; font-weight:600; color:var(--accent);
+}
+.formula{
+  text-align:center; font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:700;
+  color:var(--heading); background:var(--surface2); border-radius:10px; padding:14px; margin:14px 0;
+}
+table{width:100%; border-collapse:collapse; margin:14px 0;}
+th,td{border:1px solid var(--border); padding:8px 10px; text-align:left;}
+th{background:var(--surface2); color:var(--heading);}
+canvas{ display:block; margin:14px auto; max-width:100%; background:var(--surface2); border-radius:10px; border:1px solid var(--border); touch-action:none; }
+.canvas-wrap{text-align:center;}
+.hint{font-size:0.85rem; color:var(--muted); text-align:center; margin-top:-8px;}
+.sqrt{display:inline-flex;align-items:stretch;vertical-align:middle;margin:0 2px}
+.sqrt::before{content:'\221A';font-size:1.3em;line-height:1;padding-right:1px}
+.sqrt .radicand{border-top:1.5px solid currentColor;padding:1px 4px 0 2px;display:inline-flex;align-items:center}
+.exo{
+  background:var(--surface); border:1px solid var(--border); border-radius:10px;
+  padding:16px 18px; margin:16px 0;
+}
+.exo-title{font-weight:700; color:var(--accent); margin-bottom:6px;}
+.exo input[type=text]{
+  font-family:'Nunito Sans',sans-serif; font-size:1rem; padding:8px 10px;
+  border:2px solid var(--border); border-radius:8px; background:var(--surface); color:var(--text);
+  width:140px;
+}
+.exo input[type=text]:focus{outline:none; border-color:var(--accent);}
+button.btn{
+  background:var(--accent); color:#fff; border:none; border-radius:8px; padding:9px 18px;
+  font-weight:700; font-family:'Nunito Sans',sans-serif; cursor:pointer; margin-left:8px; font-size:0.9rem;
+  transition:filter .15s;
+}
+button.btn:hover{filter:brightness(1.1);}
+.feedback{margin-top:10px; padding:10px 14px; border-radius:8px; font-weight:600; display:none;}
+.feedback.show{display:block;}
+.feedback.good{background:var(--good-bg); color:var(--good);}
+.feedback.bad{background:var(--bad-bg); color:var(--bad);}
+details{
+  background:var(--surface2); border-radius:8px; padding:10px 14px; margin-top:10px; border:1px solid var(--border);
+}
+summary{ cursor:pointer; font-weight:700; color:var(--accent); }
+details[open] summary{ margin-bottom:8px; }
+.badge-diff{
+  display:inline-block; font-size:0.75rem; font-weight:700; padding:2px 10px; border-radius:12px;
+  margin-left:8px; vertical-align:middle;
+}
+.diff-appliquer{background:var(--good-bg); color:var(--good);}
+.diff-comprendre{background:#fff3cd; color:#8a6d1a;}
+:root[data-theme="dark"] .diff-comprendre, :root:not([data-theme="light"]) .diff-comprendre{background:#3a2e10; color:#e0c060;}
+.diff-approfondir{background:var(--bad-bg); color:var(--bad);}
+.qcm-q{ margin:0 0 20px; }
+.qcm-opts{display:flex; flex-direction:column; gap:8px; margin-top:8px;}
+.qcm-opt{
+  background:var(--surface2); border:2px solid var(--border); border-radius:8px; padding:10px 14px;
+  cursor:pointer; transition:all .15s;
+}
+.qcm-opt:hover{border-color:var(--accent);}
+.qcm-opt.selected{border-color:var(--accent); background:var(--accent-light);}
+.qcm-opt.correct{border-color:var(--good); background:var(--good-bg); color:var(--good); font-weight:700;}
+.qcm-opt.incorrect{border-color:var(--bad); background:var(--bad-bg); color:var(--bad); font-weight:700;}
+.progress-bar{
+  height:10px; background:var(--surface2); border-radius:6px; overflow:hidden; margin:14px 0; border:1px solid var(--border);
+}
+.progress-fill{height:100%; background:var(--accent); width:0%; transition:width .3s;}
+.qcm-score{ text-align:center; padding:20px; }
+.qcm-score .num{font-family:'Cormorant Garamond',serif; font-size:3rem; color:var(--heading); font-weight:700;}
+ul{padding-left:22px;} li{margin:4px 0;}
+.point-list{list-style:none; padding-left:0;}
+.point-list li{ padding:4px 0 4px 24px; position:relative; }
+.point-list li::before{content:'▸'; color:var(--accent); position:absolute; left:0; font-weight:700;}
+footer{ text-align:center; padding:20px; color:var(--muted); font-size:0.85rem; }
+@media (max-width:600px){
+  header{padding:14px 12px;}
+  h1{font-size:1.4rem;}
+  main{padding:16px 12px 40px;}
+  .formula{font-size:1.2rem;}
+  nav.tabs button{font-size:0.78rem; padding:8px 10px;}
+  .exo input[type=text]{width:100px;}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-left">
+    <span class="badge">4ème</span>
+    <h1>Théorème de Pythagore</h1>
+  </div>
+  <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()">🌓 Thème</button>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="tab-btn active" onclick="showTab(0)">1. Théorème</button>
+  <button class="tab-btn" onclick="showTab(1)">2. Hypoténuse</button>
+  <button class="tab-btn" onclick="showTab(2)">3. Un côté</button>
+  <button class="tab-btn" onclick="showTab(3)">4. Réciproque</button>
+  <button class="tab-btn" onclick="showTab(4)">5. Applications</button>
+  <button class="tab-btn" onclick="showTab(5)">6. Exercices</button>
+  <button class="tab-btn" onclick="showTab(6)">7. QCM</button>
+</nav>
+
+<main>
+  <!-- TAB 0 : THEOREME -->
+  <section class="tab-panel active" id="tab0"></section>
+  <!-- TAB 1 : HYPOTENUSE -->
+  <section class="tab-panel" id="tab1"></section>
+  <!-- TAB 2 : UN COTE -->
+  <section class="tab-panel" id="tab2"></section>
+  <!-- TAB 3 : RECIPROQUE -->
+  <section class="tab-panel" id="tab3"></section>
+  <!-- TAB 4 : APPLICATIONS -->
+  <section class="tab-panel" id="tab4"></section>
+  <!-- TAB 5 : EXERCICES -->
+  <section class="tab-panel" id="tab5"></section>
+  <!-- TAB 6 : QCM -->
+  <section class="tab-panel" id="tab6"></section>
+</main>
+
+<footer>Cours interactif — Théorème de Pythagore — Niveau 4ème</footer>
+
+<script>
+/* ============ THEME ============ */
+function toggleTheme(){
+  const root = document.documentElement;
+  const current = root.getAttribute('data-theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  let next;
+  if(!current){ next = prefersDark ? 'light' : 'dark'; }
+  else if(current === 'dark'){ next = 'light'; }
+  else { next = 'dark'; }
+  root.setAttribute('data-theme', next);
+  try{ localStorage.setItem('pytha-theme', next); }catch(e){}
+}
+(function initTheme(){
+  try{
+    const saved = localStorage.getItem('pytha-theme');
+    if(saved) document.documentElement.setAttribute('data-theme', saved);
+  }catch(e){}
+})();
+
+/* ============ HELPER: sqrt markup ============ */
+function sqrtHTML(inner){
+  return '<span class="sqrt"><span class="radicand">'+inner+'</span></span>';
+}
+
+/* ============ TAB SYSTEM ============ */
+const loaded = [false,false,false,false,false,false,false];
+const builders = [buildTab0, buildTab1, buildTab2, buildTab3, buildTab4, buildTab5, buildTab6];
+
+function showTab(i){
+  document.querySelectorAll('.tab-panel').forEach((p,idx)=>{
+    p.classList.toggle('active', idx===i);
+  });
+  document.querySelectorAll('.tab-btn').forEach((b,idx)=>{
+    b.classList.toggle('active', idx===i);
+  });
+  initSection(i);
+}
+function initSection(i){
+  if(loaded[i]) return;
+  loaded[i] = true;
+  builders[i]();
+}
+
+/* =========================================================
+   TAB 0 : THEOREME
+========================================================= */
+function buildTab0(){
+  const el = document.getElementById('tab0');
+  el.innerHTML = `
+  <h2>Le théorème de Pythagore</h2>
+  <div class="card">
+    <p>Dans un triangle <strong>rectangle</strong>, il existe une relation très importante entre les longueurs des trois côtés. Cette relation porte le nom du mathématicien grec <strong>Pythagore</strong> (VI<sup>e</sup> siècle avant J.-C.).</p>
+  </div>
+
+  <h3>Vocabulaire</h3>
+  <div class="card">
+    <p>Soit un triangle rectangle en A (l'angle droit est au sommet A).</p>
+    <ul class="point-list">
+      <li><span class="vocab">Hypoténuse</span> : c'est le côté opposé à l'angle droit. C'est toujours le <strong>plus long côté</strong> du triangle rectangle.</li>
+      <li><span class="vocab">Côtés de l'angle droit</span> : ce sont les deux côtés qui forment l'angle droit (aussi appelés « côtés adjacents à l'angle droit »).</li>
+    </ul>
+    <p>Dans un triangle ABC rectangle en A : l'hypoténuse est <strong>[BC]</strong>, et les côtés de l'angle droit sont <strong>[AB]</strong> et <strong>[AC]</strong>.</p>
+  </div>
+
+  <div class="method-box">
+    <h4>📐 Énoncé du théorème</h4>
+    <p>Si un triangle <strong>ABC</strong> est rectangle en <strong>A</strong>, alors :</p>
+    <div class="formula">BC² = AB² + AC²</div>
+    <p>En français : <em>le carré de l'hypoténuse est égal à la somme des carrés des deux autres côtés.</em></p>
+  </div>
+
+  <h3>Preuve visuelle interactive</h3>
+  <div class="card">
+    <p>L'aire du grand carré construit sur l'hypoténuse est égale à la somme des aires des deux carrés construits sur les côtés de l'angle droit. Fais glisser le sommet <strong>C</strong> (point orange) pour changer la forme du triangle rectangle : l'égalité des aires reste toujours vraie !</p>
+    <div class="canvas-wrap">
+      <canvas id="pythaCanvas" width="480" height="420"></canvas>
+    </div>
+    <p class="hint">Clique-glisse le point orange pour déformer le triangle rectangle.</p>
+    <p id="areaReadout" style="text-align:center; font-weight:700; color:var(--heading);"></p>
+  </div>
+
+  <h3>Exemples d'application directe</h3>
+  <div class="example-box">
+    <h4>Exemple 1</h4>
+    <p>Un triangle RST est rectangle en S, avec RS = 3 cm et ST = 4 cm.</p>
+    <p>D'après le théorème de Pythagore appliqué dans le triangle RST rectangle en S :</p>
+    <p>RT² = RS² + ST² = 3² + 4² = 9 + 16 = 25</p>
+    <p>Donc RT² = 25, on verra dans l'onglet suivant comment en déduire RT.</p>
+  </div>
+
+  <div class="example-box">
+    <h4>Exemple 2 — bien identifier l'hypoténuse</h4>
+    <p>Dans un triangle MNP rectangle en N, l'hypoténuse est le côté opposé à l'angle droit en N, donc c'est <strong>[MP]</strong>.</p>
+    <p>La relation de Pythagore s'écrit donc : <strong>MP² = MN² + NP²</strong></p>
+    <p>⚠️ Erreur fréquente : ne jamais écrire MN² = MP² + NP², car MN n'est pas l'hypoténuse !</p>
+  </div>
+
+  <div class="method-box">
+    <h4>✅ À retenir</h4>
+    <ul class="point-list">
+      <li>Le théorème de Pythagore ne s'applique que dans un <strong>triangle rectangle</strong>.</li>
+      <li>Il faut toujours repérer <strong>où est l'angle droit</strong> pour identifier l'hypoténuse.</li>
+      <li>L'hypoténuse est toujours seule dans le membre de gauche de l'égalité.</li>
+    </ul>
+  </div>
+  `;
+  initPythaCanvas();
+}
+
+function initPythaCanvas(){
+  const canvas = document.getElementById('pythaCanvas');
+  const ctx = canvas.getContext('2d');
+  const readout = document.getElementById('areaReadout');
+  const cs = getComputedStyle(document.documentElement);
+  function col(name){ return cs.getPropertyValue(name).trim(); }
+
+  // Right angle at A (fixed), B fixed, C draggable (keeping right angle at A)
+  let A = {x:150, y:280};
+  let B = {x:150, y:120};
+  let C = {x:330, y:280};
+  let dragging = false;
+
+  function dist(p,q){ return Math.hypot(p.x-q.x, p.y-q.y); }
+
+  function draw(){
+    const theme = getComputedStyle(document.documentElement);
+    ctx.clearRect(0,0,canvas.width, canvas.height);
+    const textColor = theme.getPropertyValue('--text').trim();
+    const accent = theme.getPropertyValue('--accent').trim();
+    const heading = theme.getPropertyValue('--heading').trim();
+    const surface2 = theme.getPropertyValue('--surface2').trim();
+    const border = theme.getPropertyValue('--border').trim();
+
+    // squares on each side
+    function squareOn(P,Q,color,alpha){
+      const dx = Q.x-P.x, dy = Q.y-P.y;
+      const nx = -dy, ny = dx; // normal
+      const P2 = {x:P.x+nx, y:P.y+ny};
+      const Q2 = {x:Q.x+nx, y:Q.y+ny};
+      ctx.beginPath();
+      ctx.moveTo(P.x,P.y); ctx.lineTo(Q.x,Q.y); ctx.lineTo(Q2.x,Q2.y); ctx.lineTo(P2.x,P2.y); ctx.closePath();
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = color;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+    // Square outward direction: choose normal pointing away from third vertex
+    function squareAway(P,Q,R,color,alpha){
+      const dx = Q.x-P.x, dy = Q.y-P.y;
+      let nx = -dy, ny = dx;
+      const mid = {x:(P.x+Q.x)/2, y:(P.y+Q.y)/2};
+      const toR = {x:R.x-mid.x, y:R.y-mid.y};
+      if(nx*toR.x + ny*toR.y > 0){ nx=-nx; ny=-ny; }
+      const P2 = {x:P.x+nx, y:P.y+ny};
+      const Q2 = {x:Q.x+nx, y:Q.y+ny};
+      ctx.beginPath();
+      ctx.moveTo(P.x,P.y); ctx.lineTo(Q.x,Q.y); ctx.lineTo(Q2.x,Q2.y); ctx.lineTo(P2.x,P2.y); ctx.closePath();
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = color;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+
+    squareAway(A,B,C, '#3d8bfd', 0.28);   // square on AB
+    squareAway(A,C,B, '#2ecc71', 0.28);   // square on AC
+    squareAway(B,C,A, accent, 0.28);      // square on BC (hypotenuse)
+
+    // triangle
+    ctx.beginPath();
+    ctx.moveTo(A.x,A.y); ctx.lineTo(B.x,B.y); ctx.lineTo(C.x,C.y); ctx.closePath();
+    ctx.fillStyle = surface2; ctx.globalAlpha=0.9; ctx.fill(); ctx.globalAlpha=1;
+    ctx.strokeStyle = textColor;
+    ctx.lineWidth = 2.2;
+    ctx.stroke();
+
+    // right angle marker at A
+    const s = 14;
+    const ux = {x:(B.x-A.x)/dist(A,B), y:(B.y-A.y)/dist(A,B)};
+    const uy = {x:(C.x-A.x)/dist(A,C), y:(C.y-A.y)/dist(A,C)};
+    ctx.beginPath();
+    ctx.moveTo(A.x+ux.x*s, A.y+ux.y*s);
+    ctx.lineTo(A.x+ux.x*s+uy.x*s, A.y+ux.y*s+uy.y*s);
+    ctx.lineTo(A.x+uy.x*s, A.y+uy.y*s);
+    ctx.strokeStyle = textColor; ctx.lineWidth = 1.5; ctx.stroke();
+
+    // vertices labels
+    ctx.font = "700 16px 'Nunito Sans', sans-serif";
+    ctx.fillStyle = heading;
+    ctx.fillText('A', A.x-20, A.y+6);
+    ctx.fillText('B', B.x-8, B.y-10);
+    ctx.fillText('C', C.x+8, C.y+18);
+
+    // draggable point C
+    ctx.beginPath();
+    ctx.arc(C.x, C.y, 8, 0, Math.PI*2);
+    ctx.fillStyle = accent;
+    ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth=2; ctx.stroke();
+
+    // readout
+    const ab = dist(A,B), ac = dist(A,C), bc = dist(A,B)===0?0:Math.hypot(B.x-C.x,B.y-C.y);
+    const scale = 0.05; // px to cm-ish
+    const abv = (ab*scale).toFixed(1), acv=(ac*scale).toFixed(1), bcv=(bc*scale).toFixed(1);
+    const sumSq = (ab*scale)**2 + (ac*scale)**2;
+    const bcSq = (bc*scale)**2;
+    readout.innerHTML = `AB = ${abv} &nbsp; AC = ${acv} &nbsp; BC = ${bcv} &nbsp;&nbsp;|&nbsp;&nbsp; AB²+AC² = ${sumSq.toFixed(2)} &nbsp; BC² = ${bcSq.toFixed(2)}`;
+  }
+
+  function pos(evt){
+    const rect = canvas.getBoundingClientRect();
+    const cx = (evt.touches ? evt.touches[0].clientX : evt.clientX) - rect.left;
+    const cy = (evt.touches ? evt.touches[0].clientY : evt.clientY) - rect.top;
+    return {x: cx*(canvas.width/rect.width), y: cy*(canvas.height/rect.height)};
+  }
+  function within(p,q,r){ return dist(p,q) < r; }
+
+  canvas.addEventListener('mousedown', e=>{ const p=pos(e); if(within(p,C,16)) dragging=true; });
+  canvas.addEventListener('touchstart', e=>{ const p=pos(e); if(within(p,C,20)) dragging=true; e.preventDefault(); }, {passive:false});
+  window.addEventListener('mousemove', e=>{
+    if(!dragging) return;
+    const p = pos(e);
+    C.x = Math.max(A.x+40, Math.min(canvas.width-20, p.x));
+    C.y = Math.max(20, Math.min(canvas.height-20, p.y));
+    draw();
+  });
+  window.addEventListener('touchmove', e=>{
+    if(!dragging) return;
+    const p = pos(e);
+    C.x = Math.max(A.x+40, Math.min(canvas.width-20, p.x));
+    C.y = Math.max(20, Math.min(canvas.height-20, p.y));
+    draw();
+    e.preventDefault();
+  }, {passive:false});
+  window.addEventListener('mouseup', ()=> dragging=false);
+  window.addEventListener('touchend', ()=> dragging=false);
+
+  draw();
+  window.addEventListener('pytha-theme-changed', draw);
+}
+
+/* =========================================================
+   TAB 1 : CALCULER L'HYPOTENUSE
+========================================================= */
+function buildTab1(){
+  const el = document.getElementById('tab1');
+  el.innerHTML = `
+  <h2>Calculer la longueur de l'hypoténuse</h2>
+  <div class="method-box">
+    <h4>📋 Méthode pas à pas</h4>
+    <ol>
+      <li>Vérifier que le triangle est rectangle, et repérer <strong>où</strong> est l'angle droit.</li>
+      <li>Écrire l'égalité de Pythagore en isolant l'hypoténuse au carré à gauche.</li>
+      <li>Remplacer les longueurs connues et calculer la somme des carrés.</li>
+      <li>Pour trouver l'hypoténuse, prendre la <strong>racine carrée</strong> du résultat.</li>
+      <li>Donner une valeur arrondie si besoin, avec l'unité.</li>
+    </ol>
+  </div>
+
+  <h3>Exemples rédigés</h3>
+  <div class="example-box">
+    <h4>Exemple 1</h4>
+    <p>ABC est un triangle rectangle en A, avec AB = 6 cm et AC = 8 cm. Calculer BC.</p>
+    <p><strong>Rédaction :</strong></p>
+    <p>Dans le triangle ABC rectangle en A, d'après le théorème de Pythagore :</p>
+    <p>BC² = AB² + AC²</p>
+    <p>BC² = 6² + 8²</p>
+    <p>BC² = 36 + 64</p>
+    <p>BC² = 100</p>
+    <p>BC = ${sqrtHTML('100')} = 10</p>
+    <p>Donc <strong>BC = 10 cm</strong>.</p>
+  </div>
+
+  <div class="example-box">
+    <h4>Exemple 2 (avec racine non entière)</h4>
+    <p>DEF est un triangle rectangle en E, avec DE = 5 cm et EF = 7 cm. Calculer DF, arrondi au dixième.</p>
+    <p><strong>Rédaction :</strong></p>
+    <p>Dans le triangle DEF rectangle en E, d'après le théorème de Pythagore :</p>
+    <p>DF² = DE² + EF²</p>
+    <p>DF² = 5² + 7² = 25 + 49 = 74</p>
+    <p>DF = ${sqrtHTML('74')} ≈ 8,6</p>
+    <p>Donc <strong>DF ≈ 8,6 cm</strong>.</p>
+  </div>
+
+  <div class="method-box">
+    <h4>💡 Astuce calculatrice</h4>
+    <p>Pour calculer ${sqrtHTML('74')}, utilise la touche racine carrée de ta calculatrice. Pense à arrondir seulement à la toute fin du calcul, jamais avant !</p>
+  </div>
+
+  <h3>Exercices interactifs</h3>
+  <div id="exos-tab1"></div>
+  `;
+  buildExosTab1();
+}
+
+function buildExosTab1(){
+  const exos = [
+    {enonce:"Triangle rectangle en A : AB = 3 cm, AC = 4 cm. Calculer BC.", a:3,b:4, answer:5, unit:"cm", exact:true,
+     corr:"BC² = AB² + AC² = 3² + 4² = 9 + 16 = 25, donc BC = "+sqrtHTML('25')+" = 5 cm."},
+    {enonce:"Triangle rectangle en R : RS = 5 cm, RT = 12 cm. Calculer ST.", a:5,b:12, answer:13, unit:"cm", exact:true,
+     corr:"ST² = RS² + RT² = 5² + 12² = 25 + 144 = 169, donc ST = "+sqrtHTML('169')+" = 13 cm."},
+    {enonce:"Triangle rectangle en M : MN = 8 cm, MP = 6 cm. Calculer NP.", a:8,b:6, answer:10, unit:"cm", exact:true,
+     corr:"NP² = MN² + MP² = 8² + 6² = 64 + 36 = 100, donc NP = "+sqrtHTML('100')+" = 10 cm."},
+    {enonce:"Triangle rectangle en K : KL = 4 cm, KJ = 9 cm. Calculer LJ, arrondi au dixième.", a:4,b:9, answer:9.8, unit:"cm", exact:false, tol:0.1,
+     corr:"LJ² = KL² + KJ² = 4² + 9² = 16 + 81 = 97, donc LJ = "+sqrtHTML('97')+" ≈ 9,8 cm."},
+    {enonce:"Triangle rectangle en U : UV = 7 cm, UW = 7 cm. Calculer VW, arrondi au dixième.", a:7,b:7, answer:9.9, unit:"cm", exact:false, tol:0.1,
+     corr:"VW² = UV² + UW² = 7² + 7² = 49 + 49 = 98, donc VW = "+sqrtHTML('98')+" ≈ 9,9 cm."}
+  ];
+  const container = document.getElementById('exos-tab1');
+  exos.forEach((ex,i)=>{
+    const div = document.createElement('div');
+    div.className = 'exo';
+    div.innerHTML = `
+      <div class="exo-title">Exercice ${i+1}</div>
+      <p>${ex.enonce}</p>
+      <input type="text" id="t1-${i}" placeholder="valeur en ${ex.unit}">
+      <button class="btn" onclick="checkT1(${i})">Vérifier</button>
+      <div class="feedback" id="fb-t1-${i}"></div>
+      <details><summary>Voir la correction</summary><p>${ex.corr}</p></details>
+    `;
+    container.appendChild(div);
+  });
+  window.t1exos = exos;
+}
+function checkT1(i){
+  const ex = window.t1exos[i];
+  const input = document.getElementById('t1-'+i);
+  const fb = document.getElementById('fb-t1-'+i);
+  const val = parseFloat((input.value||'').replace(',','.'));
+  fb.classList.add('show');
+  if(isNaN(val)){ fb.className='feedback show bad'; fb.textContent='Entre un nombre.'; return; }
+  const tol = ex.exact ? 0.05 : (ex.tol||0.15);
+  if(Math.abs(val-ex.answer) <= tol){
+    fb.className='feedback show good'; fb.textContent='✓ Bonne réponse !';
+  } else {
+    fb.className='feedback show bad'; fb.textContent="✗ Ce n'est pas correct, ouvre la correction ci-dessous.";
+  }
+}
+
+/* =========================================================
+   TAB 2 : CALCULER UN COTE DE L'ANGLE DROIT
+========================================================= */
+function buildTab2(){
+  const el = document.getElementById('tab2');
+  el.innerHTML = `
+  <h2>Calculer un côté de l'angle droit</h2>
+  <div class="method-box">
+    <h4>📋 Méthode pas à pas</h4>
+    <ol>
+      <li>Vérifier que le triangle est rectangle, repérer l'angle droit et l'hypoténuse.</li>
+      <li>Écrire l'égalité de Pythagore.</li>
+      <li>Isoler le carré du côté cherché : on le calcule en <strong>soustrayant</strong> le carré de l'autre côté de l'angle droit au carré de l'hypoténuse.</li>
+      <li>Prendre la racine carrée du résultat.</li>
+      <li>Arrondir si besoin et donner l'unité.</li>
+    </ol>
+  </div>
+
+  <div class="formula">Si BC² = AB² + AC², alors AB² = BC² − AC² et AC² = BC² − AB²</div>
+
+  <h3>Exemples rédigés</h3>
+  <div class="example-box">
+    <h4>Exemple 1</h4>
+    <p>ABC est rectangle en A, avec BC = 13 cm (hypoténuse) et AB = 5 cm. Calculer AC.</p>
+    <p><strong>Rédaction :</strong></p>
+    <p>Dans le triangle ABC rectangle en A, d'après le théorème de Pythagore :</p>
+    <p>BC² = AB² + AC²</p>
+    <p>donc AC² = BC² − AB²</p>
+    <p>AC² = 13² − 5² = 169 − 25 = 144</p>
+    <p>AC = ${sqrtHTML('144')} = 12</p>
+    <p>Donc <strong>AC = 12 cm</strong>.</p>
+  </div>
+
+  <div class="example-box">
+    <h4>Exemple 2 (arrondi)</h4>
+    <p>Un triangle GHI est rectangle en H. On connaît l'hypoténuse GI = 10 cm et le côté HI = 6 cm. Calculer GH, arrondi au dixième.</p>
+    <p><strong>Rédaction :</strong></p>
+    <p>Dans le triangle GHI rectangle en H, d'après le théorème de Pythagore :</p>
+    <p>GI² = GH² + HI²</p>
+    <p>donc GH² = GI² − HI²</p>
+    <p>GH² = 10² − 6² = 100 − 36 = 64</p>
+    <p>GH = ${sqrtHTML('64')} = 8</p>
+    <p>Donc <strong>GH = 8 cm</strong>. (ici la racine tombe juste, mais ce n'est pas toujours le cas)</p>
+  </div>
+
+  <div class="method-box">
+    <h4>⚠️ Attention</h4>
+    <p>On soustrait toujours <strong>le carré du côté de l'angle droit</strong> au <strong>carré de l'hypoténuse</strong>, jamais l'inverse ! L'hypoténuse est toujours le plus grand côté, donc BC² − AB² est toujours positif.</p>
+  </div>
+
+  <h3>Exercices interactifs</h3>
+  <div id="exos-tab2"></div>
+  `;
+  buildExosTab2();
+}
+
+function buildExosTab2(){
+  const exos = [
+    {enonce:"Triangle rectangle en A, hypoténuse BC = 10 cm, AB = 6 cm. Calculer AC.", answer:8, unit:"cm", exact:true,
+     corr:"AC² = BC² − AB² = 10² − 6² = 100 − 36 = 64, donc AC = "+sqrtHTML('64')+" = 8 cm."},
+    {enonce:"Triangle rectangle en R, hypoténuse RT = 17 cm, RS = 15 cm. Calculer ST.", answer:8, unit:"cm", exact:true,
+     corr:"ST² = RT² − RS² = 17² − 15² = 289 − 225 = 64, donc ST = "+sqrtHTML('64')+" = 8 cm."},
+    {enonce:"Triangle rectangle en M, hypoténuse NP = 25 cm, MN = 7 cm. Calculer MP.", answer:24, unit:"cm", exact:true,
+     corr:"MP² = NP² − MN² = 25² − 7² = 625 − 49 = 576, donc MP = "+sqrtHTML('576')+" = 24 cm."},
+    {enonce:"Triangle rectangle en K, hypoténuse KL... attention : ici l'hypoténuse est LJ = 15 cm, KL = 9 cm. Calculer KJ.", answer:12, unit:"cm", exact:true,
+     corr:"KJ² = LJ² − KL² = 15² − 9² = 225 − 81 = 144, donc KJ = "+sqrtHTML('144')+" = 12 cm."},
+    {enonce:"Triangle rectangle en U, hypoténuse VW = 12 cm, UV = 5 cm. Calculer UW, arrondi au dixième.", answer:10.9, unit:"cm", exact:false, tol:0.1,
+     corr:"UW² = VW² − UV² = 12² − 5² = 144 − 25 = 119, donc UW = "+sqrtHTML('119')+" ≈ 10,9 cm."}
+  ];
+  const container = document.getElementById('exos-tab2');
+  exos.forEach((ex,i)=>{
+    const div = document.createElement('div');
+    div.className = 'exo';
+    div.innerHTML = `
+      <div class="exo-title">Exercice ${i+1}</div>
+      <p>${ex.enonce}</p>
+      <input type="text" id="t2-${i}" placeholder="valeur en ${ex.unit}">
+      <button class="btn" onclick="checkT2(${i})">Vérifier</button>
+      <div class="feedback" id="fb-t2-${i}"></div>
+      <details><summary>Voir la correction</summary><p>${ex.corr}</p></details>
+    `;
+    container.appendChild(div);
+  });
+  window.t2exos = exos;
+}
+function checkT2(i){
+  const ex = window.t2exos[i];
+  const input = document.getElementById('t2-'+i);
+  const fb = document.getElementById('fb-t2-'+i);
+  const val = parseFloat((input.value||'').replace(',','.'));
+  fb.classList.add('show');
+  if(isNaN(val)){ fb.className='feedback show bad'; fb.textContent='Entre un nombre.'; return; }
+  const tol = ex.exact ? 0.05 : (ex.tol||0.15);
+  if(Math.abs(val-ex.answer) <= tol){
+    fb.className='feedback show good'; fb.textContent='✓ Bonne réponse !';
+  } else {
+    fb.className='feedback show bad'; fb.textContent="✗ Ce n'est pas correct, ouvre la correction ci-dessous.";
+  }
+}
+
+/* =========================================================
+   TAB 3 : RECIPROQUE
+========================================================= */
+function buildTab3(){
+  const el = document.getElementById('tab3');
+  el.innerHTML = `
+  <h2>La réciproque du théorème de Pythagore</h2>
+  <div class="card">
+    <p>Le théorème de Pythagore permet de calculer une longueur <strong>quand on sait déjà</strong> qu'un triangle est rectangle. Sa <strong>réciproque</strong> permet de faire l'inverse : <strong>prouver</strong> qu'un triangle est rectangle à partir de ses longueurs.</p>
+  </div>
+
+  <div class="method-box">
+    <h4>📐 Énoncé de la réciproque</h4>
+    <p>Si dans un triangle ABC, on a l'égalité :</p>
+    <div class="formula">BC² = AB² + AC²</div>
+    <p>(où BC est le plus grand côté), alors le triangle ABC est <strong>rectangle en A</strong> (l'angle droit est en A, sommet opposé au plus grand côté).</p>
+  </div>
+
+  <div class="method-box">
+    <h4>🔄 La contraposée (pour prouver qu'un triangle N'EST PAS rectangle)</h4>
+    <p>Si l'égalité BC² = AB² + AC² <strong>n'est pas vérifiée</strong> (les deux membres sont différents), alors le triangle ABC <strong>n'est pas rectangle</strong>.</p>
+  </div>
+
+  <div class="method-box">
+    <h4>📋 Méthode pas à pas</h4>
+    <ol>
+      <li>Identifier le plus grand côté du triangle : c'est le candidat « hypoténuse ».</li>
+      <li>Calculer séparément le carré du plus grand côté, puis la somme des carrés des deux autres côtés.</li>
+      <li>Comparer les deux résultats.</li>
+      <li>Conclure : égalité → triangle rectangle (préciser en quel sommet) ; pas d'égalité → triangle non rectangle.</li>
+    </ol>
+  </div>
+
+  <h3>Exemples rédigés</h3>
+  <div class="example-box">
+    <h4>Exemple 1 — triangle rectangle</h4>
+    <p>ABC est un triangle tel que AB = 6 cm, AC = 8 cm, BC = 10 cm. Ce triangle est-il rectangle ?</p>
+    <p><strong>Rédaction :</strong></p>
+    <p>Le plus grand côté est BC = 10 cm.</p>
+    <p>D'une part : BC² = 10² = 100</p>
+    <p>D'autre part : AB² + AC² = 6² + 8² = 36 + 64 = 100</p>
+    <p>On a BC² = AB² + AC² (100 = 100).</p>
+    <p>Donc, <strong>d'après la réciproque du théorème de Pythagore, le triangle ABC est rectangle en A</strong>.</p>
+  </div>
+
+  <div class="example-box">
+    <h4>Exemple 2 — triangle non rectangle</h4>
+    <p>DEF est un triangle tel que DE = 5 cm, EF = 6 cm, DF = 8 cm. Ce triangle est-il rectangle ?</p>
+    <p><strong>Rédaction :</strong></p>
+    <p>Le plus grand côté est DF = 8 cm.</p>
+    <p>D'une part : DF² = 8² = 64</p>
+    <p>D'autre part : DE² + EF² = 5² + 6² = 25 + 36 = 61</p>
+    <p>On a DF² ≠ DE² + EF² (64 ≠ 61).</p>
+    <p>Donc, <strong>le triangle DEF n'est pas rectangle</strong>.</p>
+  </div>
+
+  <div class="method-box">
+    <h4>✅ À retenir</h4>
+    <ul class="point-list">
+      <li>On compare toujours le carré du <strong>plus grand côté</strong> à la somme des carrés des deux autres.</li>
+      <li>Il faut rédiger les <strong>deux calculs séparément</strong> avant de les comparer.</li>
+      <li>Ne jamais dire « environ égal » : soit c'est exactement égal (rectangle), soit ce n'est pas égal (pas rectangle).</li>
+    </ul>
+  </div>
+
+  <h3>Exercices interactifs</h3>
+  <div id="exos-tab3"></div>
+  `;
+  buildExosTab3();
+}
+
+function buildExosTab3(){
+  const exos = [
+    {enonce:"Un triangle a pour côtés 9 cm, 12 cm et 15 cm. Est-il rectangle ? (Réponds OUI ou NON)", answer:"oui",
+     corr:"Plus grand côté : 15. 15² = 225. 9² + 12² = 81 + 144 = 225. Égalité vérifiée → le triangle est rectangle."},
+    {enonce:"Un triangle a pour côtés 7 cm, 8 cm et 12 cm. Est-il rectangle ? (Réponds OUI ou NON)", answer:"non",
+     corr:"Plus grand côté : 12. 12² = 144. 7² + 8² = 49 + 64 = 113. 144 ≠ 113 → le triangle n'est pas rectangle."},
+    {enonce:"Un triangle a pour côtés 6 cm, 8 cm et 10 cm. Est-il rectangle ? (Réponds OUI ou NON)", answer:"oui",
+     corr:"Plus grand côté : 10. 10² = 100. 6² + 8² = 36 + 64 = 100. Égalité vérifiée → le triangle est rectangle."},
+    {enonce:"Un triangle a pour côtés 5 cm, 6 cm et 9 cm. Est-il rectangle ? (Réponds OUI ou NON)", answer:"non",
+     corr:"Plus grand côté : 9. 9² = 81. 5² + 6² = 25 + 36 = 61. 81 ≠ 61 → le triangle n'est pas rectangle."}
+  ];
+  const container = document.getElementById('exos-tab3');
+  exos.forEach((ex,i)=>{
+    const div = document.createElement('div');
+    div.className = 'exo';
+    div.innerHTML = `
+      <div class="exo-title">Exercice ${i+1}</div>
+      <p>${ex.enonce}</p>
+      <input type="text" id="t3-${i}" placeholder="oui / non">
+      <button class="btn" onclick="checkT3(${i})">Vérifier</button>
+      <div class="feedback" id="fb-t3-${i}"></div>
+      <details><summary>Voir la correction</summary><p>${ex.corr}</p></details>
+    `;
+    container.appendChild(div);
+  });
+  window.t3exos = exos;
+}
+function checkT3(i){
+  const ex = window.t3exos[i];
+  const input = document.getElementById('t3-'+i);
+  const fb = document.getElementById('fb-t3-'+i);
+  const val = (input.value||'').trim().toLowerCase();
+  fb.classList.add('show');
+  if(val === ex.answer){
+    fb.className='feedback show good'; fb.textContent='✓ Bonne réponse !';
+  } else {
+    fb.className='feedback show bad'; fb.textContent="✗ Ce n'est pas correct, ouvre la correction ci-dessous.";
+  }
+}
+
+/* =========================================================
+   TAB 4 : APPLICATIONS
+========================================================= */
+function buildTab4(){
+  const el = document.getElementById('tab4');
+  el.innerHTML = `
+  <h2>Applications du théorème de Pythagore</h2>
+
+  <h3>Distance entre deux points dans un repère</h3>
+  <div class="method-box">
+    <h4>📐 Formule</h4>
+    <p>Dans un repère orthonormé, si A(x<sub>A</sub> ; y<sub>A</sub>) et B(x<sub>B</sub> ; y<sub>B</sub>) sont deux points, alors la distance AB est donnée par :</p>
+    <div class="formula">AB = ${sqrtHTML('(x<sub>B</sub> − x<sub>A</sub>)² + (y<sub>B</sub> − y<sub>A</sub>)²')}</div>
+    <p>Cette formule vient directement du théorème de Pythagore appliqué au triangle rectangle formé par les deux points et leur point de croisement (côtés parallèles aux axes).</p>
+  </div>
+
+  <div class="canvas-wrap">
+    <canvas id="repereCanvas" width="480" height="420"></canvas>
+  </div>
+  <p class="hint">Fais glisser les deux points colorés pour recalculer la distance AB en temps réel.</p>
+  <p id="distReadout" style="text-align:center; font-weight:700; color:var(--heading);"></p>
+
+  <div class="example-box">
+    <h4>Exemple</h4>
+    <p>Soit A(1 ; 2) et B(5 ; 5). Calculer AB.</p>
+    <p>AB = ${sqrtHTML('(5−1)² + (5−2)²')} = ${sqrtHTML('4² + 3²')} = ${sqrtHTML('16 + 9')} = ${sqrtHTML('25')} = 5</p>
+    <p>Donc <strong>AB = 5 unités</strong>.</p>
+  </div>
+
+  <h3>Diagonale d'un rectangle</h3>
+  <div class="card">
+    <p>Dans un rectangle ABCD, la diagonale [AC] est l'hypoténuse du triangle rectangle ABC (rectangle en B).</p>
+    <p>Donc : AC² = AB² + BC²</p>
+    <p><strong>Exemple :</strong> un rectangle a pour longueur 12 cm et largeur 5 cm.</p>
+    <p>AC² = 12² + 5² = 144 + 25 = 169, donc AC = ${sqrtHTML('169')} = 13 cm.</p>
+  </div>
+
+  <h3>Hauteur d'un triangle isocèle</h3>
+  <div class="card">
+    <p>Dans un triangle isocèle, la hauteur issue du sommet principal coupe la base en son milieu et forme un angle droit : cela crée deux triangles rectangles identiques.</p>
+    <p><strong>Exemple :</strong> triangle isocèle ABC en A, avec AB = AC = 10 cm et BC = 12 cm. Calculer la hauteur AH issue de A.</p>
+    <p>H est le milieu de [BC], donc BH = 6 cm. Le triangle ABH est rectangle en H.</p>
+    <p>AB² = AH² + BH², donc AH² = AB² − BH² = 10² − 6² = 100 − 36 = 64</p>
+    <p>AH = ${sqrtHTML('64')} = 8 cm.</p>
+  </div>
+
+  <h3>Problèmes concrets</h3>
+  <div class="example-box">
+    <h4>Problème de l'échelle</h4>
+    <p>Une échelle de 5 m est posée contre un mur. Le pied de l'échelle est à 1,4 m du mur. À quelle hauteur l'échelle touche-t-elle le mur (arrondi au dixième) ?</p>
+    <p>Le triangle formé est rectangle au sol. L'échelle est l'hypoténuse.</p>
+    <p>hauteur² = 5² − 1,4² = 25 − 1,96 = 23,04</p>
+    <p>hauteur = ${sqrtHTML('23,04')} ≈ 4,8 m</p>
+  </div>
+
+  <div class="example-box">
+    <h4>Problème du pylône haubané</h4>
+    <p>Un pylône vertical de 15 m de haut est maintenu par un hauban (câble) fixé au sommet et ancré au sol à 8 m du pied du pylône. Quelle est la longueur du hauban (arrondi au dixième) ?</p>
+    <p>Le triangle formé (pylône, sol, hauban) est rectangle au pied du pylône. Le hauban est l'hypoténuse.</p>
+    <p>hauban² = 15² + 8² = 225 + 64 = 289</p>
+    <p>hauban = ${sqrtHTML('289')} = 17 m</p>
+  </div>
+  `;
+  initRepereCanvas();
+}
+
+function initRepereCanvas(){
+  const canvas = document.getElementById('repereCanvas');
+  const ctx = canvas.getContext('2d');
+  const readout = document.getElementById('distReadout');
+  const originX = 60, originY = 360, step = 34;
+
+  let A = {gx:2, gy:2};
+  let B = {gx:9, gy:7};
+  let draggingPt = null;
+
+  function toPix(g){ return {x: originX + g.gx*step, y: originY - g.gy*step}; }
+  function toGrid(p){ return {gx:(p.x-originX)/step, gy:(originY-p.y)/step}; }
+
+  function draw(){
+    const theme = getComputedStyle(document.documentElement);
+    const textColor = theme.getPropertyValue('--text').trim();
+    const muted = theme.getPropertyValue('--muted').trim();
+    const accent = theme.getPropertyValue('--accent').trim();
+    const border = theme.getPropertyValue('--border').trim();
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    // grid
+    ctx.strokeStyle = border; ctx.lineWidth=1;
+    for(let i=0;i<=11;i++){
+      ctx.beginPath(); ctx.moveTo(originX+i*step, 20); ctx.lineTo(originX+i*step, originY); ctx.stroke();
+    }
+    for(let j=0;j<=10;j++){
+      ctx.beginPath(); ctx.moveTo(originX, originY-j*step); ctx.lineTo(originX+11*step, originY-j*step); ctx.stroke();
+    }
+    // axes
+    ctx.strokeStyle = textColor; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(originX,originY); ctx.lineTo(originX+11*step, originY); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(originX,originY); ctx.lineTo(originX, 20); ctx.stroke();
+
+    const pA = toPix(A), pB = toPix(B);
+    const corner = {x:pB.x, y:pA.y};
+
+    // right triangle legs
+    ctx.strokeStyle = muted; ctx.setLineDash([5,4]); ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.moveTo(pA.x,pA.y); ctx.lineTo(corner.x,corner.y); ctx.lineTo(pB.x,pB.y); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // AB segment
+    ctx.strokeStyle = accent; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.moveTo(pA.x,pA.y); ctx.lineTo(pB.x,pB.y); ctx.stroke();
+
+    // points
+    ctx.fillStyle = '#3d8bfd';
+    ctx.beginPath(); ctx.arc(pA.x,pA.y,8,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#e0524d';
+    ctx.beginPath(); ctx.arc(pB.x,pB.y,8,0,Math.PI*2); ctx.fill();
+
+    ctx.font = "700 14px 'Nunito Sans', sans-serif";
+    ctx.fillStyle = textColor;
+    ctx.fillText(`A(${A.gx.toFixed(1)} ; ${A.gy.toFixed(1)})`, pA.x-10, pA.y-14);
+    ctx.fillText(`B(${B.gx.toFixed(1)} ; ${B.gy.toFixed(1)})`, pB.x-10, pB.y-14);
+
+    const dx = B.gx-A.gx, dy = B.gy-A.gy;
+    const dab = Math.sqrt(dx*dx+dy*dy);
+    readout.innerHTML = `AB = √[(${B.gx.toFixed(1)}−${A.gx.toFixed(1)})² + (${B.gy.toFixed(1)}−${A.gy.toFixed(1)})²] ≈ ${dab.toFixed(2)}`;
+  }
+
+  function pos(evt){
+    const rect = canvas.getBoundingClientRect();
+    const cx = (evt.touches ? evt.touches[0].clientX : evt.clientX) - rect.left;
+    const cy = (evt.touches ? evt.touches[0].clientY : evt.clientY) - rect.top;
+    return {x: cx*(canvas.width/rect.width), y: cy*(canvas.height/rect.height)};
+  }
+  function hit(p, g){ const pp = toPix(g); return Math.hypot(p.x-pp.x,p.y-pp.y) < 16; }
+
+  canvas.addEventListener('mousedown', e=>{ const p=pos(e); if(hit(p,A)) draggingPt='A'; else if(hit(p,B)) draggingPt='B'; });
+  canvas.addEventListener('touchstart', e=>{ const p=pos(e); if(hit(p,A)) draggingPt='A'; else if(hit(p,B)) draggingPt='B'; e.preventDefault(); }, {passive:false});
+  function move(e){
+    if(!draggingPt) return;
+    const p = pos(e);
+    const g = toGrid(p);
+    g.gx = Math.max(0, Math.min(11, Math.round(g.gx*2)/2));
+    g.gy = Math.max(0, Math.min(10, Math.round(g.gy*2)/2));
+    if(draggingPt==='A') A = g; else B = g;
+    draw();
+  }
+  window.addEventListener('mousemove', move);
+  window.addEventListener('touchmove', e=>{ move(e); e.preventDefault(); }, {passive:false});
+  window.addEventListener('mouseup', ()=> draggingPt=null);
+  window.addEventListener('touchend', ()=> draggingPt=null);
+
+  draw();
+}
+
+/* =========================================================
+   TAB 5 : EXERCICES (8 progressifs)
+========================================================= */
+function buildTab5(){
+  const el = document.getElementById('tab5');
+  el.innerHTML = `
+  <h2>Exercices progressifs</h2>
+  <p>8 exercices, du plus simple au plus difficile. Cherche d'abord seul(e), puis clique sur « Voir la correction » pour vérifier ta démarche.</p>
+  <div id="exos-tab5"></div>
+  `;
+  const exos = [
+    {niv:"appliquer", titre:"Exercice 1", enonce:"ABC est rectangle en A. AB = 9 cm, AC = 12 cm. Calculer BC.",
+     corr:"BC² = AB² + AC² = 9² + 12² = 81 + 144 = 225. BC = "+sqrtHTML('225')+" = 15 cm."},
+    {niv:"appliquer", titre:"Exercice 2", enonce:"RST est rectangle en S. Hypoténuse RT = 26 cm, RS = 10 cm. Calculer ST.",
+     corr:"ST² = RT² − RS² = 26² − 10² = 676 − 100 = 576. ST = "+sqrtHTML('576')+" = 24 cm."},
+    {niv:"comprendre", titre:"Exercice 3 — un triangle est-il rectangle ?", enonce:"Un triangle a pour côtés 8 cm, 15 cm, 17 cm. Est-il rectangle ? Justifier.",
+     corr:"Plus grand côté : 17. 17² = 289. 8² + 15² = 64 + 225 = 289. Égalité → le triangle est rectangle (au sommet opposé au côté de 17 cm)."},
+    {niv:"comprendre", titre:"Exercice 4 — diagonale de carré", enonce:"Un carré a pour côté 6 cm. Calculer la longueur de sa diagonale, arrondie au dixième.",
+     corr:"La diagonale d'un carré de côté c vérifie d² = c² + c² = 2c². Ici d² = 6² + 6² = 36 + 36 = 72. d = "+sqrtHTML('72')+" ≈ 8,5 cm."},
+    {niv:"comprendre", titre:"Exercice 5 — problème concret", enonce:"Une télévision a un écran rectangulaire de 80 cm de large et 45 cm de haut. Quelle est la diagonale de l'écran en pouces sachant qu'un pouce mesure 2,54 cm ? (arrondir à l'unité)",
+     corr:"Diagonale² = 80² + 45² = 6400 + 2025 = 8425. Diagonale = "+sqrtHTML('8425')+" ≈ 91,8 cm. En pouces : 91,8 ÷ 2,54 ≈ 36 pouces."},
+    {niv:"approfondir", titre:"Exercice 6 — type Brevet", enonce:"Un triangle ABC est tel que AB = 4,5 cm, AC = 6 cm et BC = 7,5 cm. 1) Montrer que ABC est rectangle. 2) En déduire l'aire du triangle ABC.",
+     corr:"1) Plus grand côté BC = 7,5. BC² = 56,25. AB² + AC² = 20,25 + 36 = 56,25. Égalité → ABC est rectangle en A.<br>2) L'aire d'un triangle rectangle est (base × hauteur)/2, ici les côtés de l'angle droit jouent ces rôles : Aire = (AB × AC)/2 = (4,5 × 6)/2 = 27/2 = 13,5 cm²."},
+    {niv:"approfondir", titre:"Exercice 7 — figure composée", enonce:"ABCD est un rectangle avec AB = 8 cm et BC = 6 cm. E est un point tel que le triangle ADE est rectangle en D avec DE = 3 cm (E extérieur au rectangle, aligné verticalement avec D). Calculer AE.",
+     corr:"Dans le rectangle, AD = BC = 6 cm. Le triangle ADE est rectangle en D, donc AE² = AD² + DE² = 6² + 3² = 36 + 9 = 45. AE = "+sqrtHTML('45')+" ≈ 6,7 cm."},
+    {niv:"approfondir", titre:"Exercice 8 — type Brevet (raisonnement)", enonce:"Un bateau part d'un port P. Il navigue 12 km plein Nord, puis 9 km plein Est. 1) Faire un schéma. 2) Calculer à vol d'oiseau la distance qui sépare le bateau du port P.",
+     corr:"Le trajet Nord puis Est forme un angle droit au point de virage. La distance cherchée PB est l'hypoténuse du triangle rectangle formé.<br>PB² = 12² + 9² = 144 + 81 = 225. PB = "+sqrtHTML('225')+" = 15 km."}
+  ];
+  const container = document.getElementById('exos-tab5');
+  const diffLabel = {appliquer:"Appliquer", comprendre:"Comprendre", approfondir:"Approfondir"};
+  exos.forEach(ex=>{
+    const div = document.createElement('div');
+    div.className = 'exo';
+    div.innerHTML = `
+      <div class="exo-title">${ex.titre} <span class="badge-diff diff-${ex.niv}">${diffLabel[ex.niv]}</span></div>
+      <p>${ex.enonce}</p>
+      <details><summary>Voir la correction</summary><p>${ex.corr}</p></details>
+    `;
+    container.appendChild(div);
+  });
+}
+
+/* =========================================================
+   TAB 6 : QCM (16 questions)
+========================================================= */
+const qcmData = [
+  {q:"Dans un triangle rectangle, comment appelle-t-on le côté opposé à l'angle droit ?", opts:["Le côté adjacent","L'hypoténuse","La médiane","La bissectrice"], correct:1},
+  {q:"ABC est rectangle en A. Quelle est la bonne égalité de Pythagore ?", opts:["AB² = AC² + BC²","AC² = AB² + BC²","BC² = AB² + AC²","BC = AB + AC"], correct:2},
+  {q:"Un triangle rectangle a des côtés de l'angle droit 6 cm et 8 cm. Quelle est l'hypoténuse ?", opts:["10 cm","14 cm","48 cm","7 cm"], correct:0},
+  {q:"Un triangle rectangle a une hypoténuse de 13 cm et un côté de l'angle droit de 5 cm. Quel est l'autre côté ?", opts:["8 cm","12 cm","18 cm","144 cm"], correct:1},
+  {q:"Le théorème de Pythagore s'applique...", opts:["à tous les triangles","uniquement aux triangles isocèles","uniquement aux triangles rectangles","uniquement aux triangles équilatéraux"], correct:2},
+  {q:"Un triangle a pour côtés 3 cm, 4 cm, 5 cm. Est-il rectangle ?", opts:["Oui","Non","On ne peut pas savoir","Cela dépend de l'angle"], correct:0},
+  {q:"Un triangle a pour côtés 5 cm, 6 cm, 8 cm. Est-il rectangle ?", opts:["Oui","Non","On ne peut pas savoir","Cela dépend de l'unité"], correct:1},
+  {q:"Pour prouver qu'un triangle N'EST PAS rectangle, on utilise :", opts:["le théorème de Pythagore","la réciproque du théorème de Pythagore","la contraposée de la réciproque","le théorème de Thalès"], correct:2},
+  {q:"Dans un repère, la distance AB avec A(0;0) et B(3;4) vaut :", opts:["7","5","12","25"], correct:1},
+  {q:"La diagonale d'un rectangle de longueur 6 cm et largeur 8 cm mesure :", opts:["10 cm","14 cm","48 cm","100 cm"], correct:0},
+  {q:"BC² = AB² + AC² et on cherche AC. La bonne formule est :", opts:["AC² = BC² + AB²","AC² = BC² − AB²","AC² = AB² − BC²","AC = BC − AB"], correct:1},
+  {q:"${sqrtHTML('25')}" ==="" ? "" : "Que vaut " , opts:[], correct:0}, // placeholder replaced below
+  {q:"La racine carrée de 49 est :", opts:["7","24,5","14","6"], correct:0},
+  {q:"Un carré a pour côté 5 cm. Sa diagonale mesure (arrondi au dixième) :", opts:["7,1 cm","10 cm","5 cm","25 cm"], correct:0},
+  {q:"Dans un triangle isocèle ABC en A, la hauteur issue de A coupe [BC] :", opts:["n'importe où","en formant un angle droit en son milieu","toujours à l'extérieur","en formant un angle de 45°"], correct:1},
+  {q:"Une échelle de 5 m est posée contre un mur, son pied à 3 m du mur. À quelle hauteur touche-t-elle le mur ?", opts:["4 m","2 m","8 m","15 m"], correct:0},
+  {q:"Un triangle a pour côtés 7 cm, 24 cm, 25 cm. Est-il rectangle ?", opts:["Oui, en le sommet opposé au côté de 25 cm","Non","Oui, en le sommet opposé au côté de 24 cm","Impossible à déterminer"], correct:0}
+];
+// fix malformed placeholder entry (index 11) programmatically
+qcmData[11] = {q:"Que vaut " + sqrtHTML('81') + " ?", opts:["8","9","9,5","81"], correct:1};
+
+let qcmAnswers = new Array(qcmData.length).fill(null);
+let qcmCurrent = 0;
+
+function buildTab6(){
+  const el = document.getElementById('tab6');
+  el.innerHTML = `
+  <h2>QCM — Teste tes connaissances</h2>
+  <div class="progress-bar"><div class="progress-fill" id="qcmProgress"></div></div>
+  <p id="qcmCounter" style="text-align:center; color:var(--muted);"></p>
+  <div id="qcmContainer"></div>
+  <div style="text-align:center; margin-top:16px;">
+    <button class="btn" id="qcmPrev" onclick="qcmNav(-1)">◀ Précédent</button>
+    <button class="btn" id="qcmNext" onclick="qcmNav(1)">Suivant ▶</button>
+    <button class="btn" id="qcmFinish" onclick="qcmFinish()" style="display:none;">Voir mon score</button>
+  </div>
+  <div id="qcmScoreBox"></div>
+  `;
+  renderQcmQuestion();
+}
+
+function renderQcmQuestion(){
+  const container = document.getElementById('qcmContainer');
+  const item = qcmData[qcmCurrent];
+  const chosen = qcmAnswers[qcmCurrent];
+  let optsHtml = item.opts.map((opt,oi)=>{
+    let cls = 'qcm-opt';
+    if(chosen !== null){
+      if(oi === item.correct) cls += ' correct';
+      else if(oi === chosen) cls += ' incorrect';
+    }
+    return `<div class="${cls}" onclick="qcmSelect(${oi})">${opt}</div>`;
+  }).join('');
+  container.innerHTML = `
+    <div class="qcm-q">
+      <h3>Question ${qcmCurrent+1}</h3>
+      <p>${item.q}</p>
+      <div class="qcm-opts">${optsHtml}</div>
+    </div>
+  `;
+  document.getElementById('qcmCounter').textContent = `Question ${qcmCurrent+1} / ${qcmData.length}`;
+  document.getElementById('qcmProgress').style.width = ((qcmCurrent+1)/qcmData.length*100)+'%';
+  document.getElementById('qcmPrev').style.visibility = qcmCurrent===0 ? 'hidden' : 'visible';
+  const isLast = qcmCurrent === qcmData.length-1;
+  document.getElementById('qcmNext').style.display = isLast ? 'none' : 'inline-block';
+  document.getElementById('qcmFinish').style.display = isLast ? 'inline-block' : 'none';
+}
+
+function qcmSelect(oi){
+  if(qcmAnswers[qcmCurrent] !== null) return; // lock after first answer
+  qcmAnswers[qcmCurrent] = oi;
+  renderQcmQuestion();
+}
+function qcmNav(dir){
+  const next = qcmCurrent + dir;
+  if(next < 0 || next >= qcmData.length) return;
+  qcmCurrent = next;
+  renderQcmQuestion();
+}
+function qcmFinish(){
+  let score = 0;
+  qcmAnswers.forEach((a,i)=>{ if(a === qcmData[i].correct) score++; });
+  const pct = Math.round(score/qcmData.length*100);
+  let msg;
+  if(pct >= 85) msg = "Excellent ! Le théorème de Pythagore n'a plus de secret pour toi. 🏆";
+  else if(pct >= 60) msg = "Bien joué, tu maîtrises l'essentiel. Revois les points manqués. 👍";
+  else msg = "Continue à t'entraîner, relis les méthodes dans les onglets précédents. 💪";
+  const box = document.getElementById('qcmScoreBox');
+  box.innerHTML = `
+    <div class="card qcm-score">
+      <div class="num">${score} / ${qcmData.length}</div>
+      <p>${pct}% de bonnes réponses</p>
+      <p>${msg}</p>
+      <button class="btn" onclick="qcmRestart()">Recommencer le QCM</button>
+    </div>
+  `;
+  document.getElementById('qcmContainer').style.display='none';
+  document.getElementById('qcmPrev').style.display='none';
+  document.getElementById('qcmNext').style.display='none';
+  document.getElementById('qcmFinish').style.display='none';
+  document.getElementById('qcmCounter').style.display='none';
+}
+function qcmRestart(){
+  qcmAnswers = new Array(qcmData.length).fill(null);
+  qcmCurrent = 0;
+  document.getElementById('qcmContainer').style.display='';
+  document.getElementById('qcmCounter').style.display='';
+  document.getElementById('qcmScoreBox').innerHTML='';
+  renderQcmQuestion();
+}
+
+/* ============ INIT ============ */
+initSection(0);
+</script>
+</body>
+</html>

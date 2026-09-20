@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proportionnalité — Cours 4ème</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f5f2ed;--surface:#ffffff;--surface2:#ebe6de;--text:#2c2418;--heading:#8b4513;
+  --muted:#6b5a48;--border:#d4c8b8;--accent:#a0522d;--accent-light:#faf5ef;
+  --radius:10px;--shadow:0 2px 12px rgba(0,0,0,.08);
+  --font-heading:'Cormorant Garamond',Georgia,serif;
+  --font-body:'Nunito Sans',system-ui,sans-serif;
+}
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#161210;--surface:#221c18;--surface2:#302820;--text:#ddd0c0;--heading:#e0a868;
+    --muted:#9a8878;--border:#403428;--accent:#d08840;--accent-light:#1e1610;
+    --shadow:0 2px 12px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161210;--surface:#221c18;--surface2:#302820;--text:#ddd0c0;--heading:#e0a868;
+  --muted:#9a8878;--border:#403428;--accent:#d08840;--accent-light:#1e1610;
+  --shadow:0 2px 12px rgba(0,0,0,.3);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:16px;line-height:1.7;min-height:100vh;}
+.wrap{max-width:860px;margin:0 auto;padding:16px;}
+header{text-align:center;padding:32px 0 18px;position:relative;}
+header h1{font-family:var(--font-heading);font-weight:700;font-size:clamp(1.8rem,5vw,2.6rem);color:var(--heading);margin-bottom:4px;}
+header p.sub{color:var(--muted);font-size:.95rem;}
+.badge{display:inline-block;background:var(--accent);color:#fff;font-family:var(--font-heading);font-weight:700;font-size:.85rem;padding:3px 14px;border-radius:20px;margin-bottom:10px;}
+.theme-toggle{position:absolute;top:16px;right:0;background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:5px 12px;cursor:pointer;font-size:.82rem;color:var(--muted);font-family:var(--font-body);}
+.theme-toggle:hover{background:var(--accent-light);}
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:18px 0 24px;position:sticky;top:0;z-index:10;background:var(--bg);padding:10px 0;}
+nav.tabs button{font-family:var(--font-body);font-weight:600;font-size:.82rem;padding:7px 14px;border:1px solid var(--border);border-radius:20px;background:var(--surface);color:var(--muted);cursor:pointer;transition:all .2s;}
+nav.tabs button:hover{border-color:var(--accent);color:var(--accent);}
+nav.tabs button.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+section.tab{display:none;}
+section.tab.active{display:block;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:20px;box-shadow:var(--shadow);}
+h2{font-family:var(--font-heading);font-weight:700;font-size:1.55rem;color:var(--heading);margin-bottom:14px;border-bottom:2px solid var(--border);padding-bottom:8px;}
+h3{font-family:var(--font-heading);font-weight:600;font-size:1.2rem;color:var(--heading);margin:18px 0 8px;}
+.def{background:var(--accent-light);border-left:4px solid var(--accent);padding:14px 18px;border-radius:0 var(--radius) var(--radius) 0;margin:14px 0;font-size:.95rem;}
+.def strong{color:var(--accent);}
+.example{background:var(--surface2);padding:14px 18px;border-radius:var(--radius);margin:12px 0;font-size:.93rem;}
+table.prop{width:100%;border-collapse:collapse;margin:12px 0;font-size:.93rem;}
+table.prop th,table.prop td{border:1px solid var(--border);padding:8px 12px;text-align:center;}
+table.prop th{background:var(--accent);color:#fff;font-weight:600;}
+table.prop td{background:var(--surface);}
+canvas{display:block;margin:16px auto;border-radius:var(--radius);max-width:100%;}
+.exercise{background:var(--surface2);padding:16px 18px;border-radius:var(--radius);margin:14px 0;}
+.exercise p{margin-bottom:8px;}
+.exercise label{font-weight:600;color:var(--heading);font-size:.92rem;}
+input[type="number"],input[type="text"]{font-family:var(--font-body);font-size:.95rem;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);width:90px;text-align:center;}
+input:focus{outline:2px solid var(--accent);border-color:var(--accent);}
+button.btn{font-family:var(--font-body);font-weight:600;font-size:.88rem;padding:8px 18px;border:none;border-radius:6px;cursor:pointer;background:var(--accent);color:#fff;margin:6px 4px 6px 0;transition:opacity .2s;}
+button.btn:hover{opacity:.85;}
+button.btn.secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border);}
+.feedback{margin-top:8px;padding:8px 12px;border-radius:6px;font-size:.9rem;font-weight:600;}
+.feedback.correct{background:#d4edda;color:#155724;}
+.feedback.wrong{background:#f8d7da;color:#721c24;}
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .feedback.correct{background:#1a3a1a;color:#8fdf8f;}
+  :root:not([data-theme="light"]) .feedback.wrong{background:#3a1a1a;color:#df8f8f;}
+}
+:root[data-theme="dark"] .feedback.correct{background:#1a3a1a;color:#8fdf8f;}
+:root[data-theme="dark"] .feedback.wrong{background:#3a1a1a;color:#df8f8f;}
+details{margin:12px 0;}
+details summary{cursor:pointer;font-weight:600;color:var(--accent);font-size:.93rem;padding:6px 0;}
+details summary:hover{text-decoration:underline;}
+details .correction{padding:10px 14px;background:var(--accent-light);border-radius:0 0 var(--radius) var(--radius);font-size:.92rem;line-height:1.7;}
+.qcm-q{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0;}
+.qcm-q p{font-weight:600;margin-bottom:8px;}
+.qcm-q label{display:block;padding:5px 8px;border-radius:6px;cursor:pointer;font-size:.92rem;margin:2px 0;transition:background .15s;}
+.qcm-q label:hover{background:var(--surface2);}
+.qcm-q input[type="radio"]{margin-right:8px;accent-color:var(--accent);}
+.score-box{text-align:center;padding:24px;background:var(--accent-light);border:2px solid var(--accent);border-radius:var(--radius);margin:20px 0;}
+.score-box .big{font-family:var(--font-heading);font-size:2.4rem;font-weight:700;color:var(--accent);}
+.difficulty{display:inline-block;font-size:.75rem;font-weight:700;padding:2px 10px;border-radius:12px;margin-bottom:8px;text-transform:uppercase;}
+.difficulty.appliquer{background:#d4edda;color:#155724;}
+.difficulty.comprendre{background:#fff3cd;color:#856404;}
+.difficulty.approfondir{background:#f8d7da;color:#721c24;}
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .difficulty.appliquer{background:#1a3a1a;color:#8fdf8f;}
+  :root:not([data-theme="light"]) .difficulty.comprendre{background:#3a2e10;color:#dfbf5f;}
+  :root:not([data-theme="light"]) .difficulty.approfondir{background:#3a1a1a;color:#df8f8f;}
+}
+:root[data-theme="dark"] .difficulty.appliquer{background:#1a3a1a;color:#8fdf8f;}
+:root[data-theme="dark"] .difficulty.comprendre{background:#3a2e10;color:#dfbf5f;}
+:root[data-theme="dark"] .difficulty.approfondir{background:#3a1a1a;color:#df8f8f;}
+.slider-wrap{display:flex;align-items:center;gap:12px;margin:12px 0;}
+.slider-wrap input[type="range"]{flex:1;accent-color:var(--accent);}
+.slider-wrap span{font-weight:600;min-width:60px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:600px){
+  .wrap{padding:12px 16px;}
+  nav.tabs button{font-size:.75rem;padding:6px 10px;}
+  .card{padding:16px;}
+  .grid2{grid-template-columns:1fr;}
+  h2{font-size:1.3rem;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <span class="badge">4ème</span>
+  <h1>Proportionnalité</h1>
+  <p class="sub">Cours interactif — Collège</p>
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Changer de thème">☀ / ☾</button>
+</header>
+<nav class="tabs" id="tabNav"></nav>
+<div id="tabContent"></div>
+</div>
+
+<script>
+var tabNames=["Reconnaître","Produit en croix","Pourcentages","Échelles","Vitesse","Exercices","QCM"];
+var loaded=[];
+var currentTab=0;
+
+function getCSSVar(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+
+function toggleTheme(){
+  var r=document.documentElement;
+  var cur=r.getAttribute("data-theme");
+  r.setAttribute("data-theme",cur==="dark"?"light":"dark");
+}
+
+function buildNav(){
+  var nav=document.getElementById("tabNav");
+  var cont=document.getElementById("tabContent");
+  tabNames.forEach(function(name,i){
+    var btn=document.createElement("button");
+    btn.textContent=name;
+    btn.onclick=function(){showTab(i);};
+    if(i===0) btn.className="active";
+    nav.appendChild(btn);
+    var sec=document.createElement("section");
+    sec.className="tab"+(i===0?" active":"");
+    sec.id="tab"+i;
+    cont.appendChild(sec);
+  });
+}
+
+function showTab(i){
+  var btns=document.querySelectorAll("nav.tabs button");
+  var secs=document.querySelectorAll("section.tab");
+  btns.forEach(function(b,j){b.classList.toggle("active",j===i);});
+  secs.forEach(function(s,j){s.classList.toggle("active",j===i);});
+  currentTab=i;
+  if(!loaded[i]){initSection(i);loaded[i]=true;}
+}
+
+function initSection(i){
+  var el=document.getElementById("tab"+i);
+  switch(i){
+    case 0:initReconnaitre(el);break;
+    case 1:initProduitCroix(el);break;
+    case 2:initPourcentages(el);break;
+    case 3:initEchelles(el);break;
+    case 4:initVitesse(el);break;
+    case 5:initExercices(el);break;
+    case 6:initQCM(el);break;
+  }
+}
+
+/* ==================== TAB 0 : Reconnaître ==================== */
+function initReconnaitre(el){
+  el.innerHTML=`
+  <div class="card">
+    <h2>Reconnaître une situation de proportionnalité</h2>
+    <div class="def">
+      <strong>Définition :</strong> Deux grandeurs sont <em>proportionnelles</em> lorsque les valeurs de l'une s'obtiennent en multipliant les valeurs de l'autre par un même nombre, appelé <strong>coefficient de proportionnalité</strong>.
+    </div>
+    <h3>Exemple : tableau de proportionnalité</h3>
+    <p>Le prix de pommes au kg :</p>
+    <table class="prop">
+      <tr><th>Masse (kg)</th><td>1</td><td>2</td><td>3</td><td>5</td></tr>
+      <tr><th>Prix (€)</th><td>2,50</td><td>5,00</td><td>7,50</td><td>12,50</td></tr>
+    </table>
+    <p>Coefficient de proportionnalité : <strong>k = 2,50</strong> (on multiplie la masse par 2,50 pour obtenir le prix).</p>
+
+    <h3>Contre-exemple</h3>
+    <table class="prop">
+      <tr><th>Âge (ans)</th><td>5</td><td>10</td><td>15</td><td>20</td></tr>
+      <tr><th>Taille (cm)</th><td>110</td><td>140</td><td>165</td><td>175</td></tr>
+    </table>
+    <p>110÷5 = 22, mais 140÷10 = 14. Les quotients ne sont pas égaux : ce <strong>n'est pas</strong> un tableau de proportionnalité.</p>
+
+    <h3>Méthode : vérifier un tableau de proportionnalité</h3>
+    <div class="def">
+      <strong>Étape 1 :</strong> Calculer les quotients y ÷ x pour chaque colonne.<br>
+      <strong>Étape 2 :</strong> Si tous les quotients sont <em>égaux</em>, le tableau est de proportionnalité. Ce quotient commun est le coefficient k.<br>
+      <strong>Étape 3 :</strong> Si au moins deux quotients sont <em>différents</em>, ce n'est pas un tableau de proportionnalité.
+    </div>
+
+    <h3>Propriété graphique</h3>
+    <div class="def">
+      <strong>Propriété :</strong> Si deux grandeurs sont proportionnelles, alors les points placés dans un repère sont <strong>alignés avec l'origine</strong> O(0;0). La représentation graphique est une <em>droite passant par l'origine</em>.
+    </div>
+    <canvas id="canvasReco" width="520" height="340"></canvas>
+    <p style="text-align:center;font-size:.85rem;color:var(--muted);">Bleu : proportionnalité (droite par O) — Rouge : non proportionnalité</p>
+
+    <h3>Attention aux pièges !</h3>
+    <div class="example">
+      <p><strong>Piège 1 :</strong> Un tableau peut avoir des valeurs croissantes sans être proportionnel. Ce qui compte, c'est que le <em>quotient</em> soit constant, pas que les valeurs augmentent.</p>
+      <p><strong>Piège 2 :</strong> Une droite qui ne passe pas par l'origine ne correspond <em>pas</em> à une proportionnalité, même si les points sont alignés.</p>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Vérifie toi-même</h3>
+    <div class="exercise">
+      <p>Ce tableau est-il un tableau de proportionnalité ?</p>
+      <table class="prop" id="recoTable"></table>
+      <div style="margin-top:10px;">
+        <button class="btn" onclick="checkRecoExo(true)">Oui</button>
+        <button class="btn secondary" onclick="checkRecoExo(false)">Non</button>
+        <button class="btn secondary" onclick="newRecoExo()">Nouveau tableau</button>
+      </div>
+      <div id="recoFeedback"></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Retenir l'essentiel</h3>
+    <div class="def">
+      <strong>Pour vérifier la proportionnalité :</strong><br>
+      - Dans un <em>tableau</em> : tous les quotients y/x sont égaux → coefficient k<br>
+      - Sur un <em>graphique</em> : les points sont alignés avec l'origine O(0;0)<br>
+      - Dans un <em>problème</em> : quand une grandeur double, l'autre double aussi
+    </div>
+  </div>`;
+  drawRecoCanvas();
+  newRecoExo();
+}
+
+function drawRecoCanvas(){
+  var c=document.getElementById("canvasReco");
+  if(!c) return;
+  var ctx=c.getContext("2d");
+  var w=c.width,h=c.height;
+  var bg=getCSSVar("--surface");
+  var border=getCSSVar("--border");
+  var text=getCSSVar("--text");
+  var accent=getCSSVar("--accent");
+
+  ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
+  ctx.strokeStyle=border;ctx.lineWidth=1;
+  // axes
+  ctx.beginPath();ctx.moveTo(50,h-40);ctx.lineTo(w-20,h-40);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(50,h-40);ctx.lineTo(50,20);ctx.stroke();
+  ctx.fillStyle=text;ctx.font="13px 'Nunito Sans',sans-serif";
+  ctx.fillText("O",35,h-25);ctx.fillText("x",w-30,h-25);ctx.fillText("y",55,30);
+
+  // grid
+  ctx.strokeStyle=border;ctx.lineWidth=0.3;
+  for(var gx=1;gx<=8;gx++){var px=50+gx*55;ctx.beginPath();ctx.moveTo(px,h-40);ctx.lineTo(px,20);ctx.stroke();ctx.fillStyle=text;ctx.fillText(gx,px-4,h-25);}
+  for(var gy=1;gy<=5;gy++){var py=h-40-gy*55;ctx.beginPath();ctx.moveTo(50,py);ctx.lineTo(w-20,py);ctx.stroke();ctx.fillStyle=text;ctx.fillText(gy*2,25,py+4);}
+
+  // proportional line (blue)
+  ctx.strokeStyle="#3a7bd5";ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.moveTo(50,h-40);
+  var propPts=[[1,1.5],[2,3],[3,4.5],[5,7.5],[7,10.5]];
+  propPts.forEach(function(p){
+    var px=50+p[0]*55,py=h-40-p[1]*27.5;
+    ctx.lineTo(px,py);
+  });
+  ctx.stroke();
+  propPts.forEach(function(p){
+    var px=50+p[0]*55,py=h-40-p[1]*27.5;
+    ctx.beginPath();ctx.arc(px,py,5,0,Math.PI*2);ctx.fillStyle="#3a7bd5";ctx.fill();
+  });
+
+  // non-proportional curve (red)
+  ctx.strokeStyle="#d04040";ctx.lineWidth=2.5;
+  var nonPts=[[1,2],[2,3.5],[3,4.2],[5,5.8],[7,7]];
+  ctx.beginPath();ctx.moveTo(50+nonPts[0][0]*55,h-40-nonPts[0][1]*27.5);
+  for(var ni=1;ni<nonPts.length;ni++){
+    ctx.lineTo(50+nonPts[ni][0]*55,h-40-nonPts[ni][1]*27.5);
+  }
+  ctx.stroke();
+  nonPts.forEach(function(p){
+    var px=50+p[0]*55,py=h-40-p[1]*27.5;
+    ctx.beginPath();ctx.arc(px,py,5,0,Math.PI*2);ctx.fillStyle="#d04040";ctx.fill();
+  });
+
+  // legend
+  ctx.fillStyle="#3a7bd5";ctx.fillRect(w-200,30,14,14);
+  ctx.fillStyle=text;ctx.font="12px 'Nunito Sans',sans-serif";ctx.fillText("Proportionnelle",w-180,42);
+  ctx.fillStyle="#d04040";ctx.fillRect(w-200,52,14,14);
+  ctx.fillStyle=text;ctx.fillText("Non proportionnelle",w-180,64);
+}
+
+var recoAnswer=true;
+function newRecoExo(){
+  var isProp=Math.random()>0.5;
+  recoAnswer=isProp;
+  var k=Math.round((1.5+Math.random()*4)*10)/10;
+  var xs=[1,2,3,5];
+  var ys;
+  if(isProp){
+    ys=xs.map(function(x){return Math.round(x*k*10)/10;});
+  }else{
+    ys=xs.map(function(x){return Math.round((x*k+Math.random()*3-1)*10)/10;});
+    // ensure not proportional
+    if(ys[0]/xs[0]===ys[1]/xs[1]&&ys[1]/xs[1]===ys[2]/xs[2]) ys[2]+=0.5;
+  }
+  var tb=document.getElementById("recoTable");
+  tb.innerHTML="<tr><th>x</th>"+xs.map(function(x){return "<td>"+x+"</td>";}).join("")+"</tr>"+
+    "<tr><th>y</th>"+ys.map(function(y){return "<td>"+y+"</td>";}).join("")+"</tr>";
+  document.getElementById("recoFeedback").innerHTML="";
+}
+
+function checkRecoExo(ans){
+  var fb=document.getElementById("recoFeedback");
+  if(ans===recoAnswer){
+    fb.innerHTML='<div class="feedback correct">Bravo ! Bonne réponse.</div>';
+  }else{
+    fb.innerHTML='<div class="feedback wrong">Ce n\'est pas la bonne réponse. Vérifie les quotients y/x.</div>';
+  }
+}
+
+/* ==================== TAB 1 : Produit en croix ==================== */
+function initProduitCroix(el){
+  el.innerHTML=`
+  <div class="card">
+    <h2>Le produit en croix</h2>
+    <div class="def">
+      <strong>Propriété :</strong> Dans un tableau de proportionnalité, les <em>produits en croix</em> sont égaux.<br>
+      Si <strong>a/b = c/d</strong>, alors <strong>a × d = b × c</strong>.
+    </div>
+    <h3>Méthode : trouver la 4ème proportionnelle</h3>
+    <div class="example">
+      <p>On sait que 3 kg de pommes coûtent 7,50 €. Combien coûtent 5 kg ?</p>
+      <table class="prop">
+        <tr><th>Masse (kg)</th><td>3</td><td>5</td></tr>
+        <tr><th>Prix (€)</th><td>7,50</td><td>?</td></tr>
+      </table>
+      <p>Produit en croix : ? = (5 × 7,50) ÷ 3 = 37,50 ÷ 3 = <strong>12,50 €</strong></p>
+    </div>
+    <canvas id="canvasCroix" width="400" height="220"></canvas>
+
+    <h3>Deuxième exemple</h3>
+    <div class="example">
+      <p>Une recette pour <strong>6 personnes</strong> demande 400 g de chocolat. Combien pour <strong>9 personnes</strong> ?</p>
+      <table class="prop">
+        <tr><th>Personnes</th><td>6</td><td>9</td></tr>
+        <tr><th>Chocolat (g)</th><td>400</td><td>?</td></tr>
+      </table>
+      <p>? = (9 × 400) ÷ 6 = 3 600 ÷ 6 = <strong>600 g</strong></p>
+    </div>
+
+    <h3>Astuce : le coefficient de proportionnalité</h3>
+    <div class="def">
+      <strong>Alternative au produit en croix :</strong> on peut aussi trouver d'abord le coefficient k, puis multiplier.<br>
+      k = 400 ÷ 6 ≈ 66,67 g/personne<br>
+      Pour 9 personnes : 9 × 66,67 ≈ <strong>600 g</strong>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Exercice interactif</h3>
+    <p>Utilise le produit en croix pour trouver la valeur manquante. De nouveaux exercices sont générés à chaque clic.</p>
+    <div class="exercise" id="croixExo"></div>
+  </div>`;
+  drawCroixCanvas();
+  newCroixExo();
+}
+
+function drawCroixCanvas(){
+  var c=document.getElementById("canvasCroix");
+  if(!c) return;
+  var ctx=c.getContext("2d");
+  var w=c.width,h=c.height;
+  ctx.fillStyle=getCSSVar("--surface2");ctx.fillRect(0,0,w,h);
+  ctx.font="bold 22px 'Cormorant Garamond',serif";
+  ctx.fillStyle=getCSSVar("--heading");
+  ctx.textAlign="center";
+  ctx.fillText("a",100,60);ctx.fillText("b",300,60);
+  ctx.fillText("c",100,160);ctx.fillText("?",300,160);
+  // cross lines
+  ctx.strokeStyle=getCSSVar("--accent");ctx.lineWidth=2;
+  ctx.setLineDash([6,4]);
+  ctx.beginPath();ctx.moveTo(120,55);ctx.lineTo(280,155);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(280,55);ctx.lineTo(120,155);ctx.stroke();
+  ctx.setLineDash([]);
+  // formula
+  ctx.font="18px 'Nunito Sans',sans-serif";
+  ctx.fillStyle=getCSSVar("--text");
+  ctx.fillText("? = (b × c) ÷ a",200,200);
+}
+
+var croixData={};
+function newCroixExo(){
+  var a=Math.floor(Math.random()*8)+2;
+  var b=Math.floor(Math.random()*8)+2;
+  var c=Math.floor(Math.random()*8)+2;
+  var d=b*c/a;
+  // ensure clean result
+  while(d!==Math.round(d*100)/100 || a===b){
+    a=Math.floor(Math.random()*6)+2;
+    b=Math.floor(Math.random()*9)+2;
+    c=a*(Math.floor(Math.random()*4)+2);
+    d=b*c/a;
+  }
+  croixData={a:a,b:b,c:c,answer:d};
+  var div=document.getElementById("croixExo");
+  div.innerHTML=`
+    <p>Trouve la valeur manquante :</p>
+    <table class="prop">
+      <tr><th></th><td>${a}</td><td>${c}</td></tr>
+      <tr><th></th><td>${b}</td><td><input type="number" id="croixInput" step="any"></td></tr>
+    </table>
+    <button class="btn" onclick="checkCroix()">Vérifier</button>
+    <button class="btn secondary" onclick="newCroixExo()">Nouveau</button>
+    <div id="croixFeedback"></div>`;
+}
+
+function checkCroix(){
+  var inp=document.getElementById("croixInput");
+  var val=parseFloat(inp.value);
+  var fb=document.getElementById("croixFeedback");
+  if(Math.abs(val-croixData.answer)<0.01){
+    fb.innerHTML='<div class="feedback correct">Bravo ! '+croixData.a+' × ? = '+croixData.b+' × '+croixData.c+', donc ? = '+croixData.answer+'</div>';
+  }else{
+    fb.innerHTML='<div class="feedback wrong">Essaie encore. Utilise : ? = ('+croixData.b+' × '+croixData.c+') ÷ '+croixData.a+'</div>';
+  }
+}
+
+/* ==================== TAB 2 : Pourcentages ==================== */
+function initPourcentages(el){
+  el.innerHTML=`
+  <div class="card">
+    <h2>Pourcentages et proportionnalité</h2>
+    <div class="def">
+      <strong>Définition :</strong> Prendre <em>t %</em> d'une quantité, c'est la multiplier par <strong>t/100</strong>.<br>
+      Exemple : 25 % de 80 = 80 × 25/100 = 80 × 0,25 = <strong>20</strong>.
+    </div>
+    <h3>Calculer un pourcentage</h3>
+    <div class="example">
+      <p>Dans une classe de 30 élèves, 12 sont des filles. Quel pourcentage de filles ?</p>
+      <p>Pourcentage = (12 ÷ 30) × 100 = <strong>40 %</strong></p>
+    </div>
+    <h3>Augmentation et diminution</h3>
+    <div class="def">
+      <strong>Augmenter</strong> de t % → multiplier par <strong>1 + t/100</strong><br>
+      <strong>Diminuer</strong> de t % → multiplier par <strong>1 − t/100</strong>
+    </div>
+    <div class="example">
+      <p><strong>Soldes :</strong> Un article à 85 € est soldé à −30 %.<br>
+      Coefficient : 1 − 0,30 = 0,70<br>
+      Nouveau prix : 85 × 0,70 = <strong>59,50 €</strong></p>
+    </div>
+    <div class="example">
+      <p><strong>TVA :</strong> Un article HT coûte 120 €, TVA à 20 %.<br>
+      Coefficient : 1 + 0,20 = 1,20<br>
+      Prix TTC : 120 × 1,20 = <strong>144 €</strong></p>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Calculateur interactif</h3>
+    <div class="exercise">
+      <label>Prix initial (€) :</label>
+      <input type="number" id="pctPrix" value="100" step="0.01" style="width:100px;">
+      <label style="margin-left:12px;">Pourcentage :</label>
+      <input type="number" id="pctVal" value="20" step="0.1" style="width:80px;"> %
+      <div style="margin-top:10px;">
+        <button class="btn" onclick="calcPct('augm')">Augmentation</button>
+        <button class="btn" onclick="calcPct('dim')">Diminution</button>
+        <button class="btn secondary" onclick="calcPct('appliquer')">Appliquer %</button>
+      </div>
+      <div id="pctResult" style="margin-top:10px;font-weight:600;"></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Visualisation : barre de pourcentage</h3>
+    <canvas id="canvasPct" width="520" height="180"></canvas>
+    <div class="slider-wrap">
+      <label>Pourcentage :</label>
+      <input type="range" id="pctBarSlider" min="0" max="100" step="1" value="35">
+      <span id="pctBarVal">35 %</span>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Exercice : les soldes</h3>
+    <div class="exercise" id="pctExo"></div>
+  </div>`;
+  var pbs=document.getElementById("pctBarSlider");
+  pbs.oninput=function(){document.getElementById("pctBarVal").textContent=pbs.value+" %";drawPctCanvas();};
+  drawPctCanvas();
+  newPctExo();
+}
+
+function calcPct(mode){
+  var prix=parseFloat(document.getElementById("pctPrix").value);
+  var pct=parseFloat(document.getElementById("pctVal").value);
+  var res=document.getElementById("pctResult");
+  if(isNaN(prix)||isNaN(pct)){res.textContent="Entrez des valeurs valides.";return;}
+  if(mode==="augm"){
+    var r=prix*(1+pct/100);
+    res.innerHTML="Augmentation de "+pct+" % : <strong>"+r.toFixed(2)+" €</strong> (×"+(1+pct/100).toFixed(4)+")";
+  }else if(mode==="dim"){
+    var r2=prix*(1-pct/100);
+    res.innerHTML="Diminution de "+pct+" % : <strong>"+r2.toFixed(2)+" €</strong> (×"+(1-pct/100).toFixed(4)+")";
+  }else{
+    var r3=prix*pct/100;
+    res.innerHTML=pct+" % de "+prix+" = <strong>"+r3.toFixed(2)+"</strong>";
+  }
+}
+
+var pctExoData={};
+function newPctExo(){
+  var items=["Un pantalon","Une paire de baskets","Un sac à dos","Un pull","Une veste"];
+  var item=items[Math.floor(Math.random()*items.length)];
+  var prix=Math.round((30+Math.random()*120)/ 5)*5;
+  var pct=[10,15,20,25,30,40,50][Math.floor(Math.random()*7)];
+  var answer=Math.round(prix*(1-pct/100)*100)/100;
+  pctExoData={answer:answer,prix:prix,pct:pct};
+  var div=document.getElementById("pctExo");
+  div.innerHTML=`
+    <p>${item} coûte <strong>${prix} €</strong>. Il est soldé à <strong>−${pct} %</strong>. Quel est le nouveau prix ?</p>
+    <input type="number" id="pctExoInput" step="0.01" placeholder="Prix soldé"> €
+    <button class="btn" onclick="checkPctExo()">Vérifier</button>
+    <button class="btn secondary" onclick="newPctExo()">Nouveau</button>
+    <div id="pctExoFb"></div>`;
+}
+
+function checkPctExo(){
+  var val=parseFloat(document.getElementById("pctExoInput").value);
+  var fb=document.getElementById("pctExoFb");
+  if(Math.abs(val-pctExoData.answer)<0.02){
+    fb.innerHTML='<div class="feedback correct">Bravo ! '+pctExoData.prix+' × '+(1-pctExoData.pct/100)+' = '+pctExoData.answer+' €</div>';
+  }else{
+    fb.innerHTML='<div class="feedback wrong">Non. Coefficient = 1 − '+pctExoData.pct+'/100 = '+(1-pctExoData.pct/100)+'. Multiplie '+pctExoData.prix+' par ce coefficient.</div>';
+  }
+}
+
+function drawPctCanvas(){
+  var c=document.getElementById("canvasPct");
+  if(!c) return;
+  var ctx=c.getContext("2d");
+  var w=c.width,h=c.height;
+  var pct=parseInt(document.getElementById("pctBarSlider").value);
+  ctx.fillStyle=getCSSVar("--surface2");ctx.fillRect(0,0,w,h);
+
+  // Total bar
+  var barX=40,barY=40,barW=w-80,barH=50;
+  ctx.fillStyle=getCSSVar("--border");
+  ctx.beginPath();ctx.roundRect(barX,barY,barW,barH,8);ctx.fill();
+
+  // Filled portion
+  var fillW=barW*pct/100;
+  if(fillW>0){
+    ctx.fillStyle=getCSSVar("--accent");
+    ctx.beginPath();ctx.roundRect(barX,barY,fillW,barH,pct>=99?8:[8,0,0,8]);ctx.fill();
+  }
+
+  // Labels
+  ctx.fillStyle="#fff";ctx.font="bold 18px 'Nunito Sans',sans-serif";ctx.textAlign="center";
+  if(fillW>50) ctx.fillText(pct+" %",barX+fillW/2,barY+barH/2+7);
+
+  ctx.fillStyle=getCSSVar("--text");ctx.font="14px 'Nunito Sans',sans-serif";ctx.textAlign="left";
+  ctx.fillText("0",barX,barY+barH+20);
+  ctx.textAlign="right";ctx.fillText("100",barX+barW,barY+barH+20);
+  ctx.textAlign="center";ctx.fillText("Total",barX+barW/2,barY+barH+20);
+
+  // Calculation display
+  ctx.font="15px 'Nunito Sans',sans-serif";ctx.fillStyle=getCSSVar("--heading");
+  ctx.fillText(pct+" % de 200 = "+(pct*200/100).toFixed(1),w/2,barY+barH+50);
+  ctx.fillText(pct+" % de 500 = "+(pct*500/100).toFixed(1),w/2,barY+barH+72);
+}
+
+/* ==================== TAB 3 : Échelles ==================== */
+function initEchelles(el){
+  el.innerHTML=`
+  <div class="card">
+    <h2>Échelles : plans et cartes</h2>
+    <div class="def">
+      <strong>Définition :</strong> L'<em>échelle</em> d'un plan ou d'une carte est le coefficient de proportionnalité entre les distances sur le plan et les distances réelles.<br>
+      <strong>Échelle = distance plan ÷ distance réelle</strong> (dans la même unité).
+    </div>
+    <h3>Exemple</h3>
+    <div class="example">
+      <p>Sur une carte à l'échelle <strong>1/25 000</strong>, 1 cm sur la carte = 25 000 cm = 250 m en réalité.</p>
+      <p>Si deux villes sont séparées de 4 cm sur la carte :<br>
+      Distance réelle = 4 × 25 000 = 100 000 cm = <strong>1 km</strong></p>
+    </div>
+    <h3>Formules</h3>
+    <div class="def">
+      <strong>Distance réelle</strong> = distance plan ÷ échelle<br>
+      <strong>Distance plan</strong> = distance réelle × échelle
+    </div>
+
+    <h3>Échelles courantes</h3>
+    <table class="prop">
+      <tr><th>Type de plan</th><th>Échelle</th><th>1 cm =</th></tr>
+      <tr><td>Plan d'architecte</td><td>1/50</td><td>0,5 m</td></tr>
+      <tr><td>Plan de quartier</td><td>1/2 000</td><td>20 m</td></tr>
+      <tr><td>Carte de randonnée</td><td>1/25 000</td><td>250 m</td></tr>
+      <tr><td>Carte routière</td><td>1/200 000</td><td>2 km</td></tr>
+    </table>
+
+    <h3>Méthode pratique</h3>
+    <div class="def">
+      <strong>1.</strong> Identifier l'échelle (ex : 1/25 000).<br>
+      <strong>2.</strong> Mesurer la distance sur la carte en cm.<br>
+      <strong>3.</strong> Multiplier : distance carte (cm) × dénominateur = distance réelle (cm).<br>
+      <strong>4.</strong> Convertir en mètres (÷ 100) ou en km (÷ 100 000).
+    </div>
+  </div>
+  <div class="card">
+    <h3>Carte interactive</h3>
+    <p>Règle la distance sur la carte (en cm) et l'échelle pour calculer la distance réelle.</p>
+    <div class="slider-wrap">
+      <label>Distance carte :</label>
+      <input type="range" id="echelleDistSlider" min="0.5" max="15" step="0.5" value="4">
+      <span id="echelleDistVal">4 cm</span>
+    </div>
+    <div class="slider-wrap">
+      <label>Échelle 1/ :</label>
+      <input type="range" id="echelleScaleSlider" min="1000" max="100000" step="1000" value="25000">
+      <span id="echelleScaleVal">25 000</span>
+    </div>
+    <canvas id="canvasEchelle" width="520" height="280"></canvas>
+    <div id="echelleResult" style="text-align:center;font-weight:600;font-size:1.05rem;margin-top:8px;"></div>
+  </div>
+  <div class="card">
+    <h3>Exercice</h3>
+    <div class="exercise" id="echelleExo"></div>
+  </div>`;
+  var ds=document.getElementById("echelleDistSlider");
+  var ss=document.getElementById("echelleScaleSlider");
+  ds.oninput=function(){document.getElementById("echelleDistVal").textContent=ds.value+" cm";drawEchelleCanvas();};
+  ss.oninput=function(){document.getElementById("echelleScaleVal").textContent=parseInt(ss.value).toLocaleString("fr-FR");drawEchelleCanvas();};
+  drawEchelleCanvas();
+  newEchelleExo();
+}
+
+function drawEchelleCanvas(){
+  var c=document.getElementById("canvasEchelle");
+  if(!c) return;
+  var ctx=c.getContext("2d");
+  var w=c.width,h=c.height;
+  var dist=parseFloat(document.getElementById("echelleDistSlider").value);
+  var scale=parseInt(document.getElementById("echelleScaleSlider").value);
+  var realCm=dist*scale;
+  var realKm=realCm/100000;
+  var realM=realCm/100;
+  var displayReal=realKm>=1?(realKm.toFixed(2)+" km"):(realM.toFixed(0)+" m");
+
+  ctx.fillStyle=getCSSVar("--surface2");ctx.fillRect(0,0,w,h);
+  // map area
+  ctx.fillStyle=getCSSVar("--accent-light");
+  ctx.fillRect(40,30,w-80,h-80);
+  ctx.strokeStyle=getCSSVar("--border");ctx.lineWidth=1;
+  ctx.strokeRect(40,30,w-80,h-80);
+
+  // two points
+  var x1=100,y1=h/2,x2=100+dist*25,y2=h/2;
+  if(x2>w-60) x2=w-60;
+  ctx.fillStyle="#d04040";
+  ctx.beginPath();ctx.arc(x1,y1,7,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(x2,y2,7,0,Math.PI*2);ctx.fill();
+  // line
+  ctx.strokeStyle=getCSSVar("--accent");ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  // label
+  ctx.fillStyle=getCSSVar("--text");ctx.font="bold 14px 'Nunito Sans',sans-serif";ctx.textAlign="center";
+  ctx.fillText(dist+" cm",( x1+x2)/2,y1-15);
+
+  // scale bar
+  ctx.fillStyle=getCSSVar("--muted");ctx.font="12px 'Nunito Sans',sans-serif";
+  ctx.fillText("Échelle 1/"+scale.toLocaleString("fr-FR"),w/2,h-15);
+
+  document.getElementById("echelleResult").innerHTML="Distance réelle : <strong>"+displayReal+"</strong>";
+}
+
+var echelleExoData={};
+function newEchelleExo(){
+  var scales=[5000,10000,25000,50000];
+  var sc=scales[Math.floor(Math.random()*scales.length)];
+  var distCarte=Math.round((1+Math.random()*12)*10)/10;
+  var realCm=distCarte*sc;
+  var realM=realCm/100;
+  echelleExoData={answer:realM,sc:sc,distCarte:distCarte};
+  var div=document.getElementById("echelleExo");
+  div.innerHTML=`
+    <p>Sur un plan à l'échelle <strong>1/${sc.toLocaleString("fr-FR")}</strong>, deux bâtiments sont séparés de <strong>${distCarte} cm</strong>. Quelle est la distance réelle en mètres ?</p>
+    <input type="number" id="echelleInput" step="any" placeholder="en mètres"> m
+    <button class="btn" onclick="checkEchelle()">Vérifier</button>
+    <button class="btn secondary" onclick="newEchelleExo()">Nouveau</button>
+    <div id="echelleFb"></div>`;
+}
+
+function checkEchelle(){
+  var val=parseFloat(document.getElementById("echelleInput").value);
+  var fb=document.getElementById("echelleFb");
+  if(Math.abs(val-echelleExoData.answer)<1){
+    fb.innerHTML='<div class="feedback correct">Bravo ! '+echelleExoData.distCarte+' × '+echelleExoData.sc+' = '+(echelleExoData.distCarte*echelleExoData.sc)+' cm = '+echelleExoData.answer+' m</div>';
+  }else{
+    fb.innerHTML='<div class="feedback wrong">Non. Distance réelle = '+echelleExoData.distCarte+' cm × '+echelleExoData.sc+' = ? cm, puis convertis en mètres (÷ 100).</div>';
+  }
+}
+
+/* ==================== TAB 4 : Vitesse ==================== */
+function initVitesse(el){
+  el.innerHTML=`
+  <div class="card">
+    <h2>Vitesse et proportionnalité</h2>
+    <div class="def">
+      <strong>Définition :</strong> La vitesse moyenne est le quotient de la distance parcourue par la durée du parcours :<br>
+      <strong>v = d ÷ t</strong> &nbsp;|&nbsp; <strong>d = v × t</strong> &nbsp;|&nbsp; <strong>t = d ÷ v</strong>
+    </div>
+    <div class="example">
+      <p>Un train parcourt 360 km en 3 heures.<br>
+      v = 360 ÷ 3 = <strong>120 km/h</strong></p>
+    </div>
+    <h3>Conversion km/h ↔ m/s</h3>
+    <div class="def">
+      <strong>km/h → m/s :</strong> diviser par 3,6<br>
+      <strong>m/s → km/h :</strong> multiplier par 3,6
+    </div>
+    <div class="example">
+      <p>90 km/h = 90 ÷ 3,6 = <strong>25 m/s</strong></p>
+      <p>15 m/s = 15 × 3,6 = <strong>54 km/h</strong></p>
+    </div>
+    <h3>Pourquoi diviser par 3,6 ?</h3>
+    <div class="example">
+      <p>1 km = 1 000 m et 1 h = 3 600 s</p>
+      <p>Donc 1 km/h = 1 000 m ÷ 3 600 s = 1/3,6 m/s</p>
+      <p>Le facteur 3,6 vient de 3 600 ÷ 1 000.</p>
+    </div>
+
+    <h3>Problème concret</h3>
+    <div class="example">
+      <p>Un TGV roule à 300 km/h. Quelle distance parcourt-il en 45 minutes ?</p>
+      <p>45 min = 45/60 = 0,75 h</p>
+      <p>d = v × t = 300 × 0,75 = <strong>225 km</strong></p>
+    </div>
+
+    <h3>Tableau de proportionnalité (vitesse constante)</h3>
+    <table class="prop">
+      <tr><th>Durée (h)</th><td>1</td><td>2</td><td>3</td><td>4</td></tr>
+      <tr><th>Distance (km)</th><td>80</td><td>160</td><td>240</td><td>320</td></tr>
+    </table>
+    <p>Coefficient de proportionnalité = <strong>80</strong> (c'est la vitesse en km/h).</p>
+
+    <h3>Graphique distance-temps</h3>
+    <canvas id="canvasVitesse" width="520" height="300"></canvas>
+    <div class="slider-wrap">
+      <label>Vitesse :</label>
+      <input type="range" id="vitSlider" min="10" max="150" step="10" value="80">
+      <span id="vitSliderVal">80 km/h</span>
+    </div>
+    <p style="text-align:center;font-size:.85rem;color:var(--muted);">Plus la pente est forte, plus la vitesse est grande.</p>
+  </div>
+  <div class="card">
+    <h3>Convertisseur</h3>
+    <div class="exercise">
+      <div class="grid2">
+        <div>
+          <label>km/h :</label><br>
+          <input type="number" id="vitKmh" step="any" style="width:120px;" oninput="convVit('kmh')">
+        </div>
+        <div>
+          <label>m/s :</label><br>
+          <input type="number" id="vitMs" step="any" style="width:120px;" oninput="convVit('ms')">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Exercice : calculs de vitesse</h3>
+    <p>Des exercices variés sur la vitesse, la distance et la durée. Chaque clic génère un nouveau problème.</p>
+    <div class="exercise" id="vitExo"></div>
+  </div>
+  <div class="card">
+    <h3>Exercice : conversions</h3>
+    <div class="exercise" id="vitConvExo"></div>
+  </div>`;
+  newVitConvExo();
+  var vs=document.getElementById("vitSlider");
+  vs.oninput=function(){document.getElementById("vitSliderVal").textContent=vs.value+" km/h";drawVitesseCanvas();};
+  drawVitesseCanvas();
+  newVitExo();
+}
+
+function drawVitesseCanvas(){
+  var c=document.getElementById("canvasVitesse");
+  if(!c) return;
+  var ctx=c.getContext("2d");
+  var w=c.width,h=c.height;
+  var speed=parseInt(document.getElementById("vitSlider").value);
+
+  ctx.fillStyle=getCSSVar("--surface");ctx.fillRect(0,0,w,h);
+
+  var ox=60,oy=h-45,gw=w-90,gh=h-80;
+  // axes
+  ctx.strokeStyle=getCSSVar("--text");ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(ox+gw,oy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(ox,oy-gh);ctx.stroke();
+
+  ctx.fillStyle=getCSSVar("--text");ctx.font="12px 'Nunito Sans',sans-serif";ctx.textAlign="center";
+  ctx.fillText("Temps (h)",ox+gw/2,h-8);
+  ctx.save();ctx.translate(15,oy-gh/2);ctx.rotate(-Math.PI/2);ctx.fillText("Distance (km)",0,0);ctx.restore();
+
+  // grid and labels
+  ctx.strokeStyle=getCSSVar("--border");ctx.lineWidth=0.4;
+  var maxT=5,maxD=600;
+  for(var ti=1;ti<=maxT;ti++){
+    var tx=ox+ti*gw/maxT;
+    ctx.beginPath();ctx.moveTo(tx,oy);ctx.lineTo(tx,oy-gh);ctx.stroke();
+    ctx.fillStyle=getCSSVar("--text");ctx.fillText(ti+"h",tx,oy+16);
+  }
+  for(var di=1;di<=6;di++){
+    var dy=oy-di*gh/6;
+    ctx.beginPath();ctx.moveTo(ox,dy);ctx.lineTo(ox+gw,dy);ctx.stroke();
+    ctx.fillStyle=getCSSVar("--text");ctx.textAlign="right";ctx.fillText(di*100,ox-8,dy+4);ctx.textAlign="center";
+  }
+
+  // speed line
+  ctx.strokeStyle=getCSSVar("--accent");ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(ox,oy);
+  var endT=Math.min(maxT,maxD/speed);
+  var endX=ox+endT*gw/maxT;
+  var endY=oy-speed*endT*gh/maxD;
+  ctx.lineTo(endX,endY);ctx.stroke();
+
+  // dot at end
+  ctx.beginPath();ctx.arc(endX,endY,5,0,Math.PI*2);ctx.fillStyle=getCSSVar("--accent");ctx.fill();
+
+  // label
+  ctx.fillStyle=getCSSVar("--heading");ctx.font="bold 14px 'Nunito Sans',sans-serif";
+  ctx.textAlign="left";
+  var labelText="v = "+speed+" km/h";
+  ctx.fillText(labelText,endX+10,endY+5);
+
+  // reference line at 60 km/h (grey)
+  ctx.strokeStyle=getCSSVar("--muted");ctx.lineWidth=1.5;ctx.setLineDash([5,5]);
+  ctx.beginPath();ctx.moveTo(ox,oy);
+  var ref60endT=Math.min(maxT,maxD/60);
+  ctx.lineTo(ox+ref60endT*gw/maxT,oy-60*ref60endT*gh/maxD);ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle=getCSSVar("--muted");ctx.font="11px 'Nunito Sans',sans-serif";
+  ctx.fillText("60 km/h (réf.)",ox+ref60endT*gw/maxT+5,oy-60*ref60endT*gh/maxD+5);
+}
+
+function convVit(from){
+  if(from==="kmh"){
+    var v=parseFloat(document.getElementById("vitKmh").value);
+    if(!isNaN(v)) document.getElementById("vitMs").value=Math.round(v/3.6*1000)/1000;
+  }else{
+    var v2=parseFloat(document.getElementById("vitMs").value);
+    if(!isNaN(v2)) document.getElementById("vitKmh").value=Math.round(v2*3.6*1000)/1000;
+  }
+}
+
+var vitExoData={};
+function newVitExo(){
+  var type=Math.floor(Math.random()*3);// 0=find v, 1=find d, 2=find t
+  var v=[40,50,60,80,90,100,120][Math.floor(Math.random()*7)];
+  var t=[1,1.5,2,2.5,3,4][Math.floor(Math.random()*6)];
+  var d=v*t;
+  var div=document.getElementById("vitExo");
+  if(type===0){
+    vitExoData={answer:v};
+    div.innerHTML=`<p>Un véhicule parcourt <strong>${d} km</strong> en <strong>${t} h</strong>. Quelle est sa vitesse moyenne ?</p>
+      <input type="number" id="vitInput" step="any" placeholder="km/h"> km/h
+      <button class="btn" onclick="checkVit()">Vérifier</button><button class="btn secondary" onclick="newVitExo()">Nouveau</button><div id="vitFb"></div>`;
+  }else if(type===1){
+    vitExoData={answer:d};
+    div.innerHTML=`<p>Un véhicule roule à <strong>${v} km/h</strong> pendant <strong>${t} h</strong>. Quelle distance parcourt-il ?</p>
+      <input type="number" id="vitInput" step="any" placeholder="km"> km
+      <button class="btn" onclick="checkVit()">Vérifier</button><button class="btn secondary" onclick="newVitExo()">Nouveau</button><div id="vitFb"></div>`;
+  }else{
+    vitExoData={answer:t};
+    div.innerHTML=`<p>Un véhicule parcourt <strong>${d} km</strong> à <strong>${v} km/h</strong>. Combien de temps met-il ?</p>
+      <input type="number" id="vitInput" step="any" placeholder="heures"> h
+      <button class="btn" onclick="checkVit()">Vérifier</button><button class="btn secondary" onclick="newVitExo()">Nouveau</button><div id="vitFb"></div>`;
+  }
+}
+
+function checkVit(){
+  var val=parseFloat(document.getElementById("vitInput").value);
+  var fb=document.getElementById("vitFb");
+  if(Math.abs(val-vitExoData.answer)<0.1){
+    fb.innerHTML='<div class="feedback correct">Bravo ! La réponse est bien '+vitExoData.answer+'.</div>';
+  }else{
+    fb.innerHTML='<div class="feedback wrong">Ce n\'est pas la bonne réponse. Rappel : v = d ÷ t, d = v × t, t = d ÷ v.</div>';
+  }
+}
+
+var vitConvData={};
+function newVitConvExo(){
+  var toMs=Math.random()>0.5;
+  var div=document.getElementById("vitConvExo");
+  if(toMs){
+    var kmh=[36,54,72,90,108,126,144][Math.floor(Math.random()*7)];
+    vitConvData={answer:Math.round(kmh/3.6*100)/100};
+    div.innerHTML='<p>Convertis <strong>'+kmh+' km/h</strong> en m/s.</p>'+
+      '<input type="number" id="vitConvInput" step="any" placeholder="m/s"> m/s '+
+      '<button class="btn" onclick="checkVitConv()">Vérifier</button>'+
+      '<button class="btn secondary" onclick="newVitConvExo()">Nouveau</button>'+
+      '<div id="vitConvFb"></div>';
+  }else{
+    var ms=[5,10,15,20,25,30][Math.floor(Math.random()*6)];
+    vitConvData={answer:ms*3.6};
+    div.innerHTML='<p>Convertis <strong>'+ms+' m/s</strong> en km/h.</p>'+
+      '<input type="number" id="vitConvInput" step="any" placeholder="km/h"> km/h '+
+      '<button class="btn" onclick="checkVitConv()">Vérifier</button>'+
+      '<button class="btn secondary" onclick="newVitConvExo()">Nouveau</button>'+
+      '<div id="vitConvFb"></div>';
+  }
+}
+
+function checkVitConv(){
+  var val=parseFloat(document.getElementById("vitConvInput").value);
+  var fb=document.getElementById("vitConvFb");
+  if(Math.abs(val-vitConvData.answer)<0.1){
+    fb.innerHTML='<div class="feedback correct">Bravo ! La réponse est '+vitConvData.answer+'.</div>';
+  }else{
+    fb.innerHTML='<div class="feedback wrong">Essaie encore. Rappel : km/h ÷ 3,6 = m/s et m/s × 3,6 = km/h.</div>';
+  }
+}
+
+/* ==================== TAB 5 : Exercices ==================== */
+function initExercices(el){
+  el.innerHTML=`
+  <div class="card">
+    <h2>Exercices progressifs</h2>
+
+    <div class="exercise">
+      <span class="difficulty appliquer">Appliquer</span>
+      <h3>Exercice 1 — Tableau de proportionnalité</h3>
+      <p>On sait que 4 cahiers coûtent 6 €. Complète le tableau :</p>
+      <table class="prop">
+        <tr><th>Cahiers</th><td>4</td><td>1</td><td>7</td><td>10</td></tr>
+        <tr><th>Prix (€)</th><td>6</td><td>?</td><td>?</td><td>?</td></tr>
+      </table>
+      <details><summary>Voir la correction</summary>
+        <div class="correction">
+          <p>Coefficient : k = 6 ÷ 4 = <strong>1,50</strong></p>
+          <p>1 cahier : 1 × 1,50 = <strong>1,50 €</strong></p>
+          <p>7 cahiers : 7 × 1,50 = <strong>10,50 €</strong></p>
+          <p>10 cahiers : 10 × 1,50 = <strong>15,00 €</strong></p>
+        </div>
+      </details>
+    </div>
+
+    <div class="exercise">
+      <span class="difficulty appliquer">Appliquer</span>
+      <h3>Exercice 2 — Pourcentage</h3>
+      <p>Dans un collège de 450 élèves, 54 sont en section sportive. Quel pourcentage cela représente-t-il ?</p>
+      <details><summary>Voir la correction</summary>
+        <div class="correction">
+          <p>Pourcentage = (54 ÷ 450) × 100 = <strong>12 %</strong></p>
+          <p>12 % des élèves sont en section sportive.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="exercise">
+      <span class="difficulty comprendre">Comprendre</span>
+      <h3>Exercice 3 — Produit en croix</h3>
+      <p>Pour faire 15 crêpes, il faut 250 g de farine. Combien de farine faut-il pour 24 crêpes ?</p>
+      <details><summary>Voir la correction</summary>
+        <div class="correction">
+          <p>On pose le tableau de proportionnalité :</p>
+          <table class="prop"><tr><th>Crêpes</th><td>15</td><td>24</td></tr><tr><th>Farine (g)</th><td>250</td><td>?</td></tr></table>
+          <p>? = (24 × 250) ÷ 15 = 6000 ÷ 15 = <strong>400 g</strong></p>
+        </div>
+      </details>
+    </div>
+
+    <div class="exercise">
+      <span class="difficulty comprendre">Comprendre</span>
+      <h3>Exercice 4 — Échelle</h3>
+      <p>Sur un plan à l'échelle 1/200, un mur mesure 7,5 cm. Quelle est sa longueur réelle ?</p>
+      <details><summary>Voir la correction</summary>
+        <div class="correction">
+          <p>Longueur réelle = 7,5 × 200 = 1 500 cm = <strong>15 m</strong></p>
+        </div>
+      </details>
+    </div>
+
+    <div class="exercise">
+      <span class="difficulty comprendre">Comprendre</span>
+      <h3>Exercice 5 — Vitesse</h3>
+      <p>Un cycliste roule à 24 km/h. Combien de temps met-il pour parcourir 42 km ? Exprime le résultat en heures et minutes.</p>
+      <details><summary>Voir la correction</summary>
+        <div class="correction">
+          <p>t = d ÷ v = 42 ÷ 24 = 1,75 h</p>
+          <p>0,75 h = 0,75 × 60 = 45 min</p>
+          <p>Réponse : <strong>1 h 45 min</strong></p>
+        </div>
+      </details>
+    </div>
+
+    <div class="exercise">
+      <span class="difficulty approfondir">Approfondir</span>
+      <h3>Exercice 6 — Augmentations successives</h3>
+      <p>Un prix augmente de 10 % puis de 20 %. L'augmentation globale est-elle de 30 % ?</p>
+      <details><summary>Voir la correction</summary>
+        <div class="correction">
+          <p>Prenons un prix de départ de 100 €.</p>
+          <p>Après +10 % : 100 × 1,10 = 110 €</p>
+          <p>Après +20 % : 110 × 1,20 = 132 €</p>
+          <p>Augmentation totale : (132 − 100) ÷ 100 = <strong>32 %</strong></p>
+          <p>Non, l'augmentation globale est de 32 %, pas 30 %. On a : 1,10 × 1,20 = 1,32.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="exercise">
+      <span class="difficulty approfondir">Approfondir</span>
+      <h3>Exercice 7 — Carte et distances</h3>
+      <p>Deux villes sont distantes de 84 km. Sur une carte, elles sont séparées de 3,5 cm. Quelle est l'échelle de cette carte ? Si une troisième ville est à 6 cm de la première sur la carte, à quelle distance réelle se trouve-t-elle ?</p>
+      <details><summary>Voir la correction</summary>
+        <div class="correction">
+          <p>84 km = 8 400 000 cm</p>
+          <p>Échelle = 3,5 ÷ 8 400 000 = 1/2 400 000</p>
+          <p>Distance réelle de la 3e ville : 6 × 2 400 000 = 14 400 000 cm = <strong>144 km</strong></p>
+        </div>
+      </details>
+    </div>
+
+    <div class="exercise">
+      <span class="difficulty approfondir">Approfondir</span>
+      <h3>Exercice 8 — Problème concret</h3>
+      <p>Un magasin affiche : « −25 % sur tout le rayon chaussures ». Emma achète des baskets affichées à 92 €. À la caisse, on lui applique en plus une remise fidélité de 10 % sur le prix soldé. Combien paie-t-elle ?</p>
+      <details><summary>Voir la correction</summary>
+        <div class="correction">
+          <p>Étape 1 : Soldes → 92 × 0,75 = 69 €</p>
+          <p>Étape 2 : Remise fidélité → 69 × 0,90 = <strong>62,10 €</strong></p>
+          <p>Coefficient global : 0,75 × 0,90 = 0,675, soit une réduction totale de 32,5 %.</p>
+        </div>
+      </details>
+    </div>
+  </div>`;
+}
+
+/* ==================== TAB 6 : QCM ==================== */
+var qcmQuestions=[
+  {q:"Deux grandeurs sont proportionnelles si :",choices:["Leur somme est constante","Leur quotient est constant","Leur produit est constant","Leur différence est constante"],ans:1},
+  {q:"Le coefficient de proportionnalité dans le tableau ci-dessous est :\nx : 2, 5, 8 | y : 6, 15, 24",choices:["2","3","4","6"],ans:1},
+  {q:"La représentation graphique de deux grandeurs proportionnelles est :",choices:["Une parabole","Une droite quelconque","Une droite passant par l'origine","Un cercle"],ans:2},
+  {q:"25 % de 240 = ?",choices:["48","60","24","80"],ans:1},
+  {q:"Un article à 80 € augmente de 15 %. Son nouveau prix est :",choices:["92 €","95 €","68 €","12 €"],ans:0},
+  {q:"Un article à 150 € diminue de 20 %. Son nouveau prix est :",choices:["130 €","120 €","30 €","140 €"],ans:1},
+  {q:"Pour calculer la 4ème proportionnelle dans a/b = c/?, on utilise :",choices:["? = a × c ÷ b","? = b × c ÷ a","? = a × b ÷ c","? = a + c − b"],ans:1},
+  {q:"Sur une carte à l'échelle 1/50 000, 3 cm correspondent à :",choices:["150 m","1,5 km","15 km","1 500 m"],ans:1},
+  {q:"72 km/h en m/s, c'est :",choices:["72 m/s","7,2 m/s","20 m/s","36 m/s"],ans:2},
+  {q:"10 m/s en km/h, c'est :",choices:["100 km/h","36 km/h","10 km/h","27,8 km/h"],ans:1},
+  {q:"v = d ÷ t. Si d = 180 km et t = 2,5 h, alors v = ?",choices:["72 km/h","90 km/h","45 km/h","60 km/h"],ans:0},
+  {q:"Un plan à l'échelle 1/100 : une pièce de 5 m de long mesure sur le plan :",choices:["0,5 cm","5 cm","50 cm","0,05 cm"],ans:1},
+  {q:"Le tableau suivant est-il proportionnel ?\nx : 3, 6, 9 | y : 9, 18, 28",choices:["Oui","Non"],ans:1},
+  {q:"Augmenter de 50 % puis diminuer de 50 %, revient à multiplier par :",choices:["1 (prix inchangé)","0,75","1,25","0,5"],ans:1},
+  {q:"Calculer le pourcentage : 18 élèves sur 60 =",choices:["18 %","30 %","36 %","25 %"],ans:1},
+  {q:"Le coefficient multiplicateur d'une augmentation de 8 % est :",choices:["0,08","1,8","1,08","0,92"],ans:2},
+  {q:"Si 5 stylos coûtent 8 €, combien coûtent 12 stylos ?",choices:["16 €","19,20 €","20 €","24 €"],ans:1},
+  {q:"Un escargot avance à 0,05 km/h. En m/s, cela donne environ :",choices:["0,014 m/s","0,5 m/s","0,14 m/s","5 m/s"],ans:0}
+];
+
+function initQCM(el){
+  var html='<div class="card"><h2>QCM — Teste tes connaissances</h2><p>Réponds aux '+qcmQuestions.length+' questions puis vérifie ton score.</p>';
+  qcmQuestions.forEach(function(q,i){
+    html+='<div class="qcm-q" id="qcm'+i+'"><p>'+(i+1)+'. '+q.q.replace(/\n/g,"<br>")+'</p>';
+    q.choices.forEach(function(ch,j){
+      html+='<label><input type="radio" name="qcm'+i+'" value="'+j+'"> '+ch+'</label>';
+    });
+    html+='</div>';
+  });
+  html+='<div style="text-align:center;margin-top:20px;">';
+  html+='<button class="btn" onclick="scoreQCM()" style="font-size:1rem;padding:12px 30px;">Calculer mon score</button>';
+  html+=' <button class="btn secondary" onclick="resetQCM()" style="font-size:1rem;padding:12px 20px;">Recommencer</button>';
+  html+='</div>';
+  html+='<div id="qcmScore"></div></div>';
+  el.innerHTML=html;
+}
+
+function scoreQCM(){
+  var score=0;
+  qcmQuestions.forEach(function(q,i){
+    var sel=document.querySelector('input[name="qcm'+i+'"]:checked');
+    var div=document.getElementById("qcm"+i);
+    div.style.borderColor=sel&&parseInt(sel.value)===q.ans?"#28a745":"#dc3545";
+    div.style.borderWidth="2px";
+    if(sel&&parseInt(sel.value)===q.ans) score++;
+  });
+  var pct=Math.round(score/qcmQuestions.length*100);
+  var msg,advice;
+  if(pct>=90){msg="Excellent travail !";advice="Tu maîtrises très bien la proportionnalité.";}
+  else if(pct>=75){msg="Très bon résultat !";advice="Revois les questions ratées pour viser la perfection.";}
+  else if(pct>=60){msg="Bon résultat, continue !";advice="Reprends les onglets des thèmes où tu as fait des erreurs.";}
+  else if(pct>=40){msg="Résultat moyen.";advice="Relis attentivement le cours, puis refais les exercices de chaque onglet.";}
+  else{msg="Il faut revoir le cours.";advice="Reprends chaque onglet dans l'ordre, en faisant les exercices interactifs.";}
+  var wrongList="";
+  qcmQuestions.forEach(function(q,i){
+    var sel=document.querySelector('input[name="qcm'+i+'"]:checked');
+    if(!sel||parseInt(sel.value)!==q.ans){
+      wrongList+='<li>Q'+(i+1)+' : la bonne réponse était « '+q.choices[q.ans]+' »</li>';
+    }
+  });
+  var corrections=wrongList?'<details style="margin-top:12px;"><summary>Voir les corrections</summary><ul style="text-align:left;padding-left:20px;margin-top:8px;">'+wrongList+'</ul></details>':"";
+  document.getElementById("qcmScore").innerHTML='<div class="score-box"><div class="big">'+score+' / '+qcmQuestions.length+'</div><p>'+pct+' % — '+msg+'</p><p style="font-size:.9rem;color:var(--muted);margin-top:6px;">'+advice+'</p>'+corrections+'</div>';
+}
+
+function resetQCM(){
+  qcmQuestions.forEach(function(q,i){
+    var radios=document.querySelectorAll('input[name="qcm'+i+'"]');
+    radios.forEach(function(r){r.checked=false;});
+    var div=document.getElementById("qcm"+i);
+    div.style.borderColor="";div.style.borderWidth="";
+  });
+  document.getElementById("qcmScore").innerHTML="";
+}
+
+/* ==================== INIT ==================== */
+buildNav();
+showTab(0);
+
+// Redraw canvases on theme change
+function redrawAllCanvases(){
+  if(loaded[0]) drawRecoCanvas();
+  if(loaded[1]) drawCroixCanvas();
+  if(loaded[2]) drawPctCanvas();
+  if(loaded[3]) drawEchelleCanvas();
+  if(loaded[4]) drawVitesseCanvas();
+}
+var observer=new MutationObserver(redrawAllCanvases);
+observer.observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+
+var mql=window.matchMedia("(prefers-color-scheme:dark)");
+if(mql.addEventListener) mql.addEventListener("change",redrawAllCanvases);
+</script>
+</body>
+</html>
